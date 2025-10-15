@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gradient-to-br from-neutral-50 to-neutral-100 text-neutral-800 antialiased;
+  }
+}
+
+@layer utilities {
+  .shadow-neu-sm {
+    box-shadow: 3px 3px 8px #d1d1e6, -3px -3px 8px #ffffff, inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  }
+  .shadow-neu-md {
+    box-shadow: 5px 5px 15px #d1d1e6, -5px -5px 15px #ffffff, inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  }
+  .shadow-neu-lg {
+    box-shadow: 8px 8px 20px #d1d1e6, -8px -8px 20px #ffffff, inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  }
+  .shadow-neu-inset {
+    box-shadow: inset 2px 2px 5px #d1d1e6, inset -2px -2px 5px #ffffff;
+  }
+}

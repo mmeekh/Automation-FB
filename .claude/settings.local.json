@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx create-next-app@latest:*)",
+      "Read(//c/Users/kader/OneDrive/Masaüstü/**)",
+      "Bash(npm install)",
+      "Bash(npm run dev)",
+      "Bash(npm run build)",
+      "Bash(docker-compose up:*)",
+      "Bash(docker-compose:*)",
+      "Bash(dir:*)",
+      "Bash(findstr:*)",
+      "Bash(python -c \"import os; [os.remove(f) for f in [''index.html'', ''dashboard.html'', ''project_purpose.md'', ''ARCHITECTURE.md'', ''DEVELOPMENT.md'', ''i18n.ts'', ''nul'', ''public.gitkeep'', ''Dockerfile'', ''docker-compose.yml'', ''.dockerignore'', ''.editorconfig'', ''.prettierrc''] if os.path.exists(f)]; print(''Temizlik tamamlandi'')\")",
+      "Bash(awk:*)",
+      "Bash(rm:*)",
+      "Bash(curl:*)",
+      "Bash(taskkill:*)",
+      "Bash(cat:*)",
+      "Bash(pkill:*)",
+      "Bash(killall:*)",
+      "Bash(lsof:*)",
+      "Bash(netstat:*)",
+      "Bash(powershell:*)",
+      "Bash(cp:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

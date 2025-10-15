@@ -1,0 +1,72 @@
+{
+  "common": {
+    "appName": "AutoFlow",
+    "welcome": "Welcome",
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "success": "Success"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "automations": "Automations",
+    "analytics": "Analytics",
+    "templates": "Templates",
+    "settings": "Settings"
+  },
+  "auth": {
+    "login": "Sign In",
+    "logout": "Sign Out",
+    "email": "Email Address",
+    "password": "Password",
+    "twoFactorCode": "Two-Factor Authentication Code",
+    "loginButton": "Sign In",
+    "noAccount": "Don't have an account?",
+    "signUp": "Sign up",
+    "orContinueWith": "Or continue with",
+    "facebook": "Facebook",
+    "instagram": "Instagram",
+    "welcomeBack": "Welcome Back",
+    "welcomeMessage": "Sign in to your Instagram automation dashboard"
+  },
+  "dashboard": {
+    "hero": {
+      "title": "Automate your Instagram workflows — effortlessly.",
+      "description": "Choose ready-made flows, connect your account, and launch automations in minutes.",
+      "getStarted": "Get Started",
+      "watchDemo": "Watch Demo"
+    },
+    "accounts": {
+      "title": "Connected Accounts",
+      "badge": "Active",
+      "followers": "followers",
+      "posts": "posts"
+    },
+    "workflows": {
+      "title": "Active Workflows",
+      "badge": "Running",
+      "active": "Active",
+      "inactive": "Inactive",
+      "start": "Start",
+      "stop": "Stop",
+      "edit": "Edit"
+    },
+    "analytics": {
+      "title": "Performance Analytics",
+      "badge": "This Week",
+      "newFollowers": "New Followers",
+      "engagementRate": "Engagement Rate",
+      "postsPublished": "Posts Published",
+      "comments": "Comments"
+    },
+    "quickActions": {
+      "title": "Quick Actions",
+      "badge": "Fast Access",
+      "createAutomation": "Create New Automation",
+      "useTemplate": "Use Template",
+      "connectAccount": "Connect Account",
+      "create": "Create",
+      "browse": "Browse",
+      "connect": "Connect"
+    }
+  }
+}

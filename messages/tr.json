@@ -1,0 +1,72 @@
+{
+  "common": {
+    "appName": "AutoFlow",
+    "welcome": "Hoş Geldiniz",
+    "loading": "Yükleniyor...",
+    "error": "Bir şeyler yanlış gitti",
+    "success": "Başarılı"
+  },
+  "nav": {
+    "dashboard": "Panel",
+    "automations": "Otomasyonlar",
+    "analytics": "Analitik",
+    "templates": "Şablonlar",
+    "settings": "Ayarlar"
+  },
+  "auth": {
+    "login": "Giriş Yap",
+    "logout": "Çıkış Yap",
+    "email": "E-posta Adresi",
+    "password": "Şifre",
+    "twoFactorCode": "İki Faktörlü Doğrulama Kodu",
+    "loginButton": "Giriş Yap",
+    "noAccount": "Hesabınız yok mu?",
+    "signUp": "Kayıt ol",
+    "orContinueWith": "Veya şununla devam et",
+    "facebook": "Facebook",
+    "instagram": "Instagram",
+    "welcomeBack": "Tekrar Hoş Geldiniz",
+    "welcomeMessage": "Instagram otomasyon panelinize giriş yapın"
+  },
+  "dashboard": {
+    "hero": {
+      "title": "Instagram iş akışlarınızı otomatikleştirin — zahmetsizce.",
+      "description": "Hazır akışları seçin, hesabınızı bağlayın ve dakikalar içinde otomasyonları başlatın.",
+      "getStarted": "Başlayın",
+      "watchDemo": "Demo İzle"
+    },
+    "accounts": {
+      "title": "Bağlı Hesaplar",
+      "badge": "Aktif",
+      "followers": "takipçi",
+      "posts": "gönderi"
+    },
+    "workflows": {
+      "title": "Aktif İş Akışları",
+      "badge": "Çalışıyor",
+      "active": "Aktif",
+      "inactive": "Pasif",
+      "start": "Başlat",
+      "stop": "Durdur",
+      "edit": "Düzenle"
+    },
+    "analytics": {
+      "title": "Performans Analizi",
+      "badge": "Bu Hafta",
+      "newFollowers": "Yeni Takipçiler",
+      "engagementRate": "Etkileşim Oranı",
+      "postsPublished": "Yayınlanan Gönderiler",
+      "comments": "Yorumlar"
+    },
+    "quickActions": {
+      "title": "Hızlı İşlemler",
+      "badge": "Hızlı Erişim",
+      "createAutomation": "Yeni Otomasyon Oluştur",
+      "useTemplate": "Şablon Kullan",
+      "connectAccount": "Hesap Bağla",
+      "create": "Oluştur",
+      "browse": "Göz At",
+      "connect": "Bağla"
+    }
+  }
+}
