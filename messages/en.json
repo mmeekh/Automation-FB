@@ -68,5 +68,210 @@
       "browse": "Browse",
       "connect": "Connect"
     }
+  },
+  "automationsPage": {
+    "hero": {
+      "badge": "Automation studio",
+      "title": "Orchestrate every Instagram journey with confidence.",
+      "subtitle": "Launch AI-assisted automations, route human hand-offs, and monitor performance without leaving one screen.",
+      "primaryCta": "Launch automation",
+      "secondaryCta": "View live journeys",
+      "metrics": {
+        "throughput": "Monthly throughput",
+        "throughputHelp": "Unique conversations handled by your automations",
+        "satisfaction": "AI satisfaction",
+        "satisfactionHelp": "Average rating collected from human reviews",
+        "guardrails": "Active guardrails",
+        "guardrailsHelp": "Automation rules protecting brand safety"
+      }
+    },
+    "assistant": {
+      "title": "Automation control room",
+      "subtitle": "Live dispatch feed from the AutoFlow assistant.",
+      "badge": "Live feed",
+      "cta": "See full activity",
+      "activity": {
+        "warning": "Manual review",
+        "success": "Template shipped",
+        "ai": "AI assistant",
+        "publish": "Content drop"
+      }
+    },
+    "summary": {
+      "active": { "label": "Active automations" },
+      "paused": { "label": "Paused automations" },
+      "responses": { "label": "AI responses delivered" },
+      "avgResponseTime": { "label": "Average response time" },
+      "vsLastWeek": "vs last week"
+    },
+    "list": {
+      "running": "Running",
+      "paused": "Paused",
+      "optimize": "Optimize with AI",
+      "pause": "Pause",
+      "resume": "Resume",
+      "metrics": {
+        "conversion": "Conversion rate",
+        "steps": "Steps",
+        "sent": "Messages sent",
+        "completed": "Completed journeys"
+      }
+    },
+    "activity": {
+      "title": "Live automation activity",
+      "subtitle": "Recent guardrail events, content drops and escalations."
+    },
+    "recommendations": {
+      "badge": "AI insights",
+      "title": "Recommended playbooks",
+      "subtitle": "High-impact flows curated for your workspace.",
+      "complexity": {
+        "low": "Low effort",
+        "medium": "Medium effort",
+        "high": "High effort"
+      },
+      "impact": "+{value}% expected lift",
+      "cta": "Preview playbook"
+    }
+  },
+  "analyticsPage": {
+    "hero": {
+      "badge": "Realtime analytics",
+      "title": "Measure how automation drives reach, revenue and community health.",
+      "subtitle": "Every chart is stitched to the automations powering your growth so you always know what to optimize next.",
+      "atAGlance": {
+        "reach": "Weekly reach",
+        "revenue": "Attributed revenue",
+        "vsLastWeek": "vs last week"
+      }
+    },
+    "spotlight": {
+      "title": "What moved the needle",
+      "subtitle": "AI-surfaced wins that deserve your attention.",
+      "badge": "Highlights",
+      "metrics": {
+        "engagement": "Engagement rate",
+        "conversions": "AI-assisted conversions"
+      },
+      "bestPerformer": {
+        "title": "Top performer",
+        "caption": "Comment guardian accelerated save rate",
+        "description": "Auto-moderation flow shielded 92% of spam and rerouted high-intent comments to the sales assistant."
+      }
+    },
+    "trend": {
+      "title": "Growth overview",
+      "subtitle": "Follower growth and engagement from the past 7 days.",
+      "badge": "Last 7 days",
+      "legend": {
+        "followers": "Followers gained",
+        "engagement": "Engagement %"
+      }
+    },
+    "audience": {
+      "title": "Audience intelligence",
+      "subtitle": "Locations, age groups and peak moments of activity.",
+      "badge": "Smart clusters",
+      "locations": "Top locations",
+      "age": "Age brackets",
+      "activity": "Peak activity"
+    },
+    "topPosts": {
+      "title": "Content that converts",
+      "subtitle": "Posts attributed with the highest revenue impact.",
+      "badge": "Top 3",
+      "metrics": {
+        "reach": "Reach",
+        "saves": "Saves",
+        "engagement": "Engagement"
+      }
+    }
+  },
+  "templatesPage": {
+    "hero": {
+      "badge": "Playbook library",
+      "title": "Spin up expert-built automations in minutes.",
+      "subtitle": "Handcrafted journeys from top operators and verified agencies, ready to deploy with your brand voice.",
+      "primaryCta": "Browse templates",
+      "secondaryCta": "Request custom build",
+      "metrics": {
+        "installs": "Total installs",
+        "installsHelp": "Teams using AutoFlow playbooks across verticals",
+        "curators": "Expert curators",
+        "curatorsHelp": "Strategists keeping every template battle-tested",
+        "aiLabel": "AI assisted drafting",
+        "aiTitle": "Every template is powered by human + AI pairing",
+        "aiSubtitle": "We keep you in control with transparent guardrails."
+      }
+    },
+    "highlights": {
+      "title": "Featured collections",
+      "subtitle": "High-performing kits for the goals we see most.",
+      "badge": "Editor’s pick",
+      "metrics": {
+        "installs": "{value} installs"
+      },
+      "cta": "Preview bundle"
+    },
+    "categories": {
+      "title": "{category}",
+      "goesLive": "Goes live in {duration}",
+      "complexity": {
+        "low": "Low effort",
+        "medium": "Medium effort",
+        "high": "High effort"
+      },
+      "preview": "Preview flow",
+      "deploy": "Deploy now"
+    }
+  },
+  "settingsPage": {
+    "account": {
+      "title": "Workspace settings",
+      "subtitle": "Manage workspace identity, guardrails and access.",
+      "fields": {
+        "workspace": "Workspace name",
+        "timezone": "Timezone: {value}",
+        "security": "Security",
+        "twoFactorOn": "Two-factor authentication enforced",
+        "twoFactorOff": "Two-factor authentication disabled"
+      },
+      "manage": "Manage access"
+    },
+    "usage": {
+      "title": "Security posture",
+      "subtitle": "Realtime snapshot of protection layers.",
+      "badge": "Secure",
+      "updated": "Synced moments ago"
+    },
+    "notifications": {
+      "title": "Notifications & alerts",
+      "subtitle": "Control where the assistant keeps you in the loop.",
+      "badge": "Routing",
+      "toggle": "Toggle notification"
+    },
+    "integrations": {
+      "title": "Integrations",
+      "subtitle": "Connect your stack to build richer automations.",
+      "badge": "Connected",
+      "status": {
+        "connected": "Connected",
+        "pending": "Pending approval"
+      },
+      "manage": "Manage",
+      "connect": "Connect"
+    },
+    "team": {
+      "title": "Team & roles",
+      "subtitle": "Assign ownership and keep permissions fresh.",
+      "badge": "Members",
+      "status": {
+        "online": "Online",
+        "offline": "Offline",
+        "busy": "Busy"
+      },
+      "permissions": "Manage roles",
+      "assign": "Assign playbook"
+    }
   }
 }

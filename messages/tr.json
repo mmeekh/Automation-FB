@@ -68,5 +68,210 @@
       "browse": "Göz At",
       "connect": "Bağla"
     }
+  },
+  "automationsPage": {
+    "hero": {
+      "badge": "Otomasyon stüdyosu",
+      "title": "Instagram yolculuklarınızı güvenle yönetin.",
+      "subtitle": "Yapay zeka destekli otomasyonları başlatın, insan devralmalarını yönetin ve performansı tek ekrandan takip edin.",
+      "primaryCta": "Otomasyon başlat",
+      "secondaryCta": "Canlı akışları izle",
+      "metrics": {
+        "throughput": "Aylık hacim",
+        "throughputHelp": "Otomasyonlarınızın yönettiği benzersiz konuşmalar",
+        "satisfaction": "Yapay zeka memnuniyeti",
+        "satisfactionHelp": "İnsan denetimlerinden alınan ortalama puan",
+        "guardrails": "Etkin korumalar",
+        "guardrailsHelp": "Marka güvenliğini koruyan otomasyon kuralları"
+      }
+    },
+    "assistant": {
+      "title": "Otomasyon kontrol odası",
+      "subtitle": "AutoFlow asistanından canlı yönlendirme akışı.",
+      "badge": "Canlı akış",
+      "cta": "Tüm aktiviteleri gör",
+      "activity": {
+        "warning": "Manuel inceleme",
+        "success": "Şablon yayınlandı",
+        "ai": "Yapay zeka asistanı",
+        "publish": "İçerik yayını"
+      }
+    },
+    "summary": {
+      "active": { "label": "Aktif otomasyonlar" },
+      "paused": { "label": "Duraklatılan otomasyonlar" },
+      "responses": { "label": "Sunulan yapay zeka yanıtları" },
+      "avgResponseTime": { "label": "Ortalama yanıt süresi" },
+      "vsLastWeek": "geçen haftaya göre"
+    },
+    "list": {
+      "running": "Çalışıyor",
+      "paused": "Duraklatıldı",
+      "optimize": "Yapay zeka ile optimize et",
+      "pause": "Duraklat",
+      "resume": "Devam et",
+      "metrics": {
+        "conversion": "Dönüşüm oranı",
+        "steps": "Adım",
+        "sent": "Gönderilen mesaj",
+        "completed": "Tamamlanan yolculuk"
+      }
+    },
+    "activity": {
+      "title": "Canlı otomasyon aktiviteleri",
+      "subtitle": "Koruma olayları, içerik yayınları ve eskalasyonlar."
+    },
+    "recommendations": {
+      "badge": "Yapay zeka içgörüleri",
+      "title": "Önerilen playbook'lar",
+      "subtitle": "Çalışma alanınız için seçilmiş yüksek etkili akışlar.",
+      "complexity": {
+        "low": "Düşük emek",
+        "medium": "Orta emek",
+        "high": "Yüksek emek"
+      },
+      "impact": "%{value} beklenen artış",
+      "cta": "Playbook'u incele"
+    }
+  },
+  "analyticsPage": {
+    "hero": {
+      "badge": "Anlık analiz",
+      "title": "Otomasyonun erişim, gelir ve topluluk sağlığına etkisini ölçün.",
+      "subtitle": "Her grafik, büyümenizi destekleyen otomasyonlarla ilişkilidir; böylece neyi optimize edeceğinizi bilirsiniz.",
+      "atAGlance": {
+        "reach": "Haftalık erişim",
+        "revenue": "Atfedilen gelir",
+        "vsLastWeek": "geçen haftaya göre"
+      }
+    },
+    "spotlight": {
+      "title": "Öne çıkanlar",
+      "subtitle": "Dikkat etmeniz gereken yapay zeka tespitli kazanımlar.",
+      "badge": "İçgörüler",
+      "metrics": {
+        "engagement": "Etkileşim oranı",
+        "conversions": "Yapay zeka destekli dönüşüm"
+      },
+      "bestPerformer": {
+        "title": "En başarılı",
+        "caption": "Yorum koruyucusu kaydetme oranını artırdı",
+        "description": "Otomatik moderasyon akışı spam'in %92'sini engelledi ve yüksek potansiyelli yorumları satış asistanına yönlendirdi."
+      }
+    },
+    "trend": {
+      "title": "Büyüme görünümü",
+      "subtitle": "Son 7 günde takipçi ve etkileşim artışı.",
+      "badge": "Son 7 gün",
+      "legend": {
+        "followers": "Kazanılan takipçi",
+        "engagement": "Etkileşim %"
+      }
+    },
+    "audience": {
+      "title": "Kitle içgörüleri",
+      "subtitle": "Konumlar, yaş grupları ve en aktif saatler.",
+      "badge": "Akıllı kümeler",
+      "locations": "Öne çıkan şehirler",
+      "age": "Yaş dağılımı",
+      "activity": "Yoğun saatler"
+    },
+    "topPosts": {
+      "title": "Dönüştüren içerikler",
+      "subtitle": "Gelire en çok katkı sağlayan paylaşımlar.",
+      "badge": "İlk 3",
+      "metrics": {
+        "reach": "Erişim",
+        "saves": "Kaydetmeler",
+        "engagement": "Etkileşim"
+      }
+    }
+  },
+  "templatesPage": {
+    "hero": {
+      "badge": "Playbook kitaplığı",
+      "title": "Uzmanların hazırladığı otomasyonları dakikalar içinde çalıştırın.",
+      "subtitle": "Sektör liderlerinin hazırladığı yolculuklar marka tonunuza göre konuşmaya hazır.",
+      "primaryCta": "Şablonlara göz at",
+      "secondaryCta": "Özel kurulum iste",
+      "metrics": {
+        "installs": "Toplam kurulum",
+        "installsHelp": "AutoFlow playbook'larını kullanan ekipler",
+        "curators": "Uzman editör",
+        "curatorsHelp": "Her şablonu sahada test eden stratejistler",
+        "aiLabel": "Yapay zeka destekli tasarım",
+        "aiTitle": "Her şablon insan + yapay zeka iş birliğiyle oluşturuluyor",
+        "aiSubtitle": "Şeffaf korumalarla kontrol sizde kalır."
+      }
+    },
+    "highlights": {
+      "title": "Öne çıkan koleksiyonlar",
+      "subtitle": "En sık karşılaşılan hedefler için yüksek performanslı paketler.",
+      "badge": "Editör seçimi",
+      "metrics": {
+        "installs": "{value} kurulum"
+      },
+      "cta": "Paketi önizle"
+    },
+    "categories": {
+      "title": "{category}",
+      "goesLive": "{duration} içinde yayında",
+      "complexity": {
+        "low": "Düşük emek",
+        "medium": "Orta emek",
+        "high": "Yüksek emek"
+      },
+      "preview": "Akışı önizle",
+      "deploy": "Hemen uygula"
+    }
+  },
+  "settingsPage": {
+    "account": {
+      "title": "Çalışma alanı ayarları",
+      "subtitle": "Kimlik, korumalar ve erişimi yönetin.",
+      "fields": {
+        "workspace": "Çalışma alanı adı",
+        "timezone": "Saat dilimi: {value}",
+        "security": "Güvenlik",
+        "twoFactorOn": "İki faktörlü doğrulama zorunlu",
+        "twoFactorOff": "İki faktörlü doğrulama kapalı"
+      },
+      "manage": "Erişimi yönet"
+    },
+    "usage": {
+      "title": "Güvenlik durumu",
+      "subtitle": "Koruma katmanlarının anlık görünümü.",
+      "badge": "Güvende",
+      "updated": "Az önce senkronize edildi"
+    },
+    "notifications": {
+      "title": "Bildirimler ve uyarılar",
+      "subtitle": "Asistanın nerede haber vereceğini seçin.",
+      "badge": "Yönlendirme",
+      "toggle": "Bildirimi değiştir"
+    },
+    "integrations": {
+      "title": "Entegrasyonlar",
+      "subtitle": "Daha zengin otomasyonlar için yığınınızı bağlayın.",
+      "badge": "Bağlı",
+      "status": {
+        "connected": "Bağlı",
+        "pending": "Onay bekliyor"
+      },
+      "manage": "Yönet",
+      "connect": "Bağlan"
+    },
+    "team": {
+      "title": "Ekip ve roller",
+      "subtitle": "Sorumluluk atayın, izinleri güncel tutun.",
+      "badge": "Üyeler",
+      "status": {
+        "online": "Çevrimiçi",
+        "offline": "Çevrimdışı",
+        "busy": "Meşgul"
+      },
+      "permissions": "Rolleri yönet",
+      "assign": "Playbook ata"
+    }
   }
 }

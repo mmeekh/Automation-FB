@@ -4,11 +4,16 @@
 
 @layer base {
   body {
-    @apply bg-gradient-to-br from-neutral-50 to-neutral-100 text-neutral-800 antialiased;
+    @apply bg-gradient-to-br from-neutral-50 via-primary-50/10 to-accent-50/10 text-neutral-800 antialiased;
+  }
+
+  * {
+    @apply transition-colors duration-200;
   }
 }
 
 @layer utilities {
+  /* Neumorphism Shadows */
   .shadow-neu-sm {
     box-shadow: 3px 3px 8px #d1d1e6, -3px -3px 8px #ffffff, inset 0 1px 0 rgba(255, 255, 255, 0.8);
   }
@@ -20,5 +25,114 @@
   }
   .shadow-neu-inset {
     box-shadow: inset 2px 2px 5px #d1d1e6, inset -2px -2px 5px #ffffff;
+  }
+
+  /* Glassmorphism Effects */
+  .glass {
+    @apply bg-white/80 backdrop-blur-xl border border-white/30;
+  }
+
+  .glass-dark {
+    @apply bg-neutral-800/80 backdrop-blur-xl border border-white/10;
+  }
+
+  /* Gradient Text */
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary-500 to-accent-500 bg-clip-text text-transparent;
+  }
+
+  /* Hover Effects */
+  .hover-lift {
+    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-lg;
+  }
+
+  .hover-glow {
+    @apply transition-all duration-300 hover:shadow-[0_0_20px_rgba(108,99,255,0.3)];
+  }
+
+  /* Animated Gradient Background */
+  .animated-gradient {
+    background: linear-gradient(
+      -45deg,
+      #6C63FF,
+      #FF6B6B,
+      #4ECDC4,
+      #FFE66D
+    );
+    background-size: 400% 400%;
+    animation: gradient-shift 15s ease infinite;
+  }
+
+  @keyframes gradient-shift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  /* Pulse Animation */
+  .pulse-slow {
+    animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  /* Shimmer Effect */
+  .shimmer {
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.3) 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+  }
+
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  /* Smooth Bounce */
+  .bounce-soft {
+    animation: bounce-soft 2s infinite;
+  }
+
+  @keyframes bounce-soft {
+    0%, 100% {
+      transform: translateY(0);
+      animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+    }
+    50% {
+      transform: translateY(-5%);
+      animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    }
+  }
+
+  /* Card Animations */
+  .card-enter {
+    animation: card-enter 0.5s ease-out;
+  }
+
+  @keyframes card-enter {
+    from {
+      opacity: 0;
+      transform: translateY(20px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  /* Responsive Grid */
+  .responsive-grid {
+    @apply grid gap-4 sm:gap-6 lg:gap-8;
+    @apply grid-cols-1 sm:grid-cols-2 lg:grid-cols-3;
+  }
+
+  /* Mobile Menu */
+  @media (max-width: 768px) {
+    .mobile-menu-open {
+      @apply fixed inset-0 z-50 bg-white/95 backdrop-blur-xl;
+    }
   }
 }
