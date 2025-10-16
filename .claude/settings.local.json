@@ -21,7 +21,10 @@
       "Bash(lsof:*)",
       "Bash(netstat:*)",
       "Bash(powershell:*)",
-      "Bash(cp:*)"
+      "Bash(cp:*)",
+      "Bash(npx depcheck:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(find:*)"
     ],
     "deny": [],
     "ask": []

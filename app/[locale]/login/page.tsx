@@ -6,6 +6,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { Button, Input, LanguageSwitcher, TwoFactorInput } from '@/components';
 import { login } from '@/lib/api';
 import { useStore } from '@/lib/store';
+import { handleOAuthLogin, oauthProviders, type OAuthProvider } from '@/lib/auth';
 
 export default function LoginPage() {
   const t = useTranslations('auth');
@@ -18,6 +19,7 @@ export default function LoginPage() {
   const [twoFactorCode, setTwoFactorCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [oauthLoading, setOauthLoading] = useState<OAuthProvider | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,6 +39,19 @@ export default function LoginPage() {
       setError('Invalid credentials');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleOAuthClick = async (provider: OAuthProvider) => {
+    setOauthLoading(provider);
+    setError('');
+
+    try {
+      await handleOAuthLogin(provider);
+      // OAuth redirect olacağı için burası çalışmayabilir
+    } catch (err) {
+      setError(`${oauthProviders[provider].name} login failed`);
+      setOauthLoading(null);
     }
   };
 
@@ -127,15 +142,61 @@ export default function LoginPage() {
           </div>
         </div>
 
-        {/* Social Login */}
+        {/* OAuth Providers */}
         <div className="grid grid-cols-2 gap-3">
-          <Button variant="secondary" size="sm" onClick={() => alert('Facebook OAuth')} className="hover-lift">
-            <span className="text-xl">📘</span>
-            <span className="hidden sm:inline">{t('facebook')}</span>
+          {/* Google */}
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => handleOAuthClick('google')}
+            className="hover-lift hover:border-red-200"
+            disabled={oauthLoading !== null}
+            loading={oauthLoading === 'google'}
+          >
+            <span className="text-xl">{oauthProviders.google.icon}</span>
+            <span className="hidden sm:inline">Google</span>
           </Button>
-          <Button variant="secondary" size="sm" onClick={() => alert('Instagram OAuth')} className="hover-lift">
-            <span className="text-xl">📸</span>
-            <span className="hidden sm:inline">{t('instagram')}</span>
+
+          {/* Facebook */}
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => handleOAuthClick('facebook')}
+            className="hover-lift hover:border-blue-200"
+            disabled={oauthLoading !== null}
+            loading={oauthLoading === 'facebook'}
+          >
+            <span className="text-xl">{oauthProviders.facebook.icon}</span>
+            <span className="hidden sm:inline">Facebook</span>
+          </Button>
+
+          {/* Instagram */}
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => handleOAuthClick('instagram')}
+            className="hover-lift hover:border-pink-200"
+            disabled={oauthLoading !== null}
+            loading={oauthLoading === 'instagram'}
+          >
+            <span className="text-xl">{oauthProviders.instagram.icon}</span>
+            <span className="hidden sm:inline">Instagram</span>
+          </Button>
+
+          {/* Email - Alternative */}
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => {
+              // Scroll to email form
+              const emailInput = document.querySelector('input[type="email"]') as HTMLElement;
+              emailInput?.focus();
+            }}
+            className="hover-lift hover:border-neutral-200"
+            disabled={oauthLoading !== null}
+          >
+            <span className="text-xl">{oauthProviders.email.icon}</span>
+            <span className="hidden sm:inline">Email</span>
           </Button>
         </div>
 

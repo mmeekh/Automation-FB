@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { BellIcon, Bars3Icon, XMarkIcon, UserCircleIcon, Cog6ToothIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
 import { LanguageSwitcher } from './LanguageSwitcher';
@@ -12,11 +12,17 @@ export function Header() {
   const t = useTranslations('nav');
   const locale = useLocale();
   const router = useRouter();
+  const pathname = usePathname();
   const user = useStore((state) => state.user);
   const setUser = useStore((state) => state.setUser);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Check if current path is active
+  const isActive = (href: string) => {
+    return pathname?.includes(`/${href}`);
+  };
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -64,15 +70,22 @@ export function Header() {
 
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex gap-6">
-              {navItems.map(({ key, href }) => (
-                <Link
-                  key={key}
-                  href={`/${locale}/${href}`}
-                  className="text-sm font-medium text-neutral-600 hover:text-primary-500 transition-colors px-3 py-2 rounded-lg hover:bg-white/50"
-                >
-                  {t(key as any)}
-                </Link>
-              ))}
+              {navItems.map(({ key, href }) => {
+                const active = isActive(href);
+                return (
+                  <Link
+                    key={key}
+                    href={`/${locale}/${href}`}
+                    className={`text-sm font-medium transition-all px-3 py-2 rounded-lg ${
+                      active
+                        ? 'text-accent-600 bg-accent-50 font-bold'
+                        : 'text-neutral-600 hover:text-primary-500 hover:bg-white/50'
+                    }`}
+                  >
+                    {t(key as any)}
+                  </Link>
+                );
+              })}
             </nav>
 
             {/* Right Side Actions */}
@@ -166,16 +179,26 @@ export function Header() {
 
             {/* Mobile Navigation */}
             <nav className="space-y-2">
-              {navItems.map(({ key, href }) => (
-                <Link
-                  key={key}
-                  href={`/${locale}/${href}`}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block px-4 py-3 text-base font-medium text-neutral-700 hover:text-primary-500 hover:bg-white/50 rounded-xl transition-all"
-                >
-                  {t(key as any)}
-                </Link>
-              ))}
+              {navItems.map(({ key, href }) => {
+                const active = isActive(href);
+                return (
+                  <Link
+                    key={key}
+                    href={`/${locale}/${href}`}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`block px-4 py-3 text-base font-medium rounded-xl transition-all relative ${
+                      active
+                        ? 'text-accent-600 bg-accent-50 font-bold border-l-4 border-accent-500'
+                        : 'text-neutral-700 hover:text-primary-500 hover:bg-white/50'
+                    }`}
+                  >
+                    {t(key as any)}
+                    {active && (
+                      <span className="absolute right-4 top-1/2 -translate-y-1/2 w-2 h-2 bg-accent-500 rounded-full animate-pulse" />
+                    )}
+                  </Link>
+                );
+              })}
             </nav>
 
             {/* Mobile User Info */}

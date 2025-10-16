@@ -12,6 +12,7 @@ import {
   Header,
   MetricCard,
   QuickAction,
+  AITemplateCard,
 } from '@/components';
 import { useStore } from '@/lib/store';
 import { fetchDashboardData, mockUser } from '@/lib/api';
@@ -179,6 +180,74 @@ export default function DashboardPage() {
             </div>
           </Card>
         </div>
+
+        {/* AI Automation Templates Section */}
+        <section className="mt-12 sm:mt-16 lg:mt-20">
+          {/* Section Header */}
+          <div className="text-center mb-8 sm:mb-12">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-primary-500 to-accent-500 text-white text-sm font-semibold mb-4 shadow-lg">
+              <span className="text-lg">✨</span>
+              <span>AI Powered</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold gradient-text mb-4">
+              Ready-to-Use Instagram Automations
+            </h2>
+            <p className="text-base sm:text-lg text-neutral-600 max-w-2xl mx-auto">
+              Transform your Instagram engagement with AI-powered automations. Install in seconds, customize to your needs.
+            </p>
+          </div>
+
+          {/* Template Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-8">
+            {/* Hair Transformation */}
+            <AITemplateCard
+              id="hair-transformation"
+              name="Hair Transformation Automation"
+              description="Automatically replaces user's hair in selfies with chosen hairstyles using AI. Ideal for hair salons and beauty studios."
+              icon="💇"
+              gradient="bg-gradient-to-br from-pink-400 to-rose-500"
+              accentColor="text-pink-600"
+              installs={3247}
+              category="Beauty & Style"
+            />
+
+            {/* Nose Refinement */}
+            <AITemplateCard
+              id="nose-refinement"
+              name="Nose Refinement Automation"
+              description="AI-powered nose reshaping demo via DM trigger. Designed for aesthetic clinics and cosmetic consultants."
+              icon="👃"
+              gradient="bg-gradient-to-br from-teal-400 to-cyan-500"
+              accentColor="text-teal-600"
+              installs={2156}
+              category="Medical Beauty"
+            />
+
+            {/* Bald to Hair */}
+            <AITemplateCard
+              id="bald-to-hair"
+              name="Bald-to-Haired Transformation"
+              description="Converts bald or thinning hair selfies into realistic full-hair previews. Perfect for barbers and hair transplant centers."
+              icon="🧔"
+              gradient="bg-gradient-to-br from-amber-400 to-orange-500"
+              accentColor="text-amber-600"
+              installs={4892}
+              category="Hair Restoration"
+            />
+          </div>
+
+          {/* Browse All Button */}
+          <div className="flex justify-center">
+            <Button
+              size="lg"
+              className="hover-glow shadow-2xl bg-gradient-to-r from-primary-500 via-accent-500 to-primary-600 hover:from-primary-600 hover:via-accent-600 hover:to-primary-700"
+            >
+              <span className="text-xl">🚀</span>
+              <span>Browse All Templates</span>
+              <span className="px-2 py-0.5 rounded-full bg-white/20 text-xs font-bold">120+</span>
+            </Button>
+          </div>
+        </section>
       </section>
     </div>
   );
