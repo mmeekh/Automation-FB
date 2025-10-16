@@ -3,10 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
-import { TwoFactorInput } from '@/components/TwoFactorInput';
-import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import { Button, Input, LanguageSwitcher, TwoFactorInput } from '@/components';
 import { login } from '@/lib/api';
 import { useStore } from '@/lib/store';
 

@@ -2,9 +2,17 @@
 
 import { useEffect } from 'react';
 import { useTranslations } from 'next-intl';
-import { Header } from '@/components/Header';
-import { Button } from '@/components/ui/Button';
-import { Card, CardHeader, CardTitle, CardBadge } from '@/components/ui/Card';
+import {
+  Button,
+  Card,
+  CardBadge,
+  CardHeader,
+  CardTitle,
+  FloatingFeatureCard,
+  Header,
+  MetricCard,
+  QuickAction,
+} from '@/components';
 import { useStore } from '@/lib/store';
 import { fetchDashboardData, mockUser } from '@/lib/api';
 import { formatNumber } from '@/lib/utils';
@@ -159,37 +167,3 @@ export default function DashboardPage() {
   );
 }
 
-function FloatingFeatureCard({ icon, title }: { icon: string; title: string }) {
-  return (
-    <div className="bg-white/95 backdrop-blur-xl rounded-2xl p-4 shadow-neu-md border border-white/30 w-40">
-      <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-primary-500 to-accent-500 flex items-center justify-center text-2xl mb-3">
-        {icon}
-      </div>
-      <div className="font-semibold text-sm">{title}</div>
-    </div>
-  );
-}
-
-function MetricCard({ value, label, change, positive }: { value: string; label: string; change: string; positive?: boolean }) {
-  return (
-    <div className="p-5 rounded-xl bg-gradient-to-br from-white to-neutral-100 shadow-neu-sm text-center">
-      <div className="text-2xl font-bold text-neutral-800 mb-1">{value}</div>
-      <div className="text-xs text-neutral-600 uppercase tracking-wide mb-2">{label}</div>
-      <div className={`text-xs font-semibold ${positive ? 'text-green-600' : 'text-neutral-400'}`}>
-        {change}
-      </div>
-    </div>
-  );
-}
-
-function QuickAction({ icon, title, action }: { icon: React.ReactNode | string; title: string; action: string }) {
-  return (
-    <div className="flex items-center justify-between p-4 rounded-xl bg-gradient-to-br from-white to-neutral-100 shadow-neu-sm hover:shadow-neu-md transition-all cursor-pointer">
-      <div className="flex items-center gap-3">
-        <div className="text-2xl">{icon}</div>
-        <div className="font-medium text-sm">{title}</div>
-      </div>
-      <Button size="sm" variant="secondary">{action}</Button>
-    </div>
-  );
-}
