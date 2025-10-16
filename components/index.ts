@@ -1,6 +1,6 @@
 // Export all components for easy imports
-export { Header } from './Header';
-export { LanguageSwitcher } from './LanguageSwitcher';
+export * from './layout';
+export * from './dashboard';
 export { TwoFactorInput } from './TwoFactorInput';
 
 // UI Components
