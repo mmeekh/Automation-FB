@@ -24,7 +24,8 @@
       "Bash(cp:*)",
       "Bash(npx depcheck:*)",
       "Bash(npm uninstall:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(docker exec:*)"
     ],
     "deny": [],
     "ask": []
