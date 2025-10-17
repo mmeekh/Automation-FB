@@ -17,7 +17,15 @@ import {
 import { useStore } from '@/lib/store';
 import { fetchDashboardData, mockUser } from '@/lib/api';
 import { formatNumber } from '@/lib/utils';
-import { RocketLaunchIcon, PlayIcon, PlusIcon } from '@heroicons/react/24/solid';
+import {
+  RocketLaunchIcon,
+  PlayIcon,
+  PlusIcon,
+  SparklesIcon as SparklesSolidIcon,
+  FaceSmileIcon,
+  BoltIcon,
+  ArrowRightIcon,
+} from '@heroicons/react/24/solid';
 
 export default function DashboardPage() {
   const t = useTranslations('dashboard');
@@ -184,55 +192,174 @@ export default function DashboardPage() {
         {/* AI Automation Templates Section */}
         <section className="mt-12 sm:mt-16 lg:mt-20">
           {/* Section Header */}
-          <div className="text-center mb-8 sm:mb-12">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-primary-500 to-accent-500 text-white text-sm font-semibold mb-4 shadow-lg">
-              <span className="text-lg">✨</span>
+          <div className="text-center mb-8 sm:mb-12 space-y-4">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-primary-500 to-accent-500 text-white text-sm font-semibold shadow-lg">
+              <SparklesSolidIcon className="w-5 h-5" />
               <span>AI Powered</span>
             </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold gradient-text mb-4">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold gradient-text">
               Ready-to-Use Instagram Automations
             </h2>
             <p className="text-base sm:text-lg text-neutral-600 max-w-2xl mx-auto">
-              Transform your Instagram engagement with AI-powered automations. Install in seconds, customize to your needs.
+              Transform your Instagram engagement with immersive AI-driven templates your team can plug in instantly.
             </p>
           </div>
 
           {/* Template Cards Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-8">
-            {/* Hair Transformation */}
             <AITemplateCard
-              id="hair-transformation"
-              name="Hair Transformation Automation"
-              description="Automatically replaces user's hair in selfies with chosen hairstyles using AI. Ideal for hair salons and beauty studios."
-              icon="💇"
-              gradient="bg-gradient-to-br from-pink-400 to-rose-500"
-              accentColor="text-pink-600"
-              installs={3247}
-              category="Beauty & Style"
+              id="instagram-hair-transformation"
+              name="Instagram Hair Transformation Automation"
+              description="Automatically replaces user selfies with salon-ready hairstyles using AI. Ideal for hair salons and beauty studios deploying viral DM flows."
+              icon={<SparklesSolidIcon className="w-7 h-7" />}
+              gradient="bg-gradient-to-br from-rose-400 via-fuchsia-500 to-rose-500"
+              accentColor="text-rose-600"
+              installs={4827}
+              category="Beauty AI"
+              thumbnail={(
+                <div className="p-5 bg-gradient-to-br from-rose-50 via-white to-white space-y-4">
+                  <div className="flex items-center justify-between text-[11px] uppercase tracking-wide text-rose-400 font-semibold">
+                    <span>DM Workflow / Style Match</span>
+                    <span className="px-2 py-0.5 rounded-full bg-rose-100 text-rose-500 font-semibold normal-case">Live</span>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="flex gap-3">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-rose-500 to-fuchsia-500 text-xs font-semibold text-white">
+                        AI
+                      </div>
+                      <div className="flex-1 rounded-2xl border border-rose-100 bg-white/95 p-3 shadow-sm">
+                        <p className="text-[11px] font-semibold uppercase tracking-wide text-rose-400">AutoFlow Stylist</p>
+                        <p className="mt-1 text-sm text-neutral-600">Upload your selfie and choose a look. We render three hair swaps in 20 seconds.</p>
+                      </div>
+                    </div>
+                    <div className="ml-12 space-y-3">
+                      <div className="rounded-2xl border border-rose-100 bg-rose-50/80 p-3">
+                        <p className="text-xs font-semibold text-rose-500">Suggested style: Soft Fringe</p>
+                        <p className="mt-1 text-xs text-neutral-500">Send the before and after carousel straight into the chat.</p>
+                        <div className="mt-3 flex gap-2">
+                          <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-rose-200 to-rose-400 shadow-inner" />
+                          <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-amber-200 to-rose-300 shadow-inner" />
+                          <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-purple-200 to-rose-300 shadow-inner" />
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <div className="flex-1 rounded-2xl border border-rose-100 bg-white/90 p-3 text-[11px] text-neutral-500">
+                          <div className="flex items-center gap-2">
+                            <span className="h-2 w-2 rounded-full bg-emerald-400" />
+                            Smart follow-up scheduled
+                          </div>
+                          <p className="mt-1 text-[10px] uppercase tracking-wide text-rose-300">Voucher DM sends five minutes later</p>
+                        </div>
+                        <div className="flex w-16 flex-col gap-2 rounded-2xl border border-rose-100 bg-white/70 p-2">
+                          <div className="h-10 rounded-lg bg-gradient-to-br from-rose-200/70 to-rose-100" />
+                          <div className="h-10 rounded-lg bg-gradient-to-br from-rose-300/70 to-fuchsia-200" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             />
 
-            {/* Nose Refinement */}
             <AITemplateCard
-              id="nose-refinement"
-              name="Nose Refinement Automation"
-              description="AI-powered nose reshaping demo via DM trigger. Designed for aesthetic clinics and cosmetic consultants."
-              icon="👃"
-              gradient="bg-gradient-to-br from-teal-400 to-cyan-500"
+              id="instagram-nose-refinement"
+              name="Instagram Nose Refinement Automation"
+              description="AI-powered nose reshaping demo triggered directly from Instagram DMs. Built for aesthetic clinics and cosmetic consultants."
+              icon={<FaceSmileIcon className="w-7 h-7" />}
+              gradient="bg-gradient-to-br from-teal-400 via-cyan-500 to-teal-500"
               accentColor="text-teal-600"
-              installs={2156}
-              category="Medical Beauty"
+              installs={3614}
+              category="Aesthetic AI"
+              thumbnail={(
+                <div className="p-5 bg-gradient-to-br from-teal-50 via-white to-white space-y-4">
+                  <div className="flex items-center justify-between text-[11px] uppercase tracking-wide text-teal-400 font-semibold">
+                    <span>DM Trigger / Selfie Received</span>
+                    <span className="px-2 py-0.5 rounded-full bg-teal-100 text-teal-500 font-semibold normal-case">A/B Running</span>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="flex gap-3">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-teal-500 to-cyan-500 text-xs font-semibold text-white">
+                        AI
+                      </div>
+                      <div className="flex-1 rounded-2xl border border-teal-100 bg-white/95 p-3 shadow-sm">
+                        <p className="text-[11px] font-semibold uppercase tracking-wide text-teal-400">Contour Concierge</p>
+                        <p className="mt-1 text-sm text-neutral-600">Hi Leyla! Here is a natural refinement preview with balanced bridge and tip adjustments.</p>
+                      </div>
+                    </div>
+                    <div className="ml-12 space-y-3">
+                      <div className="rounded-2xl border border-teal-100 bg-teal-50/80 p-3">
+                        <div className="flex items-center justify-between text-xs font-medium text-teal-500">
+                          <span>Before and after canvas</span>
+                          <span className="rounded-full bg-white/80 px-2 py-0.5 text-[11px] text-neutral-500">0.6s render</span>
+                        </div>
+                        <div className="mt-3 grid grid-cols-2 gap-2">
+                          <div className="h-16 rounded-xl bg-gradient-to-br from-neutral-200 to-neutral-300" />
+                          <div className="h-16 rounded-xl border border-teal-200 bg-gradient-to-br from-white to-teal-50 shadow-inner" />
+                        </div>
+                      </div>
+                      <div className="flex w-fit items-center gap-2 rounded-full border border-teal-100 bg-white/90 px-3 py-2 text-[11px] text-neutral-500">
+                        <span className="h-2 w-2 rounded-full bg-teal-400 animate-pulse" />
+                        Sends clinic call-to-action when reaction includes thumbs-up or higher
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             />
 
-            {/* Bald to Hair */}
             <AITemplateCard
-              id="bald-to-hair"
-              name="Bald-to-Haired Transformation"
-              description="Converts bald or thinning hair selfies into realistic full-hair previews. Perfect for barbers and hair transplant centers."
-              icon="🧔"
-              gradient="bg-gradient-to-br from-amber-400 to-orange-500"
+              id="instagram-bald-to-haired"
+              name="Instagram Bald-to-Haired Transformation Automation"
+              description="Converts bald or thinning hair selfies into realistic full-hair previews. Built for barbers and transplant centers wanting instant DM wow-factor."
+              icon={<BoltIcon className="w-7 h-7" />}
+              gradient="bg-gradient-to-br from-amber-400 via-orange-500 to-amber-500"
               accentColor="text-amber-600"
-              installs={4892}
+              installs={5293}
               category="Hair Restoration"
+              thumbnail={(
+                <div className="p-5 bg-gradient-to-br from-amber-50 via-white to-white space-y-4">
+                  <div className="flex items-center justify-between text-[11px] uppercase tracking-wide text-amber-500 font-semibold">
+                    <span>Story Reply / Hair Density Demo</span>
+                    <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-600 font-semibold normal-case">Preview Ready</span>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="flex gap-3">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-amber-500 to-orange-500 text-xs font-semibold text-white">
+                        AI
+                      </div>
+                      <div className="flex-1 rounded-2xl border border-amber-100 bg-white/95 p-3 shadow-sm">
+                        <p className="text-[11px] font-semibold uppercase tracking-wide text-amber-500">Regrowth Studio</p>
+                        <p className="mt-1 text-sm text-neutral-600">Your reconstructed hairline is live. Swipe through three density levels below.</p>
+                      </div>
+                    </div>
+                    <div className="ml-12 space-y-3">
+                      <div className="grid grid-cols-3 gap-2">
+                        <div className="rounded-2xl border border-amber-100 bg-gradient-to-br from-neutral-900/80 via-neutral-800/80 to-neutral-700/80 p-2">
+                          <div className="h-20 rounded-xl bg-gradient-to-br from-neutral-800 to-neutral-700" />
+                          <p className="mt-2 text-[11px] text-amber-100">Natural</p>
+                        </div>
+                        <div className="rounded-2xl border-2 border-amber-400 bg-gradient-to-br from-amber-200 to-amber-100 p-2 shadow-lg">
+                          <div className="h-20 rounded-xl bg-gradient-to-br from-amber-200 to-orange-200" />
+                          <p className="mt-2 text-[11px] font-semibold text-amber-600">Full Density</p>
+                        </div>
+                        <div className="rounded-2xl border border-amber-100 bg-gradient-to-br from-amber-100 to-orange-100 p-2">
+                          <div className="h-20 rounded-xl bg-gradient-to-br from-orange-200 to-rose-200" />
+                          <p className="mt-2 text-[11px] text-amber-500">Fade</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between rounded-2xl border border-amber-100 bg-white/90 px-4 py-2 text-[11px] text-neutral-500">
+                        <span className="flex items-center gap-2">
+                          <span className="h-2 w-2 rounded-full bg-emerald-400" />
+                          92% request consult after interactive preview
+                        </span>
+                        <span className="rounded-full bg-amber-100 px-2 py-0.5 text-amber-600 font-semibold">
+                          CTA: Book visit
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             />
           </div>
 
@@ -240,11 +367,15 @@ export default function DashboardPage() {
           <div className="flex justify-center">
             <Button
               size="lg"
-              className="hover-glow shadow-2xl bg-gradient-to-r from-primary-500 via-accent-500 to-primary-600 hover:from-primary-600 hover:via-accent-600 hover:to-primary-700"
+              className="group relative overflow-hidden bg-gradient-to-r from-primary-500 via-accent-500 to-primary-600 shadow-[0_18px_38px_-18px_rgba(124,58,237,0.55)] hover:from-primary-600 hover:via-accent-600 hover:to-primary-700 hover:shadow-[0_20px_44px_-16px_rgba(124,58,237,0.7)]"
             >
-              <span className="text-xl">🚀</span>
-              <span>Browse All Templates</span>
-              <span className="px-2 py-0.5 rounded-full bg-white/20 text-xs font-bold">120+</span>
+              <span className="pointer-events-none absolute inset-0 rounded-2xl bg-white/15 opacity-0 transition-opacity duration-300 group-hover:opacity-40" />
+              <span className="pointer-events-none absolute -inset-x-12 -top-24 h-32 bg-gradient-to-r from-transparent via-white/40 to-transparent opacity-40 blur-3xl transition-opacity duration-300 group-hover:opacity-70" />
+              <span className="relative flex items-center gap-3">
+                <ArrowRightIcon className="w-5 h-5" />
+                Browse All Templates
+                <span className="rounded-full bg-white/20 px-2 py-0.5 text-xs font-semibold">120+</span>
+              </span>
             </Button>
           </div>
         </section>
@@ -252,4 +383,5 @@ export default function DashboardPage() {
     </div>
   );
 }
+
 
