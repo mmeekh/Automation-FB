@@ -258,7 +258,12 @@
       "followers": "{count} takipci",
       "posts": "{count} gonderi",
       "lastSync": "Son senkron {time}",
-      "empty": "Henuz hic Instagram hesabi baglanmadi. Otomasyonlari yonlendirmek icin bir hesap ekleyin."
+      "empty": "Henuz hic Instagram hesabi baglanmadi. Otomasyonlari yonlendirmek icin bir hesap ekleyin.",
+      "roles": {
+        "owner": "Workspace sahibi",
+        "manager": "Hesap yoneticisi",
+        "creator": "Icerik olusturucu"
+      }
     },
     "conversationsPanel": {
       "badge": "Gelen kutusu aktivitesi",

@@ -56,9 +56,9 @@ export function DetailView({ template, onToggle, onUse, isUsing }: DetailViewPro
       {/* Collapse button */}
       <button
         onClick={onToggle}
-        className="absolute top-6 left-6 z-10 p-2 rounded-xl bg-neutral-100 hover:bg-neutral-200 transition-colors"
+        className="absolute top-6 left-6 z-10 text-neutral-600 hover:text-neutral-900 transition-colors"
       >
-        <ChevronUpIcon className="w-5 h-5 text-neutral-700" />
+        <ChevronUpIcon className="w-6 h-6" />
       </button>
 
       <div className="p-8 pt-16">
@@ -73,7 +73,6 @@ export function DetailView({ template, onToggle, onUse, isUsing }: DetailViewPro
             </div>
             <div>
               <h4 className="font-semibold text-sm text-neutral-900">{title}</h4>
-              <p className="text-xs text-green-600">Active now</p>
             </div>
           </div>
 

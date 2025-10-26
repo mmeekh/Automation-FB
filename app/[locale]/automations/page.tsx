@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { ArrowRightIcon } from '@heroicons/react/24/solid';
 import { Header, Button, AutomationCard } from '@/components';
@@ -10,6 +11,7 @@ export default function AutomationsPage() {
   const t = useTranslations('automationsPage');
   const templates = AutomationRegistry.getAllTemplates();
   const { user, openAuthModal } = useStore();
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-neutral-50 via-white to-primary-50/30">
@@ -28,11 +30,11 @@ export default function AutomationsPage() {
               </span>
             </div>
             <h1
-              className="text-4xl sm:text-5xl font-bold 
-            bg-gradient-to-r from-primary-600 via-accent-500 to-primary-600 
-            bg-clip-text text-transparent"
+              className="text-4xl sm:text-5xl font-bold
+            bg-gradient-to-r from-primary-600 via-accent-500 to-primary-600
+            bg-clip-text text-transparent pb-2"
             >
-              <span className="descender-safe">{t('title')}</span>
+              {t('title')}
             </h1>
             <p className="text-lg text-neutral-600 max-w-3xl mx-auto">
               {t('subtitle')}
@@ -40,10 +42,13 @@ export default function AutomationsPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-8">
-            {templates.map((template) => (
+            {templates.map((template, index) => (
               <AutomationCard
                 key={template.id}
                 template={template}
+                isHovered={hoveredIndex === null ? undefined : hoveredIndex === index}
+                onMouseEnter={() => setHoveredIndex(index)}
+                onMouseLeave={() => setHoveredIndex(null)}
                 onUse={() => {
                   if (!user) {
                     openAuthModal();

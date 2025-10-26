@@ -90,7 +90,7 @@ export default function TermsOfServicePage() {
           <h1 className="text-3xl font-bold sm:text-4xl">LookLab Terms of Service</h1>
           <p className="text-sm text-neutral-500">Last updated: {lastUpdated}</p>
           <p className="text-base text-neutral-600 sm:text-lg">
-            These Terms of Service govern your use of LookLab's Instagram automation platform. Please read them carefully before using our services.
+            These Terms of Service govern your use of LookLab&apos;s Instagram automation platform. Please read them carefully before using our services.
           </p>
           <nav className="flex flex-wrap gap-4 text-sm font-semibold text-primary-600">
             <Link href="/privacy" className="hover:text-primary-500">
@@ -130,3 +130,4 @@ export default function TermsOfServicePage() {
     </>
   );
 }
+

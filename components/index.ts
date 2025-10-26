@@ -12,3 +12,4 @@ export { Input } from './ui/Input';
 export { Card, CardHeader, CardTitle, CardBadge } from './ui/Card';
 export { CardSpotlight } from './ui/CardSpotlight';
 export { TextHoverEffect } from './ui/TextHoverEffect';
+export { AnimatedAvatarTooltip } from './ui/AnimatedAvatarTooltip';

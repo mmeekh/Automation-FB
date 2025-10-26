@@ -2,7 +2,7 @@
 
 import { type ReactNode, useEffect, useMemo, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
-import { Header, Button } from '@/components';
+import { Header, Button, AnimatedAvatarTooltip } from '@/components';
 import { useStore } from '@/lib/store';
 import { fetchDashboardData, mockUser } from '@/lib/api';
 import { formatNumber } from '@/lib/utils';
@@ -94,6 +94,13 @@ const workspaceBadge: Record<AccountMeta['workspace'], string> = {
   primary: 'bg-primary-100 text-primary-700',
   secondary: 'bg-neutral-200 text-neutral-700',
 };
+
+const avatarGradients = [
+  'from-primary-500 via-accent-500 to-primary-600',
+  'from-amber-400 via-orange-500 to-rose-500',
+  'from-cyan-400 via-blue-500 to-indigo-500',
+  'from-emerald-400 via-teal-500 to-sky-500',
+];
 
 const sourceIcon: Record<ConversationMeta['source'], ReactNode> = {
   automation: <SparklesIcon className="h-4 w-4" />,
@@ -218,9 +225,16 @@ export default function ContactPage() {
             </div>
 
             <div className="flex-1 overflow-y-auto px-3 py-4 space-y-2">
-              {hydratedAccounts.map(({ account, seed, usage, percentage }) => {
+              {hydratedAccounts.map(({ account, seed, usage, percentage, index }) => {
                 const isActive = activeAccountId === account.id;
                 const lastSyncDisplay = seed.lastSync[normalizedLocale] ?? seed.lastSync.en;
+                const gradient = avatarGradients[index % avatarGradients.length];
+                const initials =
+                  account.username.replace('@', '').charAt(0).toUpperCase() || 'A';
+                const roleLabel = t(`accountsPanel.roles.${seed.role}` as const);
+                const followersMeta = t('accountsPanel.followers', {
+                  count: formatNumber(account.followers),
+                });
                 return (
                   <button
                     key={account.id}
@@ -233,13 +247,22 @@ export default function ContactPage() {
                     }`}
                   >
                     <div className="flex items-start justify-between gap-3">
-                      <div className="space-y-1">
-                        <p className="text-sm font-semibold text-neutral-900">{account.username}</p>
-                        <p className="text-xs text-neutral-500">
-                          {seed.workspace === 'primary'
-                            ? t('accounts.primaryWorkspace')
-                            : t('accounts.secondaryWorkspace')}
-                        </p>
+                      <div className="flex flex-1 items-start gap-3">
+                        <AnimatedAvatarTooltip
+                          initials={initials}
+                          label={account.username}
+                          caption={roleLabel}
+                          meta={followersMeta}
+                          gradient={gradient}
+                        />
+                        <div className="space-y-1">
+                          <p className="text-sm font-semibold text-neutral-900">{account.username}</p>
+                          <p className="text-xs text-neutral-500">
+                            {seed.workspace === 'primary'
+                              ? t('accounts.primaryWorkspace')
+                              : t('accounts.secondaryWorkspace')}
+                          </p>
+                        </div>
                       </div>
                       <span
                         className={`inline-flex items-center rounded-full px-3 py-1 text-[11px] font-semibold ${statusColors[seed.status]}`}
@@ -321,45 +344,57 @@ export default function ContactPage() {
               </Button>
             </div>
 
-            <div className="flex-1 divide-y divide-neutral-100 overflow-y-auto">
+            <div className="flex-1 space-y-3 overflow-y-auto px-4 py-5">
               {activeAccount && activeConversations.length ? (
-                activeConversations.map((conversation) => {
+                activeConversations.map((conversation, idx) => {
                   const name = t(`conversationsPanel.items.${conversation.key}.name`);
                   const handle = t(`conversationsPanel.items.${conversation.key}.handle`);
                   const snippet = t(`conversationsPanel.items.${conversation.key}.snippet`);
                   const stage = t(`conversationsPanel.items.${conversation.key}.stage`);
                   const lastActive = t(`conversationsPanel.items.${conversation.key}.lastActive`);
                   const initials = name.charAt(0).toUpperCase();
+                  const gradient = avatarGradients[idx % avatarGradients.length];
 
                   return (
                     <article
                       key={conversation.key}
-                      className="flex items-start gap-4 px-6 py-5 transition-colors hover:bg-primary-50/40"
+                      className="group relative flex gap-3 rounded-3xl border border-white/60 bg-white/95 p-5 shadow-sm transition-all hover:border-primary-200 hover:shadow-neu-sm"
                     >
-                      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary-100 text-sm font-semibold text-primary-700">
-                        {initials}
-                      </div>
-                      <div className="flex flex-1 flex-col gap-2">
-                        <div className="flex flex-wrap items-center justify-between gap-2">
-                          <div>
+                      <AnimatedAvatarTooltip
+                        initials={initials}
+                        label={name}
+                        caption={handle}
+                        meta={lastActive}
+                        gradient={gradient}
+                        size="sm"
+                      />
+
+                      <div className="flex flex-1 flex-col gap-3">
+                        <div className="flex flex-wrap items-center justify-between gap-3">
+                          <div className="space-y-1">
                             <p className="text-sm font-semibold text-neutral-900">{name}</p>
                             <p className="text-xs text-neutral-500">{handle}</p>
                           </div>
-                          <span className="text-[11px] font-medium text-neutral-400">
-                            {lastActive}
-                          </span>
+                          <div className="flex items-center gap-2">
+                            <span className="inline-flex items-center gap-1 rounded-full bg-primary-100 px-2.5 py-1 text-[11px] font-semibold text-primary-700">
+                              {sourceIcon[conversation.source]}
+                              {t(`conversationsPanel.sources.${conversation.source}`)}
+                            </span>
+                            <span className="inline-flex items-center rounded-full bg-neutral-900 px-2.5 py-1 text-[11px] font-semibold text-white">
+                              {stage}
+                            </span>
+                            {conversation.unread && (
+                              <span className="inline-flex items-center rounded-full bg-primary-500 px-2.5 py-1 text-[11px] font-semibold text-white">
+                                {t('conversationsPanel.unread')}
+                              </span>
+                            )}
+                          </div>
                         </div>
 
                         <p className="text-sm text-neutral-600">{snippet}</p>
 
-                        <div className="flex flex-wrap items-center gap-2">
-                          <span className="inline-flex items-center gap-1 rounded-full bg-primary-100 px-2.5 py-1 text-[11px] font-semibold text-primary-700">
-                            {sourceIcon[conversation.source]}
-                            {t(`conversationsPanel.sources.${conversation.source}`)}
-                          </span>
-                          <span className="inline-flex items-center rounded-full bg-neutral-900/90 px-2.5 py-1 text-[11px] font-semibold text-white">
-                            {stage}
-                          </span>
+                        <div className="flex flex-wrap items-center gap-2 text-[11px] text-neutral-500">
+                          <span>{lastActive}</span>
                           {conversation.tags.map((tag) => (
                             <span
                               key={`${conversation.key}-${tag}`}
@@ -370,11 +405,6 @@ export default function ContactPage() {
                           ))}
                         </div>
                       </div>
-                      {conversation.unread && (
-                        <span className="inline-flex shrink-0 items-center rounded-full bg-primary-500 px-2.5 py-1 text-[11px] font-semibold text-white">
-                          {t('conversationsPanel.unread')}
-                        </span>
-                      )}
                     </article>
                   );
                 })

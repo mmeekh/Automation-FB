@@ -14,7 +14,8 @@ export default function RootLayout({
   // Locale layout overrides these, but Next.js requires them at build-time
   return (
     <html suppressHydrationWarning>
-      <body>{children}</body>
+      <body suppressHydrationWarning>{children}</body>
     </html>
   );
 }
+

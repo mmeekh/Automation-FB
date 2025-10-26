@@ -53,105 +53,97 @@ export function CollapsedView({
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
-      <div className="p-8">
+      <div className="p-6">
         {/* Category badge at top */}
-        <div className="flex items-center justify-center mb-6">
-          <div className="px-4 py-1.5 rounded-full bg-gradient-to-r from-neutral-900 via-neutral-800 to-neutral-900 shadow-lg">
+        <div className="flex items-center justify-center mb-5">
+          <div className="px-3 py-1 rounded-full bg-gradient-to-r from-primary-600 via-accent-500 to-primary-600 shadow-lg">
             <span className="text-xs font-semibold text-white flex items-center gap-1.5">
               ✨ {template.category}
             </span>
           </div>
         </div>
         {/* Mini transformation preview: 1 + 2 = 3 */}
-        <div className="mb-8">
-          <div className="flex items-center justify-center gap-3">
+        <div className="mb-6">
+          <div className="flex items-center justify-center gap-2">
             {/* Before image */}
-            <div className="relative w-24 h-24 rounded-2xl overflow-hidden border-2 border-neutral-200 shadow-md transform hover:scale-105 transition-transform duration-300">
+            <div className="relative w-20 h-20 rounded-xl overflow-hidden border-2 border-neutral-200 shadow-md transform hover:scale-105 transition-transform duration-300">
               {hasImages ? (
                 <Image src="/media/hairchange1.webp" alt="Before" fill className="object-cover" />
               ) : (
                 <div className="absolute inset-0 bg-gradient-to-br from-neutral-100 to-neutral-200 flex items-center justify-center">
-                  <span className="text-3xl">{getPlaceholderEmoji('before')}</span>
+                  <span className="text-2xl">{getPlaceholderEmoji('before')}</span>
                 </div>
               )}
               <div className="absolute bottom-1 left-1 right-1 text-center">
-                <span className="text-[9px] font-semibold bg-white/90 px-1.5 py-0.5 rounded">Before</span>
+                <span className="text-[8px] font-semibold bg-white/90 px-1.5 py-0.5 rounded">Before</span>
               </div>
             </div>
 
             {/* Plus symbol */}
-            <div className="relative">
-              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center shadow-lg transform group-hover:rotate-180 transition-transform duration-500">
-                <span className="text-white font-bold text-lg">+</span>
-              </div>
-            </div>
+            <span className="text-2xl font-bold text-primary-600 transform group-hover:rotate-180 transition-transform duration-500">+</span>
 
             {/* Style image */}
-            <div className="relative w-24 h-24 rounded-2xl overflow-hidden border-2 border-neutral-200 shadow-md transform hover:scale-105 transition-transform duration-300">
+            <div className="relative w-20 h-20 rounded-xl overflow-hidden border-2 border-neutral-200 shadow-md transform hover:scale-105 transition-transform duration-300">
               {hasImages ? (
                 <Image src="/media/hairchange2.webp" alt="Style" fill className="object-cover" />
               ) : (
                 <div className="absolute inset-0 bg-gradient-to-br from-primary-100 to-accent-100 flex items-center justify-center">
-                  <span className="text-3xl">{getPlaceholderEmoji('style')}</span>
+                  <span className="text-2xl">{getPlaceholderEmoji('style')}</span>
                 </div>
               )}
               <div className="absolute bottom-1 left-1 right-1 text-center">
-                <span className="text-[9px] font-semibold bg-white/90 px-1.5 py-0.5 rounded">Style</span>
+                <span className="text-[8px] font-semibold bg-white/90 px-1.5 py-0.5 rounded">Style</span>
               </div>
             </div>
 
             {/* Equals symbol */}
-            <div className="relative">
-              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-accent-500 to-accent-600 flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform duration-500">
-                <span className="text-white font-bold text-lg">=</span>
-              </div>
-            </div>
+            <span className="text-2xl font-bold text-accent-600 transform group-hover:scale-110 transition-transform duration-500">=</span>
 
             {/* After image */}
-            <div className="relative w-24 h-24 rounded-2xl overflow-hidden border-2 border-accent-300 shadow-lg transform hover:scale-105 transition-transform duration-300">
+            <div className="relative w-20 h-20 rounded-xl overflow-hidden border-2 border-accent-300 shadow-lg transform hover:scale-105 transition-transform duration-300">
               {hasImages ? (
                 <Image src="/media/hairchange3.webp" alt="Result" fill className="object-cover" />
               ) : (
                 <div className="absolute inset-0 bg-gradient-to-br from-accent-100 via-primary-100 to-accent-200 flex items-center justify-center">
-                  <span className="text-3xl">{getPlaceholderEmoji('result')}</span>
+                  <span className="text-2xl">{getPlaceholderEmoji('result')}</span>
                 </div>
               )}
               <div className="absolute bottom-1 left-1 right-1 text-center">
-                <span className="text-[9px] font-semibold bg-white/90 px-1.5 py-0.5 rounded">Result</span>
+                <span className="text-[8px] font-semibold bg-white/90 px-1.5 py-0.5 rounded">Result</span>
               </div>
             </div>
           </div>
         </div>
 
         {/* Title and description */}
-        <div className="mb-6 text-center">
-          <h3 className="text-xl font-bold text-neutral-900 mb-2 leading-tight">
+        <div className="mb-5 text-center">
+          <h3 className="text-lg font-bold text-neutral-900 mb-1.5 leading-tight">
             {template.name}
           </h3>
-          <p className="text-sm text-neutral-600 leading-relaxed line-clamp-2">
+          <p className="text-xs text-neutral-600 leading-relaxed line-clamp-2">
             {template.description}
           </p>
         </div>
 
         {/* Action buttons */}
-        <div className="flex gap-3">
+        <div className="flex gap-2">
           <Button
             variant="outline"
-            size="lg"
+            size="sm"
             onClick={onToggle}
             className="flex-1 border-2 border-neutral-200 hover:border-neutral-300 hover:bg-neutral-50"
           >
-            <span className="flex items-center gap-2">
+            <span className="flex items-center gap-1.5 text-xs">
               Details
-              <ChevronDownIcon className="w-4 h-4" />
+              <ChevronDownIcon className="w-3.5 h-3.5" />
             </span>
           </Button>
           <Button
             variant="primary"
-            size="lg"
+            size="sm"
             onClick={onUse}
             loading={isUsing}
-            className="flex-1 bg-gradient-to-r from-primary-500 to-accent-500 hover:from-primary-600 hover:to-accent-600 shadow-lg hover:shadow-xl"
+            className="flex-1 bg-gradient-to-r from-primary-500 to-accent-500 hover:from-primary-600 hover:to-accent-600 shadow-lg hover:shadow-xl text-xs"
           >
             Use
           </Button>

@@ -258,7 +258,12 @@
       "followers": "{count} followers",
       "posts": "{count} posts",
       "lastSync": "Last sync {time}",
-      "empty": "No Instagram accounts connected yet. Link an account to start routing automations."
+      "empty": "No Instagram accounts connected yet. Link an account to start routing automations.",
+      "roles": {
+        "owner": "Workspace owner",
+        "manager": "Account manager",
+        "creator": "Content creator"
+      }
     },
     "conversationsPanel": {
       "badge": "Inbox activity",
