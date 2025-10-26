@@ -3,6 +3,7 @@ import {
   hairRestorationTemplate,
   aestheticAITemplate,
   nailTransformationTemplate,
+  carColorChangerTemplate,
 } from './templates';
 
 /**
@@ -24,6 +25,7 @@ class AutomationRegistryImpl implements TemplateRegistry {
     this.registerTemplate(hairRestorationTemplate);
     this.registerTemplate(aestheticAITemplate);
     this.registerTemplate(nailTransformationTemplate);
+    this.registerTemplate(carColorChangerTemplate);
   }
 
   /**

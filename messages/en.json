@@ -25,7 +25,15 @@
     "facebook": "Facebook",
     "instagram": "Instagram",
     "welcomeBack": "Welcome Back",
-    "welcomeMessage": "Sign in to your Instagram automation dashboard"
+    "welcomeMessage": "Sign in to your Instagram automation dashboard",
+    "welcomeTitle": "Welcome to LookLab",
+    "welcomeSubtitle": "Sign in to automate your Instagram",
+    "continueWithGoogle": "Continue with Google",
+    "continueWithInstagram": "Continue with Instagram",
+    "agreementText": "By signing in, you agree to our",
+    "and": "and",
+    "termsOfService": "Terms of Service",
+    "privacyPolicy": "Privacy Policy"
   },
   "dashboard": {
     "hero": {

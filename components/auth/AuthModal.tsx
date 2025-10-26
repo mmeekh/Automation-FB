@@ -1,43 +1,52 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { useStore } from '@/lib/store';
 import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
 
 export function AuthModal() {
+  const t = useTranslations('auth');
   const isAuthModalOpen = useStore((state) => state.isAuthModalOpen);
   const closeAuthModal = useStore((state) => state.closeAuthModal);
   const setUser = useStore((state) => state.setUser);
 
-  const [isSignUp, setIsSignUp] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
 
   if (!isAuthModalOpen) return null;
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleGoogleLogin = () => {
     setLoading(true);
 
-    // Simulate API call
+    // Mock Google OAuth login (replace with real OAuth when backend is ready)
     setTimeout(() => {
       setUser({
-        id: '1',
-        name: isSignUp ? name : 'Demo User',
-        email: email,
-        avatar: '👤'
+        id: 'google_mock_user',
+        name: 'Demo User (Google)',
+        email: 'demo@gmail.com',
+        avatar: '🔵'
       });
       setLoading(false);
       closeAuthModal();
-      // Reset form
-      setEmail('');
-      setPassword('');
-      setName('');
-    }, 1000);
+    }, 800);
+  };
+
+  const handleInstagramLogin = () => {
+    setLoading(true);
+
+    // Mock Instagram OAuth login (replace with real OAuth when backend is ready)
+    setTimeout(() => {
+      setUser({
+        id: 'instagram_mock_user',
+        name: 'Demo User (Instagram)',
+        email: 'demo@instagram.com',
+        avatar: '📷'
+      });
+      setLoading(false);
+      closeAuthModal();
+    }, 800);
   };
 
   const handleBackdropClick = (e: React.MouseEvent) => {
@@ -56,87 +65,72 @@ export function AuthModal() {
         {/* Close Button */}
         <button
           onClick={closeAuthModal}
-          className="absolute right-4 top-4 p-2 rounded-full hover:bg-neutral-100 transition-colors"
+          className="absolute right-4 top-4 p-2 rounded-full hover:bg-neutral-100 transition-colors z-10"
+          aria-label="Close"
         >
           <XMarkIcon className="w-5 h-5 text-neutral-500" />
         </button>
 
         {/* Content */}
-        <div className="p-8">
+        <div className="p-8 pt-12">
+          {/* Header */}
           <div className="text-center mb-8">
             <div className="inline-flex w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-500 to-accent-500 items-center justify-center shadow-lg mb-4">
               <span className="text-3xl">🔬</span>
             </div>
             <h2 className="text-2xl font-bold text-neutral-900 mb-2">
-              {isSignUp ? 'Create Account' : 'Welcome Back'}
+              {t('welcomeTitle')}
             </h2>
             <p className="text-sm text-neutral-600">
-              {isSignUp
-                ? 'Start automating your Instagram DMs'
-                : 'Sign in to continue to LookLab'}
+              {t('welcomeSubtitle')}
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {isSignUp && (
-              <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-2">
-                  Name
-                </label>
-                <Input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="John Doe"
-                  required
-                />
-              </div>
-            )}
-
-            <div>
-              <label className="block text-sm font-medium text-neutral-700 mb-2">
-                Email
-              </label>
-              <Input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="john@example.com"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-neutral-700 mb-2">
-                Password
-              </label>
-              <Input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                required
-              />
-            </div>
-
+          {/* OAuth Buttons */}
+          <div className="space-y-3">
+            {/* Google OAuth */}
             <Button
-              type="submit"
-              className="w-full bg-gradient-to-r from-primary-500 to-accent-500 text-white hover:shadow-lg"
+              onClick={handleGoogleLogin}
               disabled={loading}
+              className="w-full bg-white hover:bg-neutral-50 text-neutral-700 border-2 border-neutral-200 hover:border-neutral-300 shadow-md hover:shadow-lg transition-all"
+              size="lg"
             >
-              {loading ? 'Loading...' : isSignUp ? 'Sign Up' : 'Sign In'}
+              <span className="text-xl mr-3">🔵</span>
+              {t('continueWithGoogle')}
             </Button>
-          </form>
 
-          <div className="mt-6 text-center">
-            <button
-              onClick={() => setIsSignUp(!isSignUp)}
-              className="text-sm text-primary-600 hover:text-primary-700 font-medium"
+            {/* Instagram OAuth */}
+            <Button
+              onClick={handleInstagramLogin}
+              disabled={loading}
+              className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white shadow-md hover:shadow-lg transition-all"
+              size="lg"
             >
-              {isSignUp
-                ? 'Already have an account? Sign in'
-                : "Don't have an account? Sign up"}
-            </button>
+              <span className="text-xl mr-3">📷</span>
+              {t('continueWithInstagram')}
+            </Button>
+          </div>
+
+          {/* Legal Agreement Text */}
+          <div className="mt-6 text-center text-xs text-neutral-500">
+            <p>
+              {t('agreementText')}{' '}
+              <Link
+                href="/terms"
+                className="text-primary-600 hover:text-primary-700 font-medium underline"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {t('termsOfService')}
+              </Link>
+              {' '}{t('and')}{' '}
+              <Link
+                href="/privacy"
+                className="text-primary-600 hover:text-primary-700 font-medium underline"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {t('privacyPolicy')}
+              </Link>
+            </p>
           </div>
         </div>
       </div>

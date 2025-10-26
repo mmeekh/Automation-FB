@@ -1,6 +1,7 @@
 // Export all components for easy imports
 export * from './layout';
 export * from './dashboard';
+export * from './automations';
 export { TwoFactorInput } from './TwoFactorInput';
 export { Footer } from './Footer';
 export { AuthModal } from './auth/AuthModal';

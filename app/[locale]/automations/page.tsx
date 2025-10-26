@@ -1,10 +1,9 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { BoltIcon, ArrowRightIcon } from '@heroicons/react/24/solid';
-import { Header, Button, AITemplateCard } from '@/components';
+import { ArrowRightIcon } from '@heroicons/react/24/solid';
+import { Header, Button, AutomationCard } from '@/components';
 import { AutomationRegistry } from '@/lib/automations';
-import { getTemplateThumbnail } from '@/components/templates/TemplateThumbnails';
 import { useStore } from '@/lib/store';
 
 export default function AutomationsPage() {
@@ -42,16 +41,16 @@ export default function AutomationsPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-8">
             {templates.map((template) => (
-              <AITemplateCard
+              <AutomationCard
                 key={template.id}
-                id={template.id}
-                name={template.name}
-                description={template.description}
-                icon={<BoltIcon className="w-7 h-7" />}
-                gradient={template.gradient}
-                accentColor={template.accentColor}
-                category={template.category}
-                thumbnail={getTemplateThumbnail(template.id)}
+                template={template}
+                onUse={() => {
+                  if (!user) {
+                    openAuthModal();
+                  } else {
+                    console.log('Using automation:', template.name);
+                  }
+                }}
               />
             ))}
           </div>

@@ -11,6 +11,10 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Locale layout handles html/body tags
-  return children;
+  // Locale layout overrides these, but Next.js requires them at build-time
+  return (
+    <html suppressHydrationWarning>
+      <body>{children}</body>
+    </html>
+  );
 }

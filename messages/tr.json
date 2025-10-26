@@ -25,7 +25,15 @@
     "facebook": "Facebook",
     "instagram": "Instagram",
     "welcomeBack": "Tekrar Hoş Geldiniz",
-    "welcomeMessage": "Instagram otomasyon panelinize giriş yapın"
+    "welcomeMessage": "Instagram otomasyon panelinize giriş yapın",
+    "welcomeTitle": "LookLab'a Hoş Geldiniz",
+    "welcomeSubtitle": "Instagram otomasyonunuzu başlatın",
+    "continueWithGoogle": "Google ile Devam Et",
+    "continueWithInstagram": "Instagram ile Devam Et",
+    "agreementText": "Giriş yaparak",
+    "and": "ve",
+    "termsOfService": "Hizmet Şartları",
+    "privacyPolicy": "Gizlilik Politikası"
   },
   "dashboard": {
     "hero": {
