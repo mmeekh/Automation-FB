@@ -1,12 +1,9 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
-
 export const metadata: Metadata = {
-  title: "AutoFlow - Instagram Automation Platform",
-  description: "Automate your Instagram workflows effortlessly with ready-made templates",
+  title: "LookLab - Instagram Transformation Automation",
+  description: "Transform your Instagram engagement with AI-powered beauty and style automations",
 };
 
 export default function RootLayout({
@@ -14,5 +11,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  // Locale layout handles html/body tags
   return children;
 }

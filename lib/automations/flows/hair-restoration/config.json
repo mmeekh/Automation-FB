@@ -1,0 +1,30 @@
+{
+  "id": "instagram-bald-to-haired",
+  "name": "Hair Restoration Automation",
+  "version": "2.1.0",
+  "description": "Automated hair transformation flow for Instagram DMs",
+  "triggers": {
+    "keywords": ["hair", "bald", "transformation", "saç", "kellik"],
+    "autoStart": true
+  },
+  "ai": {
+    "model": "hair-transformation-v2",
+    "endpoint": "${AI_MODEL_ENDPOINT}",
+    "timeout": 30000,
+    "quality": "high"
+  },
+  "integration": {
+    "appointmentBookingUrl": "${APPOINTMENT_BOOKING_URL}",
+    "instagramUsername": "${INSTAGRAM_USERNAME}",
+    "webhookUrl": "${WEBHOOK_URL}"
+  },
+  "rateLimit": {
+    "maxPerHour": 50,
+    "maxPerDay": 200
+  },
+  "monitoring": {
+    "enabled": true,
+    "logLevel": "info",
+    "analytics": true
+  }
+}

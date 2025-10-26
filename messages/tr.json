@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "AutoFlow",
+    "appName": "LookLab",
     "welcome": "Hoş Geldiniz",
     "loading": "Yükleniyor...",
     "error": "Bir şeyler yanlış gitti",
@@ -10,8 +10,7 @@
     "dashboard": "Panel",
     "automations": "Otomasyonlar",
     "analytics": "Analitik",
-    "templates": "Şablonlar",
-    "settings": "Ayarlar"
+    "contact": "Kisiler"
   },
   "auth": {
     "login": "Giriş Yap",
@@ -70,69 +69,10 @@
     }
   },
   "automationsPage": {
-    "hero": {
-      "badge": "Otomasyon stüdyosu",
-      "title": "Instagram yolculuklarınızı güvenle yönetin.",
-      "subtitle": "Yapay zeka destekli otomasyonları başlatın, insan devralmalarını yönetin ve performansı tek ekrandan takip edin.",
-      "primaryCta": "Otomasyon başlat",
-      "secondaryCta": "Canlı akışları izle",
-      "metrics": {
-        "throughput": "Aylık hacim",
-        "throughputHelp": "Otomasyonlarınızın yönettiği benzersiz konuşmalar",
-        "satisfaction": "Yapay zeka memnuniyeti",
-        "satisfactionHelp": "İnsan denetimlerinden alınan ortalama puan",
-        "guardrails": "Etkin korumalar",
-        "guardrailsHelp": "Marka güvenliğini koruyan otomasyon kuralları"
-      }
-    },
-    "assistant": {
-      "title": "Otomasyon kontrol odası",
-      "subtitle": "AutoFlow asistanından canlı yönlendirme akışı.",
-      "badge": "Canlı akış",
-      "cta": "Tüm aktiviteleri gör",
-      "activity": {
-        "warning": "Manuel inceleme",
-        "success": "Şablon yayınlandı",
-        "ai": "Yapay zeka asistanı",
-        "publish": "İçerik yayını"
-      }
-    },
-    "summary": {
-      "active": { "label": "Aktif otomasyonlar" },
-      "paused": { "label": "Duraklatılan otomasyonlar" },
-      "responses": { "label": "Sunulan yapay zeka yanıtları" },
-      "avgResponseTime": { "label": "Ortalama yanıt süresi" },
-      "vsLastWeek": "geçen haftaya göre"
-    },
-    "list": {
-      "running": "Çalışıyor",
-      "paused": "Duraklatıldı",
-      "optimize": "Yapay zeka ile optimize et",
-      "pause": "Duraklat",
-      "resume": "Devam et",
-      "metrics": {
-        "conversion": "Dönüşüm oranı",
-        "steps": "Adım",
-        "sent": "Gönderilen mesaj",
-        "completed": "Tamamlanan yolculuk"
-      }
-    },
-    "activity": {
-      "title": "Canlı otomasyon aktiviteleri",
-      "subtitle": "Koruma olayları, içerik yayınları ve eskalasyonlar."
-    },
-    "recommendations": {
-      "badge": "Yapay zeka içgörüleri",
-      "title": "Önerilen playbook'lar",
-      "subtitle": "Çalışma alanınız için seçilmiş yüksek etkili akışlar.",
-      "complexity": {
-        "low": "Düşük emek",
-        "medium": "Orta emek",
-        "high": "Yüksek emek"
-      },
-      "impact": "%{value} beklenen artış",
-      "cta": "Playbook'u incele"
-    }
+    "badge": "AI destekli",
+    "title": "Hazir sosyal medya otomasyonlari",
+    "subtitle": "Birden fazla Instagram hesabinda dakikalar icinde calisacak hazir yolculuklarla etkilesimi artirin.",
+    "browse": "Tum otomasyonlari gor"
   },
   "analyticsPage": {
     "hero": {
@@ -187,44 +127,6 @@
       }
     }
   },
-  "templatesPage": {
-    "hero": {
-      "badge": "Playbook kitaplığı",
-      "title": "Uzmanların hazırladığı otomasyonları dakikalar içinde çalıştırın.",
-      "subtitle": "Sektör liderlerinin hazırladığı yolculuklar marka tonunuza göre konuşmaya hazır.",
-      "primaryCta": "Şablonlara göz at",
-      "secondaryCta": "Özel kurulum iste",
-      "metrics": {
-        "installs": "Toplam kurulum",
-        "installsHelp": "AutoFlow playbook'larını kullanan ekipler",
-        "curators": "Uzman editör",
-        "curatorsHelp": "Her şablonu sahada test eden stratejistler",
-        "aiLabel": "Yapay zeka destekli tasarım",
-        "aiTitle": "Her şablon insan + yapay zeka iş birliğiyle oluşturuluyor",
-        "aiSubtitle": "Şeffaf korumalarla kontrol sizde kalır."
-      }
-    },
-    "highlights": {
-      "title": "Öne çıkan koleksiyonlar",
-      "subtitle": "En sık karşılaşılan hedefler için yüksek performanslı paketler.",
-      "badge": "Editör seçimi",
-      "metrics": {
-        "installs": "{value} kurulum"
-      },
-      "cta": "Paketi önizle"
-    },
-    "categories": {
-      "title": "{category}",
-      "goesLive": "{duration} içinde yayında",
-      "complexity": {
-        "low": "Düşük emek",
-        "medium": "Orta emek",
-        "high": "Yüksek emek"
-      },
-      "preview": "Akışı önizle",
-      "deploy": "Hemen uygula"
-    }
-  },
   "settingsPage": {
     "account": {
       "title": "Çalışma alanı ayarları",
@@ -272,6 +174,228 @@
       },
       "permissions": "Rolleri yönet",
       "assign": "Playbook ata"
+    }
+  },
+  "legal": {
+    "title": "Yasal Merkez",
+    "intro": "Bu gecici belgeler LookLab kullanima acilinca verilerin nasil korunacagini ve kurallarin nasil uygulanacagini aciklar.",
+    "updated": "Son guncelleme: {date}",
+    "viewDocument": "Belgeyi goruntule",
+    "back": "Yasal merkeze don",
+    "privacy": {
+      "title": "Gizlilik Politikasi",
+      "summary": "LookLab verileri nasil toplayacak, kullanacak ve koruyacak ogrenin.",
+      "lastUpdated": "24 Ekim 2025",
+      "intro": "Bu taslak Gizlilik Politikasi, LookLab musterileri icin uygulamaya alinacak guvenlik adimlarini aciklar. Canli yayindan once son hukuki metin ile degistirin.",
+      "sections": {
+        "introduction": {
+          "heading": "1. Genel bakis",
+          "body": "LookLab sosyal platformlar icin otomasyon araclari saglayacak. Simdiki on izlemede gercek kullanici verisi islenmiyor; nihai politika hangi verilerin toplanacagini ve yasal dayanaklari netlestirecek."
+        },
+        "dataCollection": {
+          "heading": "2. Toplanacak veriler",
+          "body": "Workspace sahiplerinden hesap tanimlayicilari, yuklenen icerikler, performans metrikleri ve sinirli teknik kayitlar alinmasini bekliyoruz. Nihai politika her veri kategorisini ve saklama surelerini listeleyecek."
+        },
+        "dataUse": {
+          "heading": "3. Verilerin kullanimi",
+          "body": "Toplanan bilgiler otomasyon ozelliklerini saglamak, sablonlari kisilestirmek, performansi izlemek ve guvenligi korumak icin kullanilacak. Veriler hicbir sekilde ucuncu taraflara satilmayacak; paylasimlar son politikada ayrintilandirilacak."
+        },
+        "rights": {
+          "heading": "4. Haklariniz",
+          "body": "Musteriler GDPR ve benzeri duzenlemelere uygun olarak verilere erisim, duzeltme, cikarma veya silme isteyebilecek. Uretim surumunde bu talepler icin uygulama icinde araclar ve iletisim kanallari sunulacak."
+        },
+        "contact": {
+          "heading": "5. Iletisim",
+          "body": "Gizlilik talepleri icin privacy@looklab.app adresine e-posta gonderin. Iki is gunu icinde alindigini dogruluyoruz ve otuz gun icinde yanitliyoruz."
+        }
+      }
+    },
+    "terms": {
+      "title": "Kullanim Sartlari",
+      "summary": "Ozel beta ve sonrasi icin LookLab kullanim kurallarini anlayin.",
+      "lastUpdated": "24 Ekim 2025",
+      "intro": "Bu Kullanim Sartlari taslaktir ve hukuki incelemeden sonra guncellenecektir. Canli kullanicilar davet edilmeden once metni degistirin.",
+      "sections": {
+        "introduction": {
+          "heading": "1. Sozlesme",
+          "body": "LookLab erisimi saglayarak yayinlanacak nihai sartlara uyacaginizi kabul edersiniz. Bu taslak workspace sahipleri ve davet edilen ekip uyeleri icin planlanan yukumluluklari gosterir."
+        },
+        "accounts": {
+          "heading": "2. Hesaplar ve erisim",
+          "body": "Workspace sahipleri dogru hesap bilgilerini korumak ve giris bilgilerini guvende tutmakla sorumludur. Davet ettiginiz kisilerin bagli sosyal profilleri yonetme yetkisine sahip oldugundan emin olun."
+        },
+        "acceptableUse": {
+          "heading": "3. Kabul edilebilir kullanim",
+          "body": "LookLab spam, telif hakki ihlali, yasa disi tanitimlar veya Meta, TikTok gibi platform politikalariyla celisen aktiviteler icin kullanilamaz. Kural ihlali suphesinde erisimi askiya alabiliriz."
+        },
+        "liability": {
+          "heading": "4. Hizmet durumu ve sorumluluk",
+          "body": "LookLab beta surecinde oldugu gibi saglanir. Otomasyonun yanlis yapilandirilmasindan dogan dolayli zararlar veya gelir kaybi icin sorumluluk kabul etmiyoruz. Servis seviyeleri uretim sozlesmesinde tanimlanacak."
+        },
+        "changes": {
+          "heading": "5. Degisiklikler",
+          "body": "Lansmandan once bu sartlari guncelleyebiliriz. Onemli degisiklikleri e-posta veya uygulama ici bildirimle paylasacagiz; guncel sartlardan sonra LookLab kullanmaya devam etmek kabul anlamina gelir."
+        }
+      }
+    }
+  },
+  "contactPage": {
+    "title": "Iletisim ve gelen kutusu ozeti",
+    "subtitle": "LookLab ile baglanan Instagram isyerlerini yonetin ve otomasyonlardan once kredi havuzlarini planlayin.",
+    "description": "Bagli Instagram Isletme Hesaplarini ve otomasyon akislariyla tetiklenen sohbetleri takipte tutun.",
+    "accountsPanel": {
+      "title": "Instagram hesaplari",
+      "connected": "Bagli profiller",
+      "cta": "Instagram hesabi ekle",
+      "followers": "{count} takipci",
+      "posts": "{count} gonderi",
+      "lastSync": "Son senkron {time}",
+      "empty": "Henuz hic Instagram hesabi baglanmadi. Otomasyonlari yonlendirmek icin bir hesap ekleyin."
+    },
+    "conversationsPanel": {
+      "badge": "Gelen kutusu aktivitesi",
+      "title": "Canli konusmalar",
+      "subtitle": "{account} icin aktif sohbetler",
+      "subtitleFallback": "Aktif sohbetleri gormek icin bir Instagram hesabi secin.",
+      "cta": "Gelen kutusunu ac",
+      "empty": "Bu hesap icin yeni konusma yok.",
+      "unread": "Yeni",
+      "sources": {
+        "automation": "Otomasyon",
+        "manual": "DM takibi"
+      },
+      "tags": {
+        "vip": "VIP",
+        "new": "Yeni potansiyel",
+        "returning": "Geri donen musteri",
+        "followUp": "Takip",
+        "highIntent": "Yuksek niyet",
+        "priority": "Oncelik"
+      },
+      "items": {
+        "elif": {
+          "name": "Elif Kaya",
+          "handle": "@hairbyelif",
+          "snippet": "Balyaj on izlemesi icin selfie paylasti ve daha sicak tonlar istedi.",
+          "stage": "Sac Restorasyon Akisi - Adim 3",
+          "lastActive": "2 dakika once"
+        },
+        "melis": {
+          "name": "Melis Glow",
+          "handle": "@melisglow",
+          "snippet": "VIP slotlarinin zamani icin renk paletinden sonra bilgi istedi.",
+          "stage": "VIP DM Destegi - Takip",
+          "lastActive": "8 dakika once"
+        },
+        "ugur": {
+          "name": "Ugur Aksoy",
+          "handle": "@ugurstyle",
+          "snippet": "Otomasyon ton onerileri gonderdi; son onayi bekliyor.",
+          "stage": "Sac Restorasyon Akisi - Adim 2",
+          "lastActive": "15 dakika once"
+        },
+        "aylin": {
+          "name": "Aylin Atelier",
+          "handle": "@aylinatelier",
+          "snippet": "Fiyat bilgisi paylasmak icin manuel yanit hazirlaniyor.",
+          "stage": "Gelen kutusu takip sirasi",
+          "lastActive": "22 dakika once"
+        },
+        "karen": {
+          "name": "Karen Beauty",
+          "handle": "@karenbeauty",
+          "snippet": "Balyaj paketi indirimi icin yeniden dondu ve onayladi.",
+          "stage": "Sac Restorasyon Akisi - Tamamlandi",
+          "lastActive": "1 saat once"
+        },
+        "burak": {
+          "name": "Burak Cuts",
+          "handle": "@burakcuts",
+          "snippet": "Sakal sekillendirme otomasyonuna referans foto yukledi.",
+          "stage": "Sakal Tasarim DM - Adim 1",
+          "lastActive": "3 dakika once"
+        },
+        "selin": {
+          "name": "Selin Color",
+          "handle": "@selincolor",
+          "snippet": "Manuel duzenlemeden sonra ton onayi bekleniyor.",
+          "stage": "Stilist Devri - Yaniti bekliyor",
+          "lastActive": "11 dakika once"
+        },
+        "noah": {
+          "name": "Noah Looks",
+          "handle": "@noahlooks",
+          "snippet": "Otomasyon karsilastirma tablosu gonderdi; kullanici VIP olarak isaretlendi.",
+          "stage": "Kreatif Lookbook Akisi - Adim 2",
+          "lastActive": "18 dakika once"
+        },
+        "esra": {
+          "name": "Esra Lush",
+          "handle": "@esralush",
+          "snippet": "Ekip premium paket fiyatlari icin yazi hazirliyor.",
+          "stage": "Gelen kutusu takip sirasi",
+          "lastActive": "26 dakika once"
+        },
+        "lucy": {
+          "name": "Lucy Beauty Space",
+          "handle": "@lucybeautyspace",
+          "snippet": "Geri donen musteri yenileme zamanini soruyor.",
+          "stage": "Kreatif Lookbook Akisi - Tamamlandi",
+          "lastActive": "2 saat once"
+        },
+        "demet": {
+          "name": "Demet Glam",
+          "handle": "@demetglam",
+          "snippet": "Guncel glam gorunumu istedi ve referans panosu paylasti.",
+          "stage": "AI Glam Akisi - Adim 4",
+          "lastActive": "6 dakika once"
+        },
+        "yasemin": {
+          "name": "Yasemin Hair",
+          "handle": "@yaseminhair",
+          "snippet": "Otomasyon devam etmeden once randevu saatinin teyidine ihtiyaci var.",
+          "stage": "Stilist Devri - Yaniti bekliyor",
+          "lastActive": "14 dakika once"
+        },
+        "baris": {
+          "name": "Baris Barber",
+          "handle": "@barisbarber",
+          "snippet": "Otomasyon hatirlatma siraya aldi ve yuksek niyet olarak isaretledi.",
+          "stage": "Sakal Tasarim DM - Adim 2",
+          "lastActive": "4 dakika once"
+        },
+        "sude": {
+          "name": "Sude Makeup",
+          "handle": "@sudemakeup",
+          "snippet": "Makyaj seti onerileri icin manuel DM planlandi.",
+          "stage": "Gelen kutusu takip sirasi",
+          "lastActive": "19 dakika once"
+        },
+        "emre": {
+          "name": "Emre Creative",
+          "handle": "@emrecreative",
+          "snippet": "Iki ay sonra geri dondu ve transformasyon akisina yeniden baslamak istiyor.",
+          "stage": "AI Glam Akisi - Tamamlandi",
+          "lastActive": "3 saat once"
+        }
+      }
+    },
+    "accounts": {
+      "primaryWorkspace": "Birincil workspace",
+      "secondaryWorkspace": "Ikinci workspace",
+      "roles": {
+        "owner": "Sahip",
+        "manager": "Yonetici",
+        "creator": "Olusturucu"
+      },
+      "statuses": {
+        "active": "Aktif",
+        "paused": "Beklemede",
+        "limited": "Sinirli"
+      },
+      "creditUsage": "{used}/{total} kredi kullanildi",
+      "lastSync": "Son senkron {time}",
+      "multiAutomation": "Coklu hesap otomasyonuna hazir"
     }
   }
 }

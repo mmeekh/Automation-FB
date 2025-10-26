@@ -31,7 +31,7 @@ export const CardHeader = ({ className, ...props }: HTMLAttributes<HTMLDivElemen
 );
 
 export const CardTitle = ({ className, ...props }: HTMLAttributes<HTMLHeadingElement>) => (
-  <h3 className={cn('text-lg sm:text-xl font-bold gradient-text', className)} {...props} />
+  <h3 className={cn('text-lg sm:text-xl font-bold gradient-text descender-safe', className)} {...props} />
 );
 
 export const CardBadge = ({ className, ...props }: HTMLAttributes<HTMLSpanElement>) => (
@@ -44,4 +44,8 @@ export const CardBadge = ({ className, ...props }: HTMLAttributes<HTMLSpanElemen
     )}
     {...props}
   />
+);
+
+export const CardContent = ({ className, ...props }: HTMLAttributes<HTMLDivElement>) => (
+  <div className={cn('', className)} {...props} />
 );

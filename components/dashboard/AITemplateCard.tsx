@@ -2,7 +2,8 @@
 
 import { ReactNode, useState } from 'react';
 import { Button } from '@/components';
-import { CheckIcon, CloudArrowDownIcon, EyeIcon, SparklesIcon } from '@heroicons/react/24/outline';
+import { CardSpotlight } from '@/components/ui/CardSpotlight';
+import { SparklesIcon } from '@heroicons/react/24/outline';
 
 interface AITemplateCardProps {
   id: string;
@@ -11,7 +12,6 @@ interface AITemplateCardProps {
   icon: ReactNode;
   gradient: string;
   accentColor: string;
-  installs: number;
   thumbnail?: ReactNode;
   category?: string;
 }
@@ -22,56 +22,39 @@ export function AITemplateCard({
   icon,
   gradient,
   accentColor,
-  installs,
   thumbnail,
   category = 'AI Powered',
 }: AITemplateCardProps) {
-  const [isInstalling, setIsInstalling] = useState(false);
-  const [isInstalled, setIsInstalled] = useState(false);
+  const [isUsing, setIsUsing] = useState(false);
 
-  const handleInstall = async () => {
-    setIsInstalling(true);
-    // TODO: Backend API call
+  const handleUse = async () => {
+    setIsUsing(true);
     await new Promise((resolve) => setTimeout(resolve, 1500));
-    setIsInstalled(true);
-    setIsInstalling(false);
+    setIsUsing(false);
+    console.log('Using automation:', name);
   };
-
-  const handlePreview = () => {
-    // TODO: Open preview modal
-    console.log('Preview:', name);
-  };
-
-  const popularityAccent = accentColor
-    .replace('text', 'bg')
-    .replace('600', '100')
-    .replace('500', '100');
 
   return (
-    <div className="group relative glass rounded-2xl overflow-hidden shadow-neu-md hover:shadow-neu-lg transition-all duration-300 hover-lift">
-      <div className={`absolute inset-0 ${gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-300 pointer-events-none`} />
+    <CardSpotlight
+      radius={400}
+      color={gradient.includes('amber') ? '#f59e0b' : gradient.includes('teal') ? '#14b8a6' : '#ec4899'}
+      className="group"
+    >
+      <div className="relative glass rounded-[22px] shadow-neu-md hover:shadow-neu-lg transition-all duration-300 hover-lift overflow-hidden">
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-300 pointer-events-none" />
 
-      <div className="relative p-6">
-        <div className="flex items-start justify-between mb-5">
-          <div className={`w-14 h-14 rounded-2xl ${gradient} flex items-center justify-center shadow-lg text-white`}>
-            {icon}
-          </div>
-
-          <div className={`px-3 py-1 rounded-full text-xs font-semibold ${accentColor} flex items-center gap-1`}>
+        <div className="relative p-4">
+        <div className="flex items-start justify-end mb-5">
+          <div className="px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
             <SparklesIcon className="w-3 h-3" />
             {category}
           </div>
         </div>
 
         <div className="relative mb-5">
-          <div className="rounded-xl border border-white/60 bg-white/95 shadow-neu-sm overflow-hidden">
-            {thumbnail ?? (
-              <div className={`relative flex h-36 items-center justify-center ${gradient} bg-opacity-10`}>
-                <div className="text-neutral-600/70 text-sm">Automation preview coming soon</div>
-              </div>
-            )}
+          <div className="relative z-10 rounded-xl border border-white/60 bg-white shadow-neu-sm overflow-hidden">
+            {thumbnail}
           </div>
-          <div className={`absolute inset-0 rounded-xl ${gradient} opacity-0 group-hover:opacity-20 transition-opacity duration-300 pointer-events-none`} />
         </div>
 
         <div className="mb-6 space-y-2">
@@ -83,50 +66,17 @@ export function AITemplateCard({
           </p>
         </div>
 
-        <div className="flex items-center gap-4 mb-5 text-xs text-neutral-500">
-          <div className="flex items-center gap-1">
-            <CloudArrowDownIcon className="w-4 h-4" />
-            <span className="font-medium tracking-wide">{installs.toLocaleString()} installs</span>
-          </div>
-          <div className={`px-2 py-1 rounded-full ${popularityAccent} ${accentColor} font-semibold`}>
-            Trending
-          </div>
-        </div>
-
-        <div className="flex gap-2">
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={handlePreview}
-            className="flex-1"
-          >
-            <EyeIcon className="w-4 h-4" />
-            Preview
-          </Button>
-          <Button
-            variant="primary"
-            size="sm"
-            onClick={handleInstall}
-            loading={isInstalling}
-            disabled={isInstalled}
-            className={`flex-1 ${isInstalled ? 'bg-emerald-500 hover:bg-emerald-600' : ''}`}
-          >
-            {isInstalled ? (
-              <>
-                <CheckIcon className="w-4 h-4" />
-                Installed
-              </>
-            ) : (
-              <>
-                <CloudArrowDownIcon className="w-4 h-4" />
-                Install
-              </>
-            )}
-          </Button>
+        <Button
+          variant="primary"
+          size="lg"
+          onClick={handleUse}
+          loading={isUsing}
+          className="w-full"
+        >
+          Use
+        </Button>
         </div>
       </div>
-
-      <div className={`absolute inset-0 ${gradient} opacity-0 group-hover:opacity-5 blur-2xl transition-opacity duration-500 pointer-events-none`} />
-    </div>
+    </CardSpotlight>
   );
 }

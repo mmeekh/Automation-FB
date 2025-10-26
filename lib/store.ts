@@ -30,6 +30,9 @@ interface AppState {
   setAccounts: (accounts: InstagramAccount[]) => void;
   setWorkflows: (workflows: Workflow[]) => void;
   toggleWorkflow: (id: string) => void;
+  isAuthModalOpen: boolean;
+  openAuthModal: () => void;
+  closeAuthModal: () => void;
 }
 
 export const useStore = create<AppState>((set) => ({
@@ -47,4 +50,7 @@ export const useStore = create<AppState>((set) => ({
           : w
       ),
     })),
+  isAuthModalOpen: false,
+  openAuthModal: () => set({ isAuthModalOpen: true }),
+  closeAuthModal: () => set({ isAuthModalOpen: false }),
 }));

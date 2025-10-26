@@ -12,9 +12,11 @@ import {
   Settings2,
   Share2,
   ShieldCheck,
-  Users
+  Users,
+  Globe
 } from 'lucide-react';
 import { Header, Button, Card, CardBadge, CardHeader, CardTitle, ProgressBar } from '@/components';
+import { LanguageSwitcher } from '@/components/layout/LanguageSwitcher';
 import { cn } from '@/lib/utils';
 
 const workspaceRoles = ['Admin', 'Developer', 'Social Media Manager'];
@@ -124,7 +126,7 @@ export default function SettingsPage() {
           </p>
         </header>
 
-        <section className="grid gap-6 lg:grid-cols-[1.1fr,1fr]">
+        <section className="grid gap-6 lg:grid-cols-[1fr,1fr,1fr]">
           <Card className="border border-white/70 bg-white/95 backdrop-blur">
             <CardHeader className="items-start pb-4">
               <div>
@@ -168,12 +170,34 @@ export default function SettingsPage() {
                 {workspaceRoles.map((role) => (
                   <span
                     key={role}
-                    className="inline-flex items-center gap-2 rounded-full border border-white/80 bg-gradient-to-r from-[#f1efff] to-[#fde7f6] px-4 py-2 text-xs font-semibold text-primary-600 shadow-sm"
+                    className="inline-flex items-center gap-2 rounded-full border border-white/80 
+                    bg-gradient-to-r from-[#f1efff] to-[#fde7f6] 
+                    px-4 py-2 text-xs font-semibold text-primary-600 shadow-sm"
                   >
                     <ShieldCheck className="h-3.5 w-3.5" />
                     {role}
                   </span>
                 ))}
+              </div>
+            </div>
+          </Card>
+
+          <Card className="border border-white/70 bg-white/95 backdrop-blur">
+            <CardHeader className="items-start pb-4">
+              <div>
+                <CardTitle>Language & Region</CardTitle>
+                <p className="text-sm text-neutral-500">
+                  Set your preferred language and regional settings.
+                </p>
+              </div>
+              <Globe className="h-5 w-5 text-primary-500" />
+            </CardHeader>
+
+            <div className="space-y-6 px-6 pb-6">
+              <div className="rounded-2xl border border-neutral-100 bg-white p-5 shadow-sm">
+                <p className="text-xs font-semibold uppercase tracking-wide text-neutral-400 mb-4">Interface Language</p>
+                <LanguageSwitcher />
+                <p className="mt-4 text-xs text-neutral-500">Your preferred language for the app interface.</p>
               </div>
             </div>
           </Card>
@@ -222,7 +246,9 @@ export default function SettingsPage() {
               {integrations.map((integration) => (
                 <div
                   key={integration.name}
-                  className="flex flex-col justify-between rounded-2xl border border-white/80 bg-white/95 p-5 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg"
+                  className="flex flex-col justify-between rounded-2xl border border-white/80 
+                  bg-white/95 p-5 shadow-sm transition-all 
+                  hover:-translate-y-1 hover:shadow-lg"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div>
@@ -364,7 +390,9 @@ export default function SettingsPage() {
                 </Button>
               </div>
 
-              <div className="flex items-center justify-between rounded-2xl border border-dashed border-primary-200/60 bg-primary-50/30 px-4 py-3 text-sm text-neutral-600">
+              <div className="flex items-center justify-between rounded-2xl 
+              border border-dashed border-primary-200/60 bg-primary-50/30 
+              px-4 py-3 text-sm text-neutral-600">
                 <span>Auto-redistribute when an account reaches 0</span>
                 <SettingsToggle label="Auto-redistribute credits" />
               </div>
@@ -443,7 +471,8 @@ export default function SettingsPage() {
                     >
                       <div className="flex items-center justify-between text-xs text-neutral-400">
                         <span>{activity.time}</span>
-                        <span className="inline-flex items-center gap-1 rounded-full bg-white/70 px-2 py-1 text-[11px] font-semibold text-primary-600">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-white/70 
+                          px-2 py-1 text-[11px] font-semibold text-primary-600">
                           <KeyRound className="h-3 w-3" />
                           Secure
                         </span>
@@ -458,7 +487,10 @@ export default function SettingsPage() {
           </Card>
         </section>
 
-        <footer className="flex flex-col items-start gap-3 rounded-3xl border border-dashed border-primary-200/60 bg-primary-50/40 px-6 py-5 text-sm text-neutral-600 sm:flex-row sm:items-center sm:justify-between">
+        <footer className="flex flex-col items-start gap-3 rounded-3xl 
+          border border-dashed border-primary-200/60 bg-primary-50/40 
+          px-6 py-5 text-sm text-neutral-600 
+          sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
             <BellRing className="h-5 w-5 text-primary-500" />
             AutoFlow monitors your automations 24/7 and rebalances credits every night at 02:00.

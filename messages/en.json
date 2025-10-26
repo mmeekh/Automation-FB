@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "AutoFlow",
+    "appName": "LookLab",
     "welcome": "Welcome",
     "loading": "Loading...",
     "error": "Something went wrong",
@@ -10,8 +10,7 @@
     "dashboard": "Dashboard",
     "automations": "Automations",
     "analytics": "Analytics",
-    "templates": "Templates",
-    "settings": "Settings"
+    "contact": "Contacts"
   },
   "auth": {
     "login": "Sign In",
@@ -70,69 +69,10 @@
     }
   },
   "automationsPage": {
-    "hero": {
-      "badge": "Automation studio",
-      "title": "Orchestrate every Instagram journey with confidence.",
-      "subtitle": "Launch AI-assisted automations, route human hand-offs, and monitor performance without leaving one screen.",
-      "primaryCta": "Launch automation",
-      "secondaryCta": "View live journeys",
-      "metrics": {
-        "throughput": "Monthly throughput",
-        "throughputHelp": "Unique conversations handled by your automations",
-        "satisfaction": "AI satisfaction",
-        "satisfactionHelp": "Average rating collected from human reviews",
-        "guardrails": "Active guardrails",
-        "guardrailsHelp": "Automation rules protecting brand safety"
-      }
-    },
-    "assistant": {
-      "title": "Automation control room",
-      "subtitle": "Live dispatch feed from the AutoFlow assistant.",
-      "badge": "Live feed",
-      "cta": "See full activity",
-      "activity": {
-        "warning": "Manual review",
-        "success": "Template shipped",
-        "ai": "AI assistant",
-        "publish": "Content drop"
-      }
-    },
-    "summary": {
-      "active": { "label": "Active automations" },
-      "paused": { "label": "Paused automations" },
-      "responses": { "label": "AI responses delivered" },
-      "avgResponseTime": { "label": "Average response time" },
-      "vsLastWeek": "vs last week"
-    },
-    "list": {
-      "running": "Running",
-      "paused": "Paused",
-      "optimize": "Optimize with AI",
-      "pause": "Pause",
-      "resume": "Resume",
-      "metrics": {
-        "conversion": "Conversion rate",
-        "steps": "Steps",
-        "sent": "Messages sent",
-        "completed": "Completed journeys"
-      }
-    },
-    "activity": {
-      "title": "Live automation activity",
-      "subtitle": "Recent guardrail events, content drops and escalations."
-    },
-    "recommendations": {
-      "badge": "AI insights",
-      "title": "Recommended playbooks",
-      "subtitle": "High-impact flows curated for your workspace.",
-      "complexity": {
-        "low": "Low effort",
-        "medium": "Medium effort",
-        "high": "High effort"
-      },
-      "impact": "+{value}% expected lift",
-      "cta": "Preview playbook"
-    }
+    "badge": "AI powered",
+    "title": "Ready-to-use social media automations",
+    "subtitle": "Transform engagement with curated journeys your team can launch across multiple Instagram accounts in minutes.",
+    "browse": "Browse all automations"
   },
   "analyticsPage": {
     "hero": {
@@ -187,44 +127,6 @@
       }
     }
   },
-  "templatesPage": {
-    "hero": {
-      "badge": "Playbook library",
-      "title": "Spin up expert-built automations in minutes.",
-      "subtitle": "Handcrafted journeys from top operators and verified agencies, ready to deploy with your brand voice.",
-      "primaryCta": "Browse templates",
-      "secondaryCta": "Request custom build",
-      "metrics": {
-        "installs": "Total installs",
-        "installsHelp": "Teams using AutoFlow playbooks across verticals",
-        "curators": "Expert curators",
-        "curatorsHelp": "Strategists keeping every template battle-tested",
-        "aiLabel": "AI assisted drafting",
-        "aiTitle": "Every template is powered by human + AI pairing",
-        "aiSubtitle": "We keep you in control with transparent guardrails."
-      }
-    },
-    "highlights": {
-      "title": "Featured collections",
-      "subtitle": "High-performing kits for the goals we see most.",
-      "badge": "Editor’s pick",
-      "metrics": {
-        "installs": "{value} installs"
-      },
-      "cta": "Preview bundle"
-    },
-    "categories": {
-      "title": "{category}",
-      "goesLive": "Goes live in {duration}",
-      "complexity": {
-        "low": "Low effort",
-        "medium": "Medium effort",
-        "high": "High effort"
-      },
-      "preview": "Preview flow",
-      "deploy": "Deploy now"
-    }
-  },
   "settingsPage": {
     "account": {
       "title": "Workspace settings",
@@ -272,6 +174,228 @@
       },
       "permissions": "Manage roles",
       "assign": "Assign playbook"
+    }
+  },
+  "legal": {
+    "title": "Legal Center",
+    "intro": "These placeholder documents outline how LookLab will protect your data and govern usage when we launch publicly.",
+    "updated": "Last updated: {date}",
+    "viewDocument": "View document",
+    "back": "Back to legal overview",
+    "privacy": {
+      "title": "Privacy Policy",
+      "summary": "Learn how we plan to collect, use, and safeguard personal data across LookLab services.",
+      "lastUpdated": "October 24, 2025",
+      "intro": "This draft Privacy Policy describes the safeguards we expect to put in place for LookLab customers. Replace this content with the final legal copy before production launch.",
+      "sections": {
+        "introduction": {
+          "heading": "1. Overview",
+          "body": "LookLab will provide automation tooling for social platforms. During the current preview we do not process live user data; the final policy will define the scope of personal information collected and the lawful bases for processing."
+        },
+        "dataCollection": {
+          "heading": "2. Data we collect",
+          "body": "We anticipate capturing account identifiers, content assets uploaded by workspace owners, engagement metrics, and limited technical diagnostics. The production policy will enumerate each data category and its retention period."
+        },
+        "dataUse": {
+          "heading": "3. How we use information",
+          "body": "Collected information will be used to deliver automation features, personalise templates, monitor performance, and maintain platform security. We will never sell personal data to third parties; any sharing will be documented in the final policy."
+        },
+        "rights": {
+          "heading": "4. Your choices and rights",
+          "body": "Customers will be able to request access, correction, export, or deletion of stored data in line with GDPR and similar regulations. The production release will include in-app tools and contact channels to manage these requests."
+        },
+        "contact": {
+          "heading": "5. Contact",
+          "body": "For privacy requests please email privacy@looklab.app. We will confirm receipt within two business days and provide a full response within thirty days."
+        }
+      }
+    },
+    "terms": {
+      "title": "Terms of Service",
+      "summary": "Understand the baseline rules for using LookLab during the private beta and beyond.",
+      "lastUpdated": "October 24, 2025",
+      "intro": "These draft Terms of Service are placeholders until legal review is complete. Update this copy before accepting customers into production.",
+      "sections": {
+        "introduction": {
+          "heading": "1. Agreement",
+          "body": "By accessing LookLab you agree to comply with the final Terms of Service once published. These drafts outline the intended structure and obligations for workspace owners and invited teammates."
+        },
+        "accounts": {
+          "heading": "2. Accounts and access",
+          "body": "Workspace owners are responsible for maintaining accurate account information and securing login credentials. You must ensure invited teammates have permission to manage the connected social profiles."
+        },
+        "acceptableUse": {
+          "heading": "3. Acceptable use",
+          "body": "LookLab must not be used for spam, copyright infringement, illegal promotions, or any activity that breaches platform policies from Meta, TikTok, or other connected services. We may suspend access for suspected violations."
+        },
+        "liability": {
+          "heading": "4. Service availability and liability",
+          "body": "LookLab is provided on an \"as is\" basis during beta. We are not liable for indirect damages, lost revenue, or compliance failures arising from automation misconfiguration. Service levels will be defined in the production contract."
+        },
+        "changes": {
+          "heading": "5. Changes",
+          "body": "We may update these Terms before launch. Material updates will be communicated via email or in-app notification, and continued use of LookLab after changes go live signifies acceptance."
+        }
+      }
+    }
+  },
+  "contactPage": {
+    "title": "Contact & inbox overview",
+    "subtitle": "Manage the Instagram workspaces connected to LookLab and coordinate credit pools before running automations.",
+    "description": "Stay on top of connected Instagram Business Accounts and monitor conversations triggered by your automation flows.",
+    "accountsPanel": {
+      "title": "Instagram accounts",
+      "connected": "Connected profiles",
+      "cta": "Add Instagram account",
+      "followers": "{count} followers",
+      "posts": "{count} posts",
+      "lastSync": "Last sync {time}",
+      "empty": "No Instagram accounts connected yet. Link an account to start routing automations."
+    },
+    "conversationsPanel": {
+      "badge": "Inbox activity",
+      "title": "Live conversations",
+      "subtitle": "Active threads for {account}",
+      "subtitleFallback": "Pick an Instagram account to see its active conversations.",
+      "cta": "Open full inbox",
+      "empty": "No recent conversations for this account yet.",
+      "unread": "New",
+      "sources": {
+        "automation": "Automation",
+        "manual": "DM follow-up"
+      },
+      "tags": {
+        "vip": "VIP",
+        "new": "New lead",
+        "returning": "Returning customer",
+        "followUp": "Follow-up",
+        "highIntent": "High intent",
+        "priority": "Priority"
+      },
+      "items": {
+        "elif": {
+          "name": "Elif Kaya",
+          "handle": "@hairbyelif",
+          "snippet": "Shared a selfie for the balayage preview and requested warmer tones.",
+          "stage": "Hair Restoration Flow - Step 3",
+          "lastActive": "2 minutes ago"
+        },
+        "melis": {
+          "name": "Melis Glow",
+          "handle": "@melisglow",
+          "snippet": "Asked about timing for VIP slots after receiving the color palette.",
+          "stage": "VIP DM Assist - Follow-up",
+          "lastActive": "8 minutes ago"
+        },
+        "ugur": {
+          "name": "Uğur Aksoy",
+          "handle": "@ugurstyle",
+          "snippet": "Automation sent tone suggestions; waiting on final approval.",
+          "stage": "Hair Restoration Flow - Step 2",
+          "lastActive": "15 minutes ago"
+        },
+        "aylin": {
+          "name": "Aylin Atelier",
+          "handle": "@aylinatelier",
+          "snippet": "Manual reply scheduled to share pricing details.",
+          "stage": "Inbox follow-up queue",
+          "lastActive": "22 minutes ago"
+        },
+        "karen": {
+          "name": "Karen Beauty",
+          "handle": "@karenbeauty",
+          "snippet": "Came back to confirm the balayage package discount.",
+          "stage": "Hair Restoration Flow - Completed",
+          "lastActive": "1 hour ago"
+        },
+        "burak": {
+          "name": "Burak Cuts",
+          "handle": "@burakcuts",
+          "snippet": "Uploaded reference photo to the beard sculpting automation.",
+          "stage": "Beard Sculptor DM - Step 1",
+          "lastActive": "3 minutes ago"
+        },
+        "selin": {
+          "name": "Selin Color",
+          "handle": "@selincolor",
+          "snippet": "Waiting on tone confirmation after manual adjustments.",
+          "stage": "Stylist Handoff - Waiting reply",
+          "lastActive": "11 minutes ago"
+        },
+        "noah": {
+          "name": "Noah Looks",
+          "handle": "@noahlooks",
+          "snippet": "Automation sent comparison grid; user marked as VIP.",
+          "stage": "Creative Lookbook Flow - Step 2",
+          "lastActive": "18 minutes ago"
+        },
+        "esra": {
+          "name": "Esra Lush",
+          "handle": "@esralush",
+          "snippet": "Team member drafting pricing details for premium package.",
+          "stage": "Inbox follow-up queue",
+          "lastActive": "26 minutes ago"
+        },
+        "lucy": {
+          "name": "Lucy Beauty Space",
+          "handle": "@lucybeautyspace",
+          "snippet": "Returning customer asking for renewal timeline.",
+          "stage": "Creative Lookbook Flow - Completed",
+          "lastActive": "2 hours ago"
+        },
+        "demet": {
+          "name": "Demet Glam",
+          "handle": "@demetglam",
+          "snippet": "Requested updated glam look and shared reference board.",
+          "stage": "AI Glam Flow - Step 4",
+          "lastActive": "6 minutes ago"
+        },
+        "yasemin": {
+          "name": "Yasemin Hair",
+          "handle": "@yaseminhair",
+          "snippet": "Needs confirmation on appointment slot before automation resumes.",
+          "stage": "Stylist Handoff - Waiting reply",
+          "lastActive": "14 minutes ago"
+        },
+        "baris": {
+          "name": "Barış Barber",
+          "handle": "@barisbarber",
+          "snippet": "Automation queued a reminder and flagged as high intent.",
+          "stage": "Beard Sculptor DM - Step 2",
+          "lastActive": "4 minutes ago"
+        },
+        "sude": {
+          "name": "Sude Makeup",
+          "handle": "@sudemakeup",
+          "snippet": "Manual DM scheduled with kit recommendations.",
+          "stage": "Inbox follow-up queue",
+          "lastActive": "19 minutes ago"
+        },
+        "emre": {
+          "name": "Emre Creative",
+          "handle": "@emrecreative",
+          "snippet": "Returning after two months to restart the transformation flow.",
+          "stage": "AI Glam Flow - Completed",
+          "lastActive": "3 hours ago"
+        }
+      }
+    },
+    "accounts": {
+      "primaryWorkspace": "Primary workspace",
+      "secondaryWorkspace": "Secondary workspace",
+      "roles": {
+        "owner": "Owner",
+        "manager": "Manager",
+        "creator": "Creator"
+      },
+      "statuses": {
+        "active": "Active",
+        "paused": "Paused",
+        "limited": "Limited"
+      },
+      "creditUsage": "{used}/{total} credits used",
+      "lastSync": "Last sync {time}",
+      "multiAutomation": "Enabled for multi-account automations"
     }
   }
 }

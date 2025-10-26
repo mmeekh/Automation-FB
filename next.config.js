@@ -4,7 +4,6 @@ const createNextIntlPlugin = require('next-intl/plugin');
 const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
 
 const nextConfig = {
-  output: 'standalone',
   reactStrictMode: true,
   poweredByHeader: false,
   compress: true,
@@ -19,6 +18,16 @@ const nextConfig = {
   },
   experimental: {
     optimizePackageImports: ['@heroicons/react'],
+  },
+  // Docker hot reload fix
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.watchOptions = {
+        poll: 1000,
+        aggregateTimeout: 300,
+      };
+    }
+    return config;
   },
 };
 

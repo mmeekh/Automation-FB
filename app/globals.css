@@ -135,4 +135,61 @@
       @apply fixed inset-0 z-50 bg-white/95 backdrop-blur-xl;
     }
   }
+
+  /* Animation Delays */
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+  .animation-delay-4000 {
+    animation-delay: 4s;
+  }
+  .animation-delay-6000 {
+    animation-delay: 6s;
+  }
+
+  /* Preserve space for descenders on large display text */
+  .descender-safe {
+    padding-bottom: 0.15em;
+  }
+
+  /* Footer Big Text Styles */
+  .footer-big-text {
+    font-family: var(--font-rubik-moonrocks), 'Rubik Moonrocks', cursive;
+    font-size: 10.8vw;
+    position: absolute;
+    left: 50%;
+    top: 75%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    white-space: nowrap;
+    pointer-events: none;
+    user-select: none;
+    transition: color 0.3s ease;
+    color: rgba(0, 0, 0, 0.25);
+  }
+
+  .footer-big-text-mobile {
+    font-family: var(--font-rubik-moonrocks), 'Rubik Moonrocks', cursive;
+    font-size: 15vw;
+    position: absolute;
+    left: 50%;
+    bottom: 5%;
+    transform: translate(-50%, 0);
+    z-index: 0;
+    white-space: nowrap;
+    pointer-events: none;
+    user-select: none;
+    transition: color 0.3s ease;
+    color: rgba(0, 0, 0, 0.25);
+    line-height: 0.8;
+  }
+
+  /* Dark mode footer text */
+  .dark .footer-big-text {
+    color: rgba(255, 255, 255, 0.05);
+  }
+
+  .dark .footer-big-text-mobile {
+    color: rgba(255, 255, 255, 0.04);
+  }
 }

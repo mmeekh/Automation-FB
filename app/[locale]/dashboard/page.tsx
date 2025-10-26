@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
+import { useRouter } from 'next/navigation';
 import {
   Button,
   Card,
@@ -14,6 +15,7 @@ import {
   QuickAction,
   AITemplateCard,
 } from '@/components';
+import { FlipWords } from '@/components/ui/FlipWords';
 import { useStore } from '@/lib/store';
 import { fetchDashboardData, mockUser } from '@/lib/api';
 import { formatNumber } from '@/lib/utils';
@@ -29,15 +31,21 @@ import {
 
 export default function DashboardPage() {
   const t = useTranslations('dashboard');
-  const { user, accounts, workflows, setUser, setAccounts, setWorkflows, toggleWorkflow } = useStore();
+  const locale = useLocale();
+  const router = useRouter();
+  const { user, accounts, workflows, setUser, setAccounts, setWorkflows, toggleWorkflow, openAuthModal } = useStore();
 
   useEffect(() => {
-    setUser(mockUser);
+    if (!user) {
+      // Don't auto-login, let user sign in manually
+      return;
+    }
+
     fetchDashboardData().then(data => {
       setAccounts(data.accounts);
       setWorkflows(data.workflows);
     });
-  }, [setUser, setAccounts, setWorkflows]);
+  }, [user, setAccounts, setWorkflows]);
 
   return (
     <div className="min-h-screen">
@@ -45,55 +53,33 @@ export default function DashboardPage() {
 
       {/* Hero Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
-        <div className="grid md:grid-cols-2 gap-8 sm:gap-12 items-center mb-12 sm:mb-16 lg:mb-20">
-          <div className="text-center md:text-left">
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4 sm:mb-6 gradient-text leading-tight">
-              {t('hero.title')}
+        <div className="flex justify-center items-center mb-12 sm:mb-16 lg:mb-20">
+          <div className="text-center max-w-4xl">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 sm:mb-8 leading-tight">
+              <span className="block text-neutral-900">Automate your social media</span>
+              <span className="block text-neutral-900">
+                <span className="inline-flex items-baseline justify-center gap-2 flex-wrap sm:flex-nowrap">
+                  <FlipWords
+                    words={["workflows", "engagement", "growth", "automation"]}
+                    className="font-bold bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent"
+                    duration={2000}
+                  />
+                  <span className="descender-safe">effortlessly.</span>
+                </span>
+              </span>
             </h1>
-            <p className="text-base sm:text-lg lg:text-xl text-neutral-600 mb-6 sm:mb-8">
-              {t('hero.description')}
+            <p className="text-lg sm:text-xl lg:text-2xl text-neutral-600 mb-8 sm:mb-10 max-w-3xl mx-auto">
+              Choose ready-made flows, connect your account, and launch automations in minutes.
             </p>
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center md:justify-start">
-              <Button size="lg" className="hover-glow hover-lift">
-                <RocketLaunchIcon className="w-5 h-5" />
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 justify-center">
+              <Button size="lg" className="hover-glow hover-lift text-lg px-8 py-6">
+                <RocketLaunchIcon className="w-6 h-6" />
                 {t('hero.getStarted')}
               </Button>
-              <Button variant="secondary" size="lg" className="hover-lift">
-                <PlayIcon className="w-5 h-5" />
+              <Button variant="secondary" size="lg" className="hover-lift text-lg px-8 py-6">
+                <PlayIcon className="w-6 h-6" />
                 {t('hero.watchDemo')}
               </Button>
-            </div>
-          </div>
-
-          {/* Floating Cards */}
-          <div className="relative h-64 sm:h-80 md:h-96 hidden md:block">
-            <div className="absolute top-10 left-10 animate-float hover-lift">
-              <FloatingFeatureCard icon="🤖" title="Auto-Reply Bot" />
-            </div>
-            <div className="absolute top-20 right-0 animate-float hover-lift" style={{ animationDelay: '1s' }}>
-              <FloatingFeatureCard icon="📅" title="Post Scheduler" />
-            </div>
-            <div className="absolute bottom-20 left-0 animate-float hover-lift" style={{ animationDelay: '2s' }}>
-              <FloatingFeatureCard icon="❤️" title="Like & Follow" />
-            </div>
-            <div className="absolute bottom-10 right-10 animate-float hover-lift" style={{ animationDelay: '3s' }}>
-              <FloatingFeatureCard icon="📊" title="Analytics" />
-            </div>
-          </div>
-
-          {/* Mobile Feature Icons */}
-          <div className="flex md:hidden justify-center gap-4 flex-wrap">
-            <div className="bounce-soft">
-              <FloatingFeatureCard icon="🤖" title="Auto-Reply Bot" />
-            </div>
-            <div className="bounce-soft" style={{ animationDelay: '0.3s' }}>
-              <FloatingFeatureCard icon="📅" title="Post Scheduler" />
-            </div>
-            <div className="bounce-soft" style={{ animationDelay: '0.6s' }}>
-              <FloatingFeatureCard icon="❤️" title="Like & Follow" />
-            </div>
-            <div className="bounce-soft" style={{ animationDelay: '0.9s' }}>
-              <FloatingFeatureCard icon="📊" title="Analytics" />
             </div>
           </div>
         </div>
@@ -108,8 +94,12 @@ export default function DashboardPage() {
             </CardHeader>
             <div className="space-y-3 sm:space-y-4">
               {accounts.map((account) => (
-                <div key={account.id} className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl bg-gradient-to-br from-white to-neutral-100 shadow-neu-sm hover:shadow-neu-md transition-all hover-lift cursor-pointer">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-r from-primary-500 to-accent-500 flex items-center justify-center text-white font-semibold flex-shrink-0">
+                <div key={account.id} className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl
+                  bg-gradient-to-br from-white to-neutral-100 
+                  shadow-neu-sm hover:shadow-neu-md transition-all hover-lift cursor-pointer">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full 
+                    bg-gradient-to-r from-primary-500 to-accent-500 
+                    flex items-center justify-center text-white font-semibold flex-shrink-0">
                     {account.username.charAt(1).toUpperCase()}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -130,14 +120,19 @@ export default function DashboardPage() {
           <Card className="card-enter hover-lift" style={{ animationDelay: '0.1s' }}>
             <CardHeader>
               <CardTitle>{t('workflows.title')}</CardTitle>
-              <CardBadge>{workflows.filter(w => w.status === 'active').length} {t('workflows.badge')}</CardBadge>
+              <CardBadge>
+                {workflows.filter(w => w.status === 'active').length} {t('workflows.badge')}
+              </CardBadge>
             </CardHeader>
             <div className="space-y-3 sm:space-y-4">
               {workflows.map((workflow) => (
-                <div key={workflow.id} className="p-4 sm:p-5 rounded-xl bg-gradient-to-br from-white to-neutral-100 shadow-neu-sm hover:shadow-neu-md transition-all hover-lift">
+                <div key={workflow.id} className="p-4 sm:p-5 rounded-xl 
+                  bg-gradient-to-br from-white to-neutral-100 
+                  shadow-neu-sm hover:shadow-neu-md transition-all hover-lift">
                   <div className="flex items-start justify-between mb-3 gap-2">
                     <div className="font-semibold text-neutral-800 text-sm sm:text-base">{workflow.name}</div>
-                    <span className={`text-xs font-semibold flex items-center gap-1 flex-shrink-0 ${workflow.status === 'active' ? 'text-green-600' : 'text-neutral-400'}`}>
+                    <span className={`text-xs font-semibold flex items-center gap-1 flex-shrink-0 
+                      ${workflow.status === 'active' ? 'text-green-600' : 'text-neutral-400'}`}>
                       <span className={`w-2 h-2 rounded-full bg-current ${workflow.status === 'active' ? 'animate-pulse' : ''}`} />
                       {workflow.status === 'active' ? t('workflows.active') : t('workflows.inactive')}
                     </span>
@@ -193,7 +188,9 @@ export default function DashboardPage() {
         <section className="mt-12 sm:mt-16 lg:mt-20">
           {/* Section Header */}
           <div className="text-center mb-8 sm:mb-12 space-y-4">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-primary-500 to-accent-500 text-white text-sm font-semibold shadow-lg">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full 
+            bg-gradient-to-r from-primary-500 to-accent-500 
+            text-white text-sm font-semibold shadow-lg">
               <SparklesSolidIcon className="w-5 h-5" />
               <span>AI Powered</span>
             </div>
@@ -210,11 +207,11 @@ export default function DashboardPage() {
             <AITemplateCard
               id="instagram-hair-transformation"
               name="Instagram Hair Transformation Automation"
-              description="Automatically replaces user selfies with salon-ready hairstyles using AI. Ideal for hair salons and beauty studios deploying viral DM flows."
+              description="Automatically replaces user selfies with salon-ready hairstyles using AI. 
+              Ideal for hair salons and beauty studios deploying viral DM flows."
               icon={<SparklesSolidIcon className="w-7 h-7" />}
               gradient="bg-gradient-to-br from-rose-400 via-fuchsia-500 to-rose-500"
               accentColor="text-rose-600"
-              installs={4827}
               category="Beauty AI"
               thumbnail={(
                 <div className="p-5 bg-gradient-to-br from-rose-50 via-white to-white space-y-4">
@@ -224,12 +221,16 @@ export default function DashboardPage() {
                   </div>
                   <div className="space-y-3">
                     <div className="flex gap-3">
-                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-rose-500 to-fuchsia-500 text-xs font-semibold text-white">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-full 
+                      bg-gradient-to-br from-rose-500 to-fuchsia-500 
+                      text-xs font-semibold text-white">
                         AI
                       </div>
                       <div className="flex-1 rounded-2xl border border-rose-100 bg-white/95 p-3 shadow-sm">
-                        <p className="text-[11px] font-semibold uppercase tracking-wide text-rose-400">AutoFlow Stylist</p>
-                        <p className="mt-1 text-sm text-neutral-600">Upload your selfie and choose a look. We render three hair swaps in 20 seconds.</p>
+                        <p className="text-[11px] font-semibold uppercase tracking-wide text-rose-400">LookLab Stylist</p>
+                        <p className="mt-1 text-sm text-neutral-600">
+                        Upload your selfie and choose a look. We render three hair swaps in 20 seconds.
+                      </p>
                       </div>
                     </div>
                     <div className="ml-12 space-y-3">
@@ -264,11 +265,11 @@ export default function DashboardPage() {
             <AITemplateCard
               id="instagram-nose-refinement"
               name="Instagram Nose Refinement Automation"
-              description="AI-powered nose reshaping demo triggered directly from Instagram DMs. Built for aesthetic clinics and cosmetic consultants."
+              description="AI-powered nose reshaping demo triggered directly from Instagram DMs. 
+              Built for aesthetic clinics and cosmetic consultants."
               icon={<FaceSmileIcon className="w-7 h-7" />}
               gradient="bg-gradient-to-br from-teal-400 via-cyan-500 to-teal-500"
               accentColor="text-teal-600"
-              installs={3614}
               category="Aesthetic AI"
               thumbnail={(
                 <div className="p-5 bg-gradient-to-br from-teal-50 via-white to-white space-y-4">
@@ -278,12 +279,16 @@ export default function DashboardPage() {
                   </div>
                   <div className="space-y-3">
                     <div className="flex gap-3">
-                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-teal-500 to-cyan-500 text-xs font-semibold text-white">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-full 
+                      bg-gradient-to-br from-teal-500 to-cyan-500 
+                      text-xs font-semibold text-white">
                         AI
                       </div>
                       <div className="flex-1 rounded-2xl border border-teal-100 bg-white/95 p-3 shadow-sm">
                         <p className="text-[11px] font-semibold uppercase tracking-wide text-teal-400">Contour Concierge</p>
-                        <p className="mt-1 text-sm text-neutral-600">Hi Leyla! Here is a natural refinement preview with balanced bridge and tip adjustments.</p>
+                        <p className="mt-1 text-sm text-neutral-600">
+                        Hi Leyla! Here is a natural refinement preview with balanced bridge and tip adjustments.
+                      </p>
                       </div>
                     </div>
                     <div className="ml-12 space-y-3">
@@ -297,7 +302,9 @@ export default function DashboardPage() {
                           <div className="h-16 rounded-xl border border-teal-200 bg-gradient-to-br from-white to-teal-50 shadow-inner" />
                         </div>
                       </div>
-                      <div className="flex w-fit items-center gap-2 rounded-full border border-teal-100 bg-white/90 px-3 py-2 text-[11px] text-neutral-500">
+                      <div className="flex w-fit items-center gap-2 rounded-full 
+                      border border-teal-100 bg-white/90 
+                      px-3 py-2 text-[11px] text-neutral-500">
                         <span className="h-2 w-2 rounded-full bg-teal-400 animate-pulse" />
                         Sends clinic call-to-action when reaction includes thumbs-up or higher
                       </div>
@@ -310,11 +317,11 @@ export default function DashboardPage() {
             <AITemplateCard
               id="instagram-bald-to-haired"
               name="Instagram Bald-to-Haired Transformation Automation"
-              description="Converts bald or thinning hair selfies into realistic full-hair previews. Built for barbers and transplant centers wanting instant DM wow-factor."
+              description="Converts bald or thinning hair selfies into realistic full-hair previews. 
+              Built for barbers and transplant centers wanting instant DM wow-factor."
               icon={<BoltIcon className="w-7 h-7" />}
               gradient="bg-gradient-to-br from-amber-400 via-orange-500 to-amber-500"
               accentColor="text-amber-600"
-              installs={5293}
               category="Hair Restoration"
               thumbnail={(
                 <div className="p-5 bg-gradient-to-br from-amber-50 via-white to-white space-y-4">
@@ -324,17 +331,22 @@ export default function DashboardPage() {
                   </div>
                   <div className="space-y-3">
                     <div className="flex gap-3">
-                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-amber-500 to-orange-500 text-xs font-semibold text-white">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-full 
+                      bg-gradient-to-br from-amber-500 to-orange-500 
+                      text-xs font-semibold text-white">
                         AI
                       </div>
                       <div className="flex-1 rounded-2xl border border-amber-100 bg-white/95 p-3 shadow-sm">
                         <p className="text-[11px] font-semibold uppercase tracking-wide text-amber-500">Regrowth Studio</p>
-                        <p className="mt-1 text-sm text-neutral-600">Your reconstructed hairline is live. Swipe through three density levels below.</p>
+                        <p className="mt-1 text-sm text-neutral-600">
+                        Your reconstructed hairline is live. Swipe through three density levels below.
+                      </p>
                       </div>
                     </div>
                     <div className="ml-12 space-y-3">
                       <div className="grid grid-cols-3 gap-2">
-                        <div className="rounded-2xl border border-amber-100 bg-gradient-to-br from-neutral-900/80 via-neutral-800/80 to-neutral-700/80 p-2">
+                        <div className="rounded-2xl border border-amber-100 
+                        bg-gradient-to-br from-neutral-900/80 via-neutral-800/80 to-neutral-700/80 p-2">
                           <div className="h-20 rounded-xl bg-gradient-to-br from-neutral-800 to-neutral-700" />
                           <p className="mt-2 text-[11px] text-amber-100">Natural</p>
                         </div>
@@ -347,7 +359,9 @@ export default function DashboardPage() {
                           <p className="mt-2 text-[11px] text-amber-500">Fade</p>
                         </div>
                       </div>
-                      <div className="flex items-center justify-between rounded-2xl border border-amber-100 bg-white/90 px-4 py-2 text-[11px] text-neutral-500">
+                      <div className="flex items-center justify-between rounded-2xl 
+                      border border-amber-100 bg-white/90 
+                      px-4 py-2 text-[11px] text-neutral-500">
                         <span className="flex items-center gap-2">
                           <span className="h-2 w-2 rounded-full bg-emerald-400" />
                           92% request consult after interactive preview
@@ -367,10 +381,18 @@ export default function DashboardPage() {
           <div className="flex justify-center">
             <Button
               size="lg"
-              className="group relative overflow-hidden bg-gradient-to-r from-primary-500 via-accent-500 to-primary-600 shadow-[0_18px_38px_-18px_rgba(124,58,237,0.55)] hover:from-primary-600 hover:via-accent-600 hover:to-primary-700 hover:shadow-[0_20px_44px_-16px_rgba(124,58,237,0.7)]"
+              onClick={() => router.push(`/${locale}/automations`)}
+              className="group relative overflow-hidden
+              bg-gradient-to-r from-primary-500 via-accent-500 to-primary-600
+              shadow-[0_18px_38px_-18px_rgba(124,58,237,0.55)]
+              hover:from-primary-600 hover:via-accent-600 hover:to-primary-700
+              hover:shadow-[0_20px_44px_-16px_rgba(124,58,237,0.7)]"
             >
-              <span className="pointer-events-none absolute inset-0 rounded-2xl bg-white/15 opacity-0 transition-opacity duration-300 group-hover:opacity-40" />
-              <span className="pointer-events-none absolute -inset-x-12 -top-24 h-32 bg-gradient-to-r from-transparent via-white/40 to-transparent opacity-40 blur-3xl transition-opacity duration-300 group-hover:opacity-70" />
+              <span className="pointer-events-none absolute inset-0 rounded-2xl 
+              bg-white/15 opacity-0 transition-opacity duration-300 group-hover:opacity-40" />
+              <span className="pointer-events-none absolute -inset-x-12 -top-24 h-32 
+              bg-gradient-to-r from-transparent via-white/40 to-transparent 
+              opacity-40 blur-3xl transition-opacity duration-300 group-hover:opacity-70" />
               <span className="relative flex items-center gap-3">
                 <ArrowRightIcon className="w-5 h-5" />
                 Browse All Templates

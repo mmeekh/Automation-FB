@@ -50,6 +50,17 @@ const config: Config = {
       animation: {
         'float': 'float 6s ease-in-out infinite',
         'glow': 'glow-pulse 4s ease-in-out infinite',
+        'blob': 'blob 7s infinite',
+        first: "moveVertical 15s ease infinite", // 30s -> 15s (2x hızlı)
+        second: "moveInCircle 10s reverse infinite", // 20s -> 10s (2x hızlı)
+        third: "moveInCircle 20s linear infinite", // 40s -> 20s (2x hızlı)
+        fourth: "moveHorizontal 20s ease infinite", // 40s -> 20s (2x hızlı)
+        fifth: "moveInCircle 12s ease infinite", // 20s -> 12s (1.7x hızlı)
+      },
+      animationDelay: {
+        '2000': '2s',
+        '4000': '4s',
+        '6000': '6s',
       },
       keyframes: {
         float: {
@@ -59,6 +70,45 @@ const config: Config = {
         'glow-pulse': {
           '0%, 100%': { transform: 'scale(1)', opacity: '0.5' },
           '50%': { transform: 'scale(1.2)', opacity: '0.8' },
+        },
+        blob: {
+          '0%': { transform: 'translate(0px, 0px) scale(1)' },
+          '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+          '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+          '100%': { transform: 'translate(0px, 0px) scale(1)' },
+        },
+        moveHorizontal: {
+          "0%": {
+            transform: "translateX(-50%) translateY(-10%)",
+          },
+          "50%": {
+            transform: "translateX(50%) translateY(10%)",
+          },
+          "100%": {
+            transform: "translateX(-50%) translateY(-10%)",
+          },
+        },
+        moveInCircle: {
+          "0%": {
+            transform: "rotate(0deg)",
+          },
+          "50%": {
+            transform: "rotate(180deg)",
+          },
+          "100%": {
+            transform: "rotate(360deg)",
+          },
+        },
+        moveVertical: {
+          "0%": {
+            transform: "translateY(-50%)",
+          },
+          "50%": {
+            transform: "translateY(50%)",
+          },
+          "100%": {
+            transform: "translateY(-50%)",
+          },
         },
       },
     },
