@@ -1,6 +1,16 @@
+'use client';
+
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 export function Footer() {
+  const pathname = usePathname();
+
+  // Hide footer on automation builder pages
+  if (pathname?.includes('/automations/builder/')) {
+    return null;
+  }
+
   return (
     <footer className="relative w-full overflow-hidden border-t border-neutral-200 bg-neutral-50/50 backdrop-blur-sm pt-16 pb-40 lg:pt-24 lg:pb-48">
       {/* Devasa LookLab Yazısı (Desktop) */}

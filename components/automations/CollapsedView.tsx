@@ -10,6 +10,7 @@ interface CollapsedViewProps {
   onToggle: () => void;
   onUse: () => void;
   isUsing: boolean;
+  isActivated?: boolean;
   isHovered?: boolean;
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
@@ -20,6 +21,7 @@ export function CollapsedView({
   onToggle,
   onUse,
   isUsing,
+  isActivated,
   isHovered,
   onMouseEnter,
   onMouseLeave
@@ -54,13 +56,20 @@ export function CollapsedView({
       onMouseLeave={onMouseLeave}
     >
       <div className="p-6">
-        {/* Category badge at top */}
-        <div className="flex items-center justify-center mb-5">
+        {/* Category badge and Active status at top */}
+        <div className="flex items-center justify-center gap-2 mb-5">
           <div className="px-3 py-1 rounded-full bg-gradient-to-r from-primary-600 via-accent-500 to-primary-600 shadow-lg">
             <span className="text-xs font-semibold text-white flex items-center gap-1.5">
               ✨ {template.category}
             </span>
           </div>
+          {isActivated && (
+            <div className="px-3 py-1 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 shadow-lg">
+              <span className="text-xs font-semibold text-white flex items-center gap-1.5">
+                ✓ Active
+              </span>
+            </div>
+          )}
         </div>
         {/* Mini transformation preview: 1 + 2 = 3 */}
         <div className="mb-6">
@@ -143,9 +152,13 @@ export function CollapsedView({
             size="sm"
             onClick={onUse}
             loading={isUsing}
-            className="flex-1 bg-gradient-to-r from-primary-500 to-accent-500 hover:from-primary-600 hover:to-accent-600 shadow-lg hover:shadow-xl text-xs"
+            className={`flex-1 shadow-lg hover:shadow-xl text-xs ${
+              isActivated
+                ? 'bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600'
+                : 'bg-gradient-to-r from-primary-500 to-accent-500 hover:from-primary-600 hover:to-accent-600'
+            }`}
           >
-            Use
+            {isActivated ? 'Update' : 'Use'}
           </Button>
         </div>
       </div>

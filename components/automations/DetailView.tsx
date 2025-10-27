@@ -12,9 +12,10 @@ interface DetailViewProps {
   onToggle: () => void;
   onUse: () => void;
   isUsing: boolean;
+  isActivated?: boolean;
 }
 
-export function DetailView({ template, onToggle, onUse, isUsing }: DetailViewProps) {
+export function DetailView({ template, onToggle, onUse, isUsing, isActivated }: DetailViewProps) {
   // Get gradient based on category
   const getGradient = () => {
     if (template.category === 'Hair Restoration') return 'from-amber-400 to-orange-500';
@@ -46,11 +47,16 @@ export function DetailView({ template, onToggle, onUse, isUsing }: DetailViewPro
 
   return (
     <div className="relative rounded-3xl bg-white border border-neutral-200/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
-      {/* Category badge */}
-      <div className="absolute top-6 right-6 z-10">
+      {/* Category badge and Active status */}
+      <div className="absolute top-6 right-6 z-10 flex gap-2">
         <div className="px-3 py-1.5 rounded-full bg-neutral-900/90 backdrop-blur-sm">
           <span className="text-xs font-semibold text-white">✨ {template.category}</span>
         </div>
+        {isActivated && (
+          <div className="px-3 py-1.5 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 shadow-lg">
+            <span className="text-xs font-semibold text-white">✓ Active</span>
+          </div>
+        )}
       </div>
 
       {/* Collapse button */}
@@ -113,18 +119,22 @@ export function DetailView({ template, onToggle, onUse, isUsing }: DetailViewPro
           <h3 className="text-2xl font-bold text-neutral-900 mb-3">{template.name}</h3>
           <p className="text-neutral-600 mb-6 leading-relaxed">{template.description}</p>
 
-          <div className="flex gap-4">
-            <Button variant="outline" size="lg" onClick={onToggle} className="border-2">
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" onClick={onToggle} className="border-2 text-xs">
               Close Details
             </Button>
             <Button
               variant="primary"
-              size="lg"
+              size="sm"
               onClick={onUse}
               loading={isUsing}
-              className="flex-1 bg-gradient-to-r from-primary-500 to-accent-500 hover:from-primary-600 hover:to-accent-600 shadow-lg hover:shadow-xl"
+              className={`flex-1 shadow-lg hover:shadow-xl text-xs ${
+                isActivated
+                  ? 'bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600'
+                  : 'bg-gradient-to-r from-primary-500 to-accent-500 hover:from-primary-600 hover:to-accent-600'
+              }`}
             >
-              Use
+              {isActivated ? 'Update' : 'Use'}
             </Button>
           </div>
         </div>

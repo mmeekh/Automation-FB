@@ -1,4 +1,4 @@
-import { Button, Card, CardBadge, CardHeader, CardTitle, ProgressBar } from '@/components';
+import { Button, Card, CardBadge, CardHeader, CardTitle, DashboardProgressBar } from '@/components';
 import { cn } from '@/lib/utils';
 import {
   BellRing,
@@ -340,7 +340,7 @@ export default function SettingsPage() {
               </div>
 
               <div className="rounded-2xl border border-dashed border-primary-200/60 bg-primary-50/40 p-5">
-                <ProgressBar current={750} max={1000} label="Credits used today" />
+                <DashboardProgressBar current={750} max={1000} label="Credits used today" />
               </div>
             </div>
           </Card>

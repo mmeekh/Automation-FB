@@ -1,9 +1,11 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { AutomationTemplate } from '@/lib/automations/types';
 import { CollapsedView } from './CollapsedView';
 import { DetailView } from './DetailView';
+import { useAutomationStore } from '@/lib/store/automationStore';
 
 type ViewMode = 'collapsed' | 'detail';
 
@@ -16,33 +18,45 @@ interface AutomationCardProps {
 }
 
 export function AutomationCard({ template, onUse, isHovered, onMouseEnter, onMouseLeave }: AutomationCardProps) {
+  const router = useRouter();
   const [viewMode, setViewMode] = useState<ViewMode>('collapsed');
-  const [isUsing, setIsUsing] = useState(false);
 
-  const handleUse = async () => {
-    setIsUsing(true);
-    await new Promise((resolve) => setTimeout(resolve, 800));
-    setIsUsing(false);
-    onUse?.();
+  const { isActivated } = useAutomationStore();
+  const isActive = isActivated(template.id);
+
+  const handleUseClick = () => {
+    // Map template ID to flow ID (for now using template.id as flow ID)
+    const flowId = `flow-${template.id}`;
+    router.push(`/automations/builder/${flowId}`);
   };
 
   const toggleDetail = () => {
     setViewMode(viewMode === 'collapsed' ? 'detail' : 'collapsed');
   };
 
-  if (viewMode === 'collapsed') {
-    return (
-      <CollapsedView
-        template={template}
-        onToggle={toggleDetail}
-        onUse={handleUse}
-        isUsing={isUsing}
-        isHovered={isHovered}
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
-      />
-    );
-  }
+  return (
+    <>
+      {viewMode === 'collapsed' ? (
+        <CollapsedView
+          template={template}
+          onToggle={toggleDetail}
+          onUse={handleUseClick}
+          isUsing={false}
+          isActivated={isActive}
+          isHovered={isHovered}
+          onMouseEnter={onMouseEnter}
+          onMouseLeave={onMouseLeave}
+        />
+      ) : (
+        <DetailView
+          template={template}
+          onToggle={toggleDetail}
+          onUse={handleUseClick}
+          isUsing={false}
+          isActivated={isActive}
+        />
+      )}
 
-  return <DetailView template={template} onToggle={toggleDetail} onUse={handleUse} isUsing={isUsing} />;
+    </>
+  );
 }

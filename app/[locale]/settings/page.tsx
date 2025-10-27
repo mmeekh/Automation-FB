@@ -15,7 +15,7 @@ import {
   Users,
   Globe
 } from 'lucide-react';
-import { Header, Button, Card, CardBadge, CardHeader, CardTitle, ProgressBar } from '@/components';
+import { Header, Button, Card, CardBadge, CardHeader, CardTitle, DashboardProgressBar } from '@/components';
 import { LanguageSwitcher } from '@/components/layout/LanguageSwitcher';
 import { cn } from '@/lib/utils';
 
@@ -341,7 +341,7 @@ export default function SettingsPage() {
               </div>
 
               <div className="rounded-2xl border border-dashed border-primary-200/60 bg-primary-50/40 p-5">
-                <ProgressBar current={750} max={1000} label="Credits used today" />
+                <DashboardProgressBar current={750} max={1000} label="Credits used today" />
               </div>
             </div>
           </Card>

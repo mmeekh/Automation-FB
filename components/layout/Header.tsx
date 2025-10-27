@@ -9,6 +9,14 @@ import { Button } from '@/components/ui/Button';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { useStore } from '@/lib/store';
 
+// Navigation items - memoized outside component
+const NAV_ITEMS = [
+  { key: 'dashboard', href: 'dashboard' },
+  { key: 'automations', href: 'automations' },
+  { key: 'analytics', href: 'analytics' },
+  { key: 'contact', href: 'contact' },
+] as const;
+
 export function Header() {
   const t = useTranslations('nav');
   const locale = useLocale();
@@ -50,12 +58,6 @@ export function Header() {
     setUserMenuOpen(false);
   };
 
-  const navItems = [
-    { key: 'dashboard', href: 'dashboard' },
-    { key: 'automations', href: 'automations' },
-    { key: 'analytics', href: 'analytics' },
-    { key: 'contact', href: 'contact' },
-  ];
 
   return (
     <>
@@ -64,7 +66,7 @@ export function Header() {
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <div className="flex items-center gap-4">
-              <Link href={`/${locale}/dashboard`} className="flex items-center gap-2">
+              <Link href={`/${locale}/dashboard`} prefetch={false} className="flex items-center gap-2">
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center shadow-lg">
                   <span className="text-xl">🔬</span>
                 </div>
@@ -76,12 +78,13 @@ export function Header() {
 
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex gap-6">
-              {navItems.map(({ key, href }) => {
+              {NAV_ITEMS.map(({ key, href }) => {
                 const active = isActive(href);
                 return (
                   <Link
                     key={key}
                     href={`/${locale}/${href}`}
+                    prefetch={false}
                     className={`text-sm font-medium transition-all px-3 py-2 rounded-lg ${
                       active
                         ? 'text-accent-600 bg-accent-50 font-bold'
@@ -127,6 +130,7 @@ export function Header() {
                         <div className="border-t border-neutral-100">
                           <Link
                             href={`/${locale}/settings`}
+                            prefetch={false}
                             onClick={() => setUserMenuOpen(false)}
                             className="flex items-center gap-3 px-4 py-3 text-sm text-neutral-700 hover:bg-primary-50 hover:text-primary-600 transition-colors"
                           >
@@ -135,6 +139,7 @@ export function Header() {
                           </Link>
                           <Link
                             href={`/${locale}/settings`}
+                            prefetch={false}
                             onClick={() => setUserMenuOpen(false)}
                             className="flex items-center gap-3 px-4 py-3 text-sm text-neutral-700 hover:bg-primary-50 hover:text-primary-600 transition-colors"
                           >
@@ -190,12 +195,13 @@ export function Header() {
           <div className="glass h-full p-6 space-y-4 overflow-y-auto">
             {/* Mobile Navigation */}
             <nav className="space-y-2">
-              {navItems.map(({ key, href }) => {
+              {NAV_ITEMS.map(({ key, href }) => {
                 const active = isActive(href);
                 return (
                   <Link
                     key={key}
                     href={`/${locale}/${href}`}
+                    prefetch={false}
                     onClick={() => setMobileMenuOpen(false)}
                     className={`block px-4 py-3 text-base font-medium rounded-xl transition-all relative ${
                       active
