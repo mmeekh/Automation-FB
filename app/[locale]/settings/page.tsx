@@ -141,16 +141,16 @@ export default function SettingsPage() {
             </CardHeader>
 
             <div className="space-y-6 px-6 pb-6">
-              <div className="grid gap-5 md:grid-cols-2">
-                <div className="rounded-2xl border border-neutral-100 bg-white p-5 shadow-sm">
+              <div className="grid gap-4 sm:grid-cols-2 sm:gap-5">
+                <div className="rounded-2xl border border-neutral-100 bg-white p-6 shadow-sm">
                   <p className="text-xs font-semibold uppercase tracking-wide text-neutral-400">Workspace Name</p>
-                  <p className="mt-2 text-lg font-semibold text-neutral-800">SwordNest HQ</p>
+                  <p className="mt-2 text-lg font-semibold text-neutral-800 break-words">SwordNest HQ</p>
                   <p className="mt-2 text-xs text-neutral-500">Visible to teammates and Instagram automations.</p>
                 </div>
 
-                <div className="rounded-2xl border border-neutral-100 bg-white p-5 shadow-sm">
+                <div className="rounded-2xl border border-neutral-100 bg-white p-6 shadow-sm">
                   <p className="text-xs font-semibold uppercase tracking-wide text-neutral-400">Timezone</p>
-                  <p className="mt-2 text-lg font-semibold text-neutral-800">Europe/Istanbul</p>
+                  <p className="mt-2 text-lg font-semibold text-neutral-800 break-words">Europe/Istanbul</p>
                   <p className="mt-2 text-xs text-neutral-500">All automation schedules respect this timezone.</p>
                 </div>
               </div>

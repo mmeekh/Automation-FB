@@ -2,9 +2,9 @@ import { AutomationTemplate } from '../types';
 
 export const hairRestorationTemplate: AutomationTemplate = {
   id: 'instagram-bald-to-haired',
-  name: 'Instagram Bald-to-Haired Transformation Automation',
-  description: 'Converts bald or thinning hair selfies into realistic full-hair previews. Built for barbers and hair transplant centers wanting instant DM wow-factor.',
-  category: 'Hair Restoration',
+  name: 'Saç Stili Değiştirme AI',
+  description: 'Yapay zeka ile müşterilerinize farklı saç stillerini anında gösterin. Kuaförler ve güzellik salonları için ideal.',
+  category: 'Hair Style Change',
   gradient: 'bg-gradient-to-br from-amber-400 via-orange-500 to-amber-500',
   accentColor: 'text-amber-600',
   installs: 5293,

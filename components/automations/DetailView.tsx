@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { Button } from '@/components';
 import { ChevronUpIcon } from '@heroicons/react/24/outline';
@@ -20,7 +20,6 @@ export function DetailView({ template, onToggle, onUse, isUsing, isActivated }: 
   const getGradient = () => {
     if (template.category === 'Hair Restoration') return 'from-amber-400 to-orange-500';
     if (template.category === 'Aesthetic AI') return 'from-teal-400 to-cyan-500';
-    if (template.category === 'Nail Transformation') return 'from-pink-400 to-rose-500';
     if (template.category === 'Car Color Changer') return 'from-blue-400 to-purple-500';
     return 'from-primary-400 to-accent-500';
   };
@@ -28,7 +27,6 @@ export function DetailView({ template, onToggle, onUse, isUsing, isActivated }: 
   const getInitials = () => {
     if (template.category === 'Hair Restoration') return 'HT';
     if (template.category === 'Aesthetic AI') return 'AC';
-    if (template.category === 'Nail Transformation') return 'NS';
     if (template.category === 'Car Color Changer') return 'CC';
     return 'AI';
   };
@@ -36,7 +34,6 @@ export function DetailView({ template, onToggle, onUse, isUsing, isActivated }: 
   const getTitle = () => {
     if (template.category === 'Hair Restoration') return 'Hair Transplant Center';
     if (template.category === 'Aesthetic AI') return 'Aesthetic Clinic';
-    if (template.category === 'Nail Transformation') return 'Nail Studio';
     if (template.category === 'Car Color Changer') return 'Auto Customization Shop';
     return 'AI Assistant';
   };
@@ -142,3 +139,4 @@ export function DetailView({ template, onToggle, onUse, isUsing, isActivated }: 
     </div>
   );
 }
+

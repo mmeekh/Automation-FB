@@ -12,6 +12,8 @@ interface BaseNodeProps {
   statistics?: NodeStatistics;
   hasInput?: boolean;
   hasOutput?: boolean;
+  onEdit?: () => void;
+  isEditable?: boolean;
 }
 
 export const BaseNode = memo(function BaseNode({
@@ -22,14 +24,21 @@ export const BaseNode = memo(function BaseNode({
   statistics,
   hasInput = true,
   hasOutput = true,
+  onEdit,
+  isEditable = false,
 }: BaseNodeProps) {
   return (
-    <div className="group relative">
-      {/* Input Handle - Top Only */}
+    <div
+      className={`group relative ${isEditable ? 'cursor-pointer' : ''}`}
+      onDoubleClick={() => {
+        if (isEditable && onEdit) onEdit();
+      }}
+    >
+      {/* Input Handle - Left */}
       {hasInput && (
         <Handle
           type="target"
-          position={Position.Top}
+          position={Position.Left}
           className="w-3 h-3 !bg-primary-500 border-2 border-white hover:!bg-primary-600 transition-colors"
         />
       )}
@@ -105,19 +114,28 @@ export const BaseNode = memo(function BaseNode({
         )}
       </div>
 
-      {/* Output Handle - Bottom Only */}
+      {/* Output Handle - Right */}
       {hasOutput && (
         <Handle
           type="source"
-          position={Position.Bottom}
+          position={Position.Right}
           className="w-3 h-3 !bg-accent-500 border-2 border-white hover:!bg-accent-600 transition-colors"
         />
       )}
 
       {/* Edit button (shown on hover in edit mode) */}
-      <button className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity px-2 py-1 bg-white rounded-lg shadow-md text-xs font-semibold text-primary-600 hover:bg-primary-50">
-        Edit
-      </button>
+      {isEditable && onEdit && (
+        <button
+          type="button"
+          onClick={(event) => {
+            event.stopPropagation();
+            onEdit();
+          }}
+          className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity px-2 py-1 bg-white rounded-lg shadow-md text-xs font-semibold text-primary-600 hover:bg-primary-50"
+        >
+          Edit
+        </button>
+      )}
     </div>
   );
 });

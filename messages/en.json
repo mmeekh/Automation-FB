@@ -10,7 +10,8 @@
     "dashboard": "Dashboard",
     "automations": "Automations",
     "analytics": "Analytics",
-    "contact": "Contacts"
+    "blog": "Blog",
+    "pricing": "Pricing"
   },
   "auth": {
     "login": "Sign In",

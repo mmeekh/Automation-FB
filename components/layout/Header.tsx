@@ -14,7 +14,8 @@ const NAV_ITEMS = [
   { key: 'dashboard', href: 'dashboard' },
   { key: 'automations', href: 'automations' },
   { key: 'analytics', href: 'analytics' },
-  { key: 'contact', href: 'contact' },
+  { key: 'blog', href: 'blog' },
+  { key: 'pricing', href: 'pricing' },
 ] as const;
 
 export function Header() {
@@ -68,7 +69,7 @@ export function Header() {
             <div className="flex items-center gap-4">
               <Link href={`/${locale}/dashboard`} prefetch={false} className="flex items-center gap-2">
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center shadow-lg">
-                  <span className="text-xl">🔬</span>
+                  <span className="text-xl font-semibold text-white">LL</span>
                 </div>
                 <h1 className="text-xl sm:text-2xl font-bold gradient-text">
                   LookLab

@@ -5,35 +5,52 @@ import Image from 'next/image';
 import { NodeProps } from 'reactflow';
 import { BaseNode } from './BaseNode';
 import { MessageNodeData } from '@/lib/types/flow';
+import { useFlowStore } from '@/lib/store/flowStore';
+import { useUIStore } from '@/lib/store/uiStore';
 
-export const MessageNode = memo(function MessageNode({ data }: NodeProps<MessageNodeData>) {
+export const MessageNode = memo(function MessageNode({ id, data }: NodeProps<MessageNodeData>) {
+  const isEditMode = useFlowStore((state) => state.isEditMode);
+  const openNodeEditor = useUIStore((state) => state.openNodeEditor);
+
+  const handleEdit = () => {
+    if (!isEditMode) return;
+    openNodeEditor(id);
+  };
+
   return (
     <BaseNode
-      icon="💬"
-      title="Send Message"
+      icon={data.icon ?? 'MSG'}
+      title={data.label || 'Send Message'}
       color="from-blue-500 to-cyan-500"
       statistics={data.statistics}
+      onEdit={handleEdit}
+      isEditable={isEditMode}
     >
       <div className="space-y-3">
         {/* Message Text */}
         <div>
-          <p className="text-xs font-semibold text-neutral-500 mb-2">Message:</p>
-          <div className="bg-neutral-50 rounded-lg p-3 border border-neutral-200">
-            <p className="text-sm text-neutral-700 whitespace-pre-wrap line-clamp-3">
-              {data.messageText || <span className="italic text-neutral-400">No message</span>}
-            </p>
+          <p className="mb-2 text-xs font-semibold text-neutral-500">Message:</p>
+          <div className="rounded-lg border border-neutral-200 bg-neutral-50 p-3">
+            {data.messageText ? (
+              <p className="line-clamp-4 whitespace-pre-wrap text-sm text-neutral-700">
+                {data.messageText}
+              </p>
+            ) : (
+              <span className="text-sm italic text-neutral-400">No message configured</span>
+            )}
           </div>
         </div>
 
         {/* Image Preview */}
         {data.imageUrl && (
           <div>
-            <p className="text-xs font-semibold text-neutral-500 mb-2">Image:</p>
-            <div className="relative h-32 rounded-lg overflow-hidden border border-neutral-200">
+            <p className="mb-2 text-xs font-semibold text-neutral-500">Image:</p>
+            <div className="relative h-32 overflow-hidden rounded-lg border border-neutral-200">
               <Image
                 src={data.imageUrl}
                 alt="Message image"
                 fill
+                sizes="200px"
                 className="object-cover"
               />
             </div>
@@ -43,17 +60,17 @@ export const MessageNode = memo(function MessageNode({ data }: NodeProps<Message
         {/* Buttons */}
         {data.buttons.length > 0 && (
           <div>
-            <p className="text-xs font-semibold text-neutral-500 mb-2">
-              Buttons ({data.buttons.length}):
+            <p className="mb-2 text-xs font-semibold text-neutral-500">
+              Buttons ({data.buttons.length})
             </p>
             <div className="space-y-1.5">
               {data.buttons.map((button) => (
                 <div
                   key={button.id}
-                  className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium ${
+                  className={`flex items-center justify-between rounded-lg px-3 py-2 text-xs font-medium ${
                     button.type === 'whatsapp'
-                      ? 'bg-green-50 border border-green-200 text-green-700'
-                      : 'bg-red-50 border border-red-200 text-red-700'
+                      ? 'border border-green-200 bg-green-50 text-green-700'
+                      : 'border border-red-200 bg-red-50 text-red-700'
                   }`}
                 >
                   <span>{button.text}</span>

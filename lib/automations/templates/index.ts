@@ -1,4 +1,9 @@
 export { hairRestorationTemplate } from './hair-restoration';
 export { aestheticAITemplate } from './aesthetic-ai';
-export { nailTransformationTemplate } from './nail-transformation';
 export { carColorChangerTemplate } from './car-color-changer';
+export { petProductsTemplate } from './pet-products';
+export { carWheelsTemplate } from './car-wheels';
+export { wallPaintTemplate } from './wall-paint';
+export { furniturePlacementTemplate } from './furniture-placement';
+export { clothesTryOnTemplate } from './clothes-tryon';
+export { jewelryTemplate } from './jewelry';

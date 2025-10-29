@@ -113,6 +113,11 @@ export type FlowNode = Node<FlowNodeData> & {
   data: FlowNodeData;
 };
 
+export type TriggerFlowNode = FlowNode & { type: 'trigger'; data: TriggerNodeData };
+export type MessageFlowNode = FlowNode & { type: 'message'; data: MessageNodeData };
+export type ImageRequestFlowNode = FlowNode & { type: 'image_request'; data: ImageRequestNodeData };
+export type ResultFlowNode = FlowNode & { type: 'result'; data: ResultNodeData };
+
 /**
  * Flow edge - compatible with React Flow's Edge type
  */

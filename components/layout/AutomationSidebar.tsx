@@ -3,17 +3,15 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useAccountStore } from '@/lib/store/accountStore';
-import { useUIStore } from '@/lib/store/uiStore';
+import { motion } from 'framer-motion';
 import { AccountSwitcher } from './AccountSwitcher';
+import { AutomationSwitcher } from './AutomationSwitcher';
 import {
   HomeIcon,
-  UsersIcon,
+  ChartBarIcon,
   Cog6ToothIcon,
   QuestionMarkCircleIcon,
   UserCircleIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
 } from '@heroicons/react/24/outline';
 import { SparklesIcon } from '@heroicons/react/24/solid';
 
@@ -26,47 +24,60 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { name: 'Home', href: '/dashboard', icon: HomeIcon },
-  { name: 'Contacts', href: '/contacts', icon: UsersIcon },
   { name: 'Automation', href: '/automations', icon: SparklesIcon },
-  { name: 'Settings', href: '/settings', icon: Cog6ToothIcon },
+  { name: 'Analytics', href: '/analytics', icon: ChartBarIcon },
+];
+
+const bottomItems: NavItem[] = [
+  { name: 'Settings', href: '/automation-settings', icon: Cog6ToothIcon },
+  { name: 'Help', href: '/help', icon: QuestionMarkCircleIcon },
 ];
 
 export function AutomationSidebar() {
   const pathname = usePathname();
-  const { isSidebarCollapsed, toggleSidebar } = useUIStore();
-  const { getCurrentAccount } = useAccountStore();
-
-  const currentAccount = getCurrentAccount();
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div
-      className={`relative h-screen bg-white border-r border-neutral-200 flex flex-col transition-all duration-300 ${
-        isSidebarCollapsed ? 'w-[70px]' : 'w-[280px]'
-      }`}
+    <motion.div
+      onMouseEnter={() => setIsOpen(true)}
+      onMouseLeave={() => setIsOpen(false)}
+      animate={{
+        width: isOpen ? '280px' : '70px',
+      }}
+      transition={{
+        duration: 0.3,
+        ease: 'easeInOut',
+      }}
+      className="relative h-screen bg-white border-r border-neutral-200 flex flex-col overflow-hidden"
     >
       {/* Logo Section */}
-      <div className="h-20 flex items-center justify-between px-6 border-b border-neutral-100">
-        {!isSidebarCollapsed && (
-          <Link href="/dashboard" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center">
-              <span className="text-white font-bold text-sm">L</span>
-            </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent">
-              LookLab
-            </span>
-          </Link>
-        )}
-
-        {isSidebarCollapsed && (
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center mx-auto">
+      <div className="h-20 flex items-center px-6 border-b border-neutral-100">
+        <Link href="/dashboard" className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center flex-shrink-0">
             <span className="text-white font-bold text-sm">L</span>
           </div>
-        )}
+          <motion.span
+            initial={{ opacity: 0 }}
+            animate={{
+              opacity: isOpen ? 1 : 0,
+              display: isOpen ? 'inline-block' : 'none',
+            }}
+            transition={{ duration: 0.2 }}
+            className="text-xl font-bold bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent whitespace-nowrap"
+          >
+            LookLab
+          </motion.span>
+        </Link>
       </div>
 
       {/* Account Switcher */}
       <div className="px-4 py-6 border-b border-neutral-100">
-        <AccountSwitcher collapsed={isSidebarCollapsed} />
+        <AccountSwitcher collapsed={!isOpen} />
+      </div>
+
+      {/* Automation Switcher */}
+      <div className="px-4 py-6 border-b border-neutral-100">
+        <AutomationSwitcher collapsed={!isOpen} />
       </div>
 
       {/* Navigation Items */}
@@ -91,16 +102,28 @@ export function AutomationSidebar() {
                 }`}
               />
 
-              {!isSidebarCollapsed && (
-                <span className={`font-medium ${isActive ? 'text-white' : 'text-neutral-700'}`}>
-                  {item.name}
-                </span>
-              )}
+              <motion.span
+                animate={{
+                  opacity: isOpen ? 1 : 0,
+                  display: isOpen ? 'inline-block' : 'none',
+                }}
+                transition={{ duration: 0.15 }}
+                className={`font-medium whitespace-nowrap ${
+                  isActive ? 'text-white' : 'text-neutral-700 group-hover:translate-x-1 transition-transform'
+                }`}
+              >
+                {item.name}
+              </motion.span>
 
-              {!isSidebarCollapsed && item.badge && (
-                <span className="ml-auto px-2 py-0.5 text-xs font-semibold rounded-full bg-accent-500 text-white">
+              {isOpen && item.badge && (
+                <motion.span
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.2 }}
+                  className="ml-auto px-2 py-0.5 text-xs font-semibold rounded-full bg-accent-500 text-white"
+                >
                   {item.badge}
-                </span>
+                </motion.span>
               )}
             </Link>
           );
@@ -109,36 +132,29 @@ export function AutomationSidebar() {
 
       {/* Bottom Section */}
       <div className="border-t border-neutral-100 px-3 py-4 space-y-2">
-        {/* Profile */}
-        <Link
-          href="/profile"
-          className="flex items-center gap-3 px-3 py-3 rounded-xl text-neutral-600 hover:bg-neutral-50 transition-all"
-        >
-          <UserCircleIcon className="w-5 h-5 text-neutral-500" />
-          {!isSidebarCollapsed && <span className="font-medium text-neutral-700">My Profile</span>}
-        </Link>
-
-        {/* Help */}
-        <Link
-          href="/help"
-          className="flex items-center gap-3 px-3 py-3 rounded-xl text-neutral-600 hover:bg-neutral-50 transition-all"
-        >
-          <QuestionMarkCircleIcon className="w-5 h-5 text-neutral-500" />
-          {!isSidebarCollapsed && <span className="font-medium text-neutral-700">Help</span>}
-        </Link>
+        {bottomItems.map((item) => {
+          const Icon = item.icon;
+          return (
+            <Link
+              key={item.name}
+              href={item.href}
+              className="flex items-center gap-3 px-3 py-3 rounded-xl text-neutral-600 hover:bg-neutral-50 transition-all group"
+            >
+              <Icon className="w-5 h-5 text-neutral-500 group-hover:text-primary-500 flex-shrink-0" />
+              <motion.span
+                animate={{
+                  opacity: isOpen ? 1 : 0,
+                  display: isOpen ? 'inline-block' : 'none',
+                }}
+                transition={{ duration: 0.15 }}
+                className="font-medium text-neutral-700 whitespace-nowrap group-hover:translate-x-1 transition-transform"
+              >
+                {item.name}
+              </motion.span>
+            </Link>
+          );
+        })}
       </div>
-
-      {/* Collapse/Expand Button */}
-      <button
-        onClick={toggleSidebar}
-        className="absolute -right-3 top-24 w-6 h-6 rounded-full bg-white border-2 border-neutral-200 shadow-md flex items-center justify-center hover:bg-neutral-50 transition-all"
-      >
-        {isSidebarCollapsed ? (
-          <ChevronRightIcon className="w-3 h-3 text-neutral-600" />
-        ) : (
-          <ChevronLeftIcon className="w-3 h-3 text-neutral-600" />
-        )}
-      </button>
-    </div>
+    </motion.div>
   );
 }

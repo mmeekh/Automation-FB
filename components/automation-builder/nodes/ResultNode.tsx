@@ -3,25 +3,37 @@
 import { memo } from 'react';
 import Image from 'next/image';
 import { NodeProps } from 'reactflow';
+import { PhoneIcon } from '@heroicons/react/24/solid';
 import { BaseNode } from './BaseNode';
 import { ResultNodeData } from '@/lib/types/flow';
-import { PhoneIcon } from '@heroicons/react/24/solid';
+import { useFlowStore } from '@/lib/store/flowStore';
+import { useUIStore } from '@/lib/store/uiStore';
 
-export const ResultNode = memo(function ResultNode({ data }: NodeProps<ResultNodeData>) {
+export const ResultNode = memo(function ResultNode({ id, data }: NodeProps<ResultNodeData>) {
+  const isEditMode = useFlowStore((state) => state.isEditMode);
+  const openNodeEditor = useUIStore((state) => state.openNodeEditor);
+
+  const handleEdit = () => {
+    if (!isEditMode) return;
+    openNodeEditor(id);
+  };
+
   return (
     <BaseNode
-      icon="🎨"
-      title="Show Result"
+      icon={data.icon ?? 'FIN'}
+      title={data.label || 'Show Result'}
       color="from-green-500 to-emerald-500"
       hasOutput={false}
       statistics={data.statistics}
+      onEdit={handleEdit}
+      isEditable={isEditMode}
     >
       <div className="space-y-3">
         {/* Output Message */}
         <div>
-          <p className="text-xs font-semibold text-neutral-500 mb-2">Result Message:</p>
-          <div className="bg-green-50 rounded-lg p-3 border border-green-200">
-            <p className="text-sm text-green-700 whitespace-pre-wrap line-clamp-3">
+          <p className="mb-2 text-xs font-semibold text-neutral-500">Result Message:</p>
+          <div className="rounded-lg border border-green-200 bg-green-50 p-3">
+            <p className="line-clamp-4 whitespace-pre-wrap text-sm text-green-700">
               {data.outputTemplate}
             </p>
           </div>
@@ -30,12 +42,13 @@ export const ResultNode = memo(function ResultNode({ data }: NodeProps<ResultNod
         {/* Result Image */}
         {data.imageUrl && (
           <div>
-            <p className="text-xs font-semibold text-neutral-500 mb-2">AI Generated Image:</p>
-            <div className="relative h-40 rounded-lg overflow-hidden border border-neutral-200">
+            <p className="mb-2 text-xs font-semibold text-neutral-500">AI Generated Image:</p>
+            <div className="relative h-40 overflow-hidden rounded-lg border border-neutral-200">
               <Image
                 src={data.imageUrl}
                 alt="Result preview"
                 fill
+                sizes="240px"
                 className="object-cover"
               />
             </div>
@@ -45,13 +58,13 @@ export const ResultNode = memo(function ResultNode({ data }: NodeProps<ResultNod
         {/* Appointment Button */}
         {data.appointmentButton && (
           <div>
-            <p className="text-xs font-semibold text-neutral-500 mb-2">Appointment Button:</p>
-            <div className="flex items-center gap-2 px-3 py-2.5 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg shadow-md">
-              <PhoneIcon className="w-4 h-4" />
+            <p className="mb-2 text-xs font-semibold text-neutral-500">Appointment Button:</p>
+            <div className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-green-500 to-emerald-500 px-3 py-2.5 text-white shadow-md">
+              <PhoneIcon className="h-4 w-4" />
               <span className="text-sm font-semibold">{data.appointmentButton.text}</span>
             </div>
-            <p className="text-[10px] text-neutral-500 mt-1 italic">
-              📱 Opens WhatsApp: {data.appointmentButton.phoneNumber}
+            <p className="mt-1 text-[10px] italic text-neutral-500">
+              Opens WhatsApp: {data.appointmentButton.phoneNumber}
             </p>
           </div>
         )}
@@ -59,19 +72,19 @@ export const ResultNode = memo(function ResultNode({ data }: NodeProps<ResultNod
         {/* Delayed Messages */}
         {data.delayedMessages && data.delayedMessages.length > 0 && (
           <div>
-            <p className="text-xs font-semibold text-neutral-500 mb-2">
+            <p className="mb-2 text-xs font-semibold text-neutral-500">
               Follow-up Messages ({data.delayedMessages.length}):
             </p>
             <div className="space-y-1.5">
               {data.delayedMessages.map((msg, index) => (
                 <div
-                  key={index}
-                  className="flex items-start gap-2 bg-neutral-50 rounded-lg p-2 border border-neutral-200"
+                  key={`${msg.delay}-${index}`}
+                  className="flex items-start gap-2 rounded-lg border border-neutral-200 bg-neutral-50 p-2"
                 >
-                  <span className="text-[10px] font-semibold text-neutral-500 mt-0.5">
+                  <span className="mt-0.5 text-[10px] font-semibold text-neutral-500">
                     +{msg.delay}s
                   </span>
-                  <p className="text-xs text-neutral-700 flex-1 line-clamp-2">{msg.text}</p>
+                  <p className="flex-1 text-xs text-neutral-700">{msg.text}</p>
                 </div>
               ))}
             </div>
@@ -79,9 +92,8 @@ export const ResultNode = memo(function ResultNode({ data }: NodeProps<ResultNod
         )}
 
         {/* Info */}
-        <p className="text-xs text-neutral-500 italic flex items-center gap-1">
-          <span>✅</span>
-          <span>Final step - automation completes here</span>
+        <p className="text-xs italic text-neutral-500">
+          Final step - automation completes here
         </p>
       </div>
     </BaseNode>

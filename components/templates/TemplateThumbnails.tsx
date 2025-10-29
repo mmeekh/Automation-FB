@@ -1,4 +1,4 @@
-import Image from 'next/image';
+﻿import Image from 'next/image';
 
 /**
  * Get thumbnail preview for a template
@@ -183,90 +183,8 @@ export function getTemplateThumbnail(templateId: string) {
         </div>
       </div>
     ),
-    'instagram-nail-transformation': (
-      <div className="bg-gradient-to-br from-rose-50 to-white p-4">
-        <div className="flex items-center gap-2 mb-4 pb-3 border-b border-gray-200">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-rose-500 to-fuchsia-500 flex items-center justify-center text-white text-xs font-bold">
-            NS
-          </div>
-          <div>
-            <p className="text-xs font-semibold text-gray-800">Nail Studio</p>
-            <p className="text-[10px] text-gray-400">Active now</p>
-          </div>
-        </div>
-        <div className="space-y-2.5">
-          <div className="flex justify-start">
-            <div className="max-w-[80%]">
-              <div className="rounded-2xl rounded-tl-sm bg-gray-100 px-3 py-2">
-                <p className="text-[11px] text-gray-800">Please send your hand photo 📸</p>
-              </div>
-              <p className="text-[9px] text-gray-400 mt-1">2:14 PM</p>
-            </div>
-          </div>
-          <div className="flex justify-end">
-            <div className="max-w-[65%]">
-              <div className="rounded-2xl rounded-tr-sm bg-blue-500 p-2">
-                <div className="w-28 h-28 bg-gradient-to-br from-neutral-200 to-neutral-300 rounded-lg flex items-center justify-center text-[9px] text-gray-600">
-                  🖐️ My Hand
-                </div>
-              </div>
-              <p className="text-[9px] text-gray-400 text-right mt-1">2:15 PM</p>
-            </div>
-          </div>
-          <div className="flex justify-start">
-            <div className="max-w-[80%]">
-              <div className="rounded-2xl rounded-tl-sm bg-gray-100 px-3 py-2">
-                <p className="text-[11px] text-gray-800">Great! Now send the nail design you want 💅</p>
-              </div>
-              <p className="text-[9px] text-gray-400 mt-1">2:15 PM</p>
-            </div>
-          </div>
-          <div className="flex justify-end">
-            <div className="max-w-[65%]">
-              <div className="rounded-2xl rounded-tr-sm bg-blue-500 p-2">
-                <div className="w-28 h-28 bg-gradient-to-br from-rose-200 to-fuchsia-200 rounded-lg flex items-center justify-center text-[9px] text-rose-800">
-                  💅 Desired Design
-                </div>
-              </div>
-              <p className="text-[9px] text-gray-400 text-right mt-1">2:16 PM</p>
-            </div>
-          </div>
-          <div className="flex justify-start">
-            <div className="max-w-[75%]">
-              <div className="rounded-2xl rounded-tl-sm bg-gray-100 px-3 py-2">
-                <p className="text-[11px] text-gray-800">Your nails are being prepared... ✨</p>
-              </div>
-              <p className="text-[9px] text-gray-400 mt-1">2:16 PM</p>
-            </div>
-          </div>
-          <div className="flex justify-start">
-            <div className="max-w-[85%]">
-              <div className="rounded-2xl rounded-tl-sm bg-gray-100 p-3">
-                <p className="text-[11px] text-gray-800 font-medium mb-2">🌟 Your Transformation is Ready!</p>
-                <div className="rounded-lg overflow-hidden mb-2">
-                  <div className="h-32 bg-gradient-to-br from-rose-300 via-fuchsia-300 to-rose-400 flex items-center justify-center text-[10px] text-rose-900 font-semibold border-2 border-rose-500">
-                    ✨ New Nail Design ✨
-                  </div>
-                </div>
-                <button className="w-full bg-gradient-to-r from-rose-500 to-fuchsia-500 text-white text-[11px] font-semibold py-2 px-4 rounded-lg hover:from-rose-600 hover:to-fuchsia-600 transition-all">
-                  📅 Randevu Al
-                </button>
-              </div>
-              <p className="text-[9px] text-gray-400 mt-1">2:17 PM</p>
-            </div>
-          </div>
-          <div className="flex justify-start">
-            <div className="max-w-[70%]">
-              <div className="rounded-2xl rounded-tl-sm bg-gray-100 px-3 py-2">
-                <p className="text-[11px] text-gray-800">Perfect match! 💅</p>
-              </div>
-              <p className="text-[9px] text-gray-400 mt-1">2:17 PM</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    ),
   };
 
   return thumbnailConfigs[templateId] || null;
 }
+

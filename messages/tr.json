@@ -10,7 +10,8 @@
     "dashboard": "Panel",
     "automations": "Otomasyonlar",
     "analytics": "Analitik",
-    "contact": "Kisiler"
+    "blog": "Blog",
+    "pricing": "Fiyatlar"
   },
   "auth": {
     "login": "Giriş Yap",

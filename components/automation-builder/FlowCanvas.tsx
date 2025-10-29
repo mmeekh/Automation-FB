@@ -4,13 +4,9 @@ import { useCallback } from 'react';
 import ReactFlow, {
   Background,
   Controls,
-  MiniMap,
-  Node,
-  Edge,
   Connection,
   addEdge,
   BackgroundVariant,
-  ConnectionLineType,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 
@@ -106,33 +102,13 @@ export function FlowCanvas() {
           showInteractive={false}
           className="bg-white border border-neutral-200 rounded-xl shadow-lg"
         />
-
-        {/* MiniMap */}
-        <MiniMap
-          nodeStrokeWidth={3}
-          nodeColor={(node) => {
-            switch (node.type) {
-              case 'trigger':
-                return '#f59e0b'; // amber
-              case 'message':
-                return '#3b82f6'; // blue
-              case 'image_request':
-                return '#8b5cf6'; // purple
-              case 'result':
-                return '#10b981'; // green
-              default:
-                return '#6b7280'; // gray
-            }
-          }}
-          className="bg-white border border-neutral-200 rounded-xl shadow-lg"
-        />
       </ReactFlow>
 
       {/* Edit Mode Indicator */}
       {!isEditMode && (
         <div className="absolute top-4 left-1/2 -translate-x-1/2 z-10">
           <div className="px-4 py-2 bg-blue-500 text-white text-sm font-semibold rounded-full shadow-lg">
-            👀 View Mode - Click "Edit Automation" to make changes
+            View mode - click "Edit Automation" to make changes
           </div>
         </div>
       )}
@@ -140,10 +116,11 @@ export function FlowCanvas() {
       {isEditMode && (
         <div className="absolute top-4 left-1/2 -translate-x-1/2 z-10">
           <div className="px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white text-sm font-semibold rounded-full shadow-lg animate-pulse">
-            ✏️ Edit Mode - Drag nodes, click to edit content
+            Edit mode - drag nodes or click a card to update content
           </div>
         </div>
       )}
     </div>
   );
 }
+

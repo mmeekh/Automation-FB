@@ -1,4 +1,4 @@
-import {
+﻿import {
   AutomationFlow,
   FlowNode,
   FlowEdge,
@@ -8,13 +8,14 @@ import {
   ResultNodeData,
 } from '../types/flow';
 
-/**
- * Sample Hair Restoration Flow
- */
+// ---------------------------------------------------------------------------
+// Hair Restoration Flow
+// ---------------------------------------------------------------------------
+
 export const hairRestorationFlow: AutomationFlow = {
   id: 'flow-instagram-bald-to-haired',
-  name: 'Saç Restorasyon AI',
-  description: 'Kullanıcıların saç modellerini AI ile dönüştürür',
+  name: 'Sac Restorasyon AI',
+  description: 'Kullanicilarin sac modellerini AI ile degistirir',
   templateId: 'instagram-bald-to-haired',
   instagramAccountId: 'acc-1',
 
@@ -22,20 +23,19 @@ export const hairRestorationFlow: AutomationFlow = {
   testUsers: ['test_user1', 'test_user2'],
 
   trigger: {
-    keywords: ['saç', 'sac', 'SAÇ', 'hair'],
+    keywords: ['sac', 'hair'],
     exactMatch: false,
   },
 
   nodes: [
-    // 1. Trigger Node
     {
       id: 'trigger-1',
       type: 'trigger',
-      position: { x: 50, y: 150 },
+      position: { x: 50, y: 200 },
       data: {
-        label: 'Kullanıcı "saç" yazdı',
-        icon: '⚡',
-        keywords: ['saç', 'sac', 'SAÇ', 'hair'],
+        label: 'Kullanici "sac" yazdi',
+        icon: 'TR',
+        keywords: ['sac', 'hair'],
         exactMatch: false,
         statistics: {
           sent: 0,
@@ -46,27 +46,25 @@ export const hairRestorationFlow: AutomationFlow = {
         },
       } as TriggerNodeData,
     },
-
-    // 2. Welcome Message
     {
       id: 'message-welcome',
       type: 'message',
-      position: { x: 450, y: 150 },
+      position: { x: 400, y: 200 },
       data: {
-        label: 'Hoşgeldin Mesajı',
-        icon: '💬',
+        label: 'Hosgeldin Mesaji',
+        icon: 'MSG',
         messageText:
-          'Merhaba! 👋 Saç modelinizi AI ile değiştirebilirim.\n\nSize farklı saç stilleri göstereceğim! 💇‍♀️✨',
+          'Merhaba! Sac modelinizi AI ile degistirebilirim.\n\nFarkli stiller denemek ister misiniz?',
         imageUrl: null,
         buttons: [
           {
             id: 'btn-start',
-            text: 'Hadi Başlayalım! 🚀',
+            text: 'Baslayalim',
             type: 'whatsapp',
           },
           {
             id: 'btn-cancel',
-            text: 'İptal',
+            text: 'Iptal',
             type: 'cancel',
           },
         ],
@@ -79,17 +77,15 @@ export const hairRestorationFlow: AutomationFlow = {
         },
       } as MessageNodeData,
     },
-
-    // 3. Request First Image
     {
       id: 'image-req-1',
       type: 'image_request',
-      position: { x: 250, y: 500 },
+      position: { x: 750, y: 200 },
       data: {
-        label: 'İlk Fotoğraf İsteği',
-        icon: '🖼️',
-        requestMessage: 'Lütfen mevcut saç fotoğrafınızı gönderin 📸',
-        errorMessage: '⚠️ Hata! Lütfen bir fotoğraf gönderin (yazı değil)',
+        label: 'Ilk Fotograf Istegi',
+        icon: 'CAM',
+        requestMessage: 'Lutfen mevcut sac fotografini gonder.',
+        errorMessage: 'Lutfen fotograf gonder, metin kabul edilmiyor.',
         retryCount: 3,
         statistics: {
           sent: 30,
@@ -100,33 +96,19 @@ export const hairRestorationFlow: AutomationFlow = {
         },
       } as ImageRequestNodeData,
     },
-
-    // 4. Ask for Style Preference
     {
       id: 'message-style',
       type: 'message',
-      position: { x: 250, y: 750 },
+      position: { x: 1100, y: 200 },
       data: {
-        label: 'Stil Seçimi',
-        icon: '💅',
-        messageText: 'Harika! Şimdi hangi saç stilini denemek istersiniz?',
+        label: 'Stil Sorusu',
+        icon: 'ART',
+        messageText: 'Harika! Hangi sac stilini denemek istersiniz?',
         imageUrl: '/media/hairchange2.webp',
         buttons: [
-          {
-            id: 'btn-blonde',
-            text: 'Sarı Saç',
-            type: 'whatsapp',
-          },
-          {
-            id: 'btn-red',
-            text: 'Kızıl Saç',
-            type: 'whatsapp',
-          },
-          {
-            id: 'btn-dark',
-            text: 'Koyu Renk',
-            type: 'whatsapp',
-          },
+          { id: 'btn-blonde', text: 'Sari', type: 'whatsapp' },
+          { id: 'btn-red', text: 'Kizil', type: 'whatsapp' },
+          { id: 'btn-dark', text: 'Koyu Renk', type: 'whatsapp' },
         ],
         statistics: {
           sent: 28,
@@ -137,16 +119,14 @@ export const hairRestorationFlow: AutomationFlow = {
         },
       } as MessageNodeData,
     },
-
-    // 5. Processing Message
     {
       id: 'message-processing',
       type: 'message',
-      position: { x: 250, y: 1050 },
+      position: { x: 1450, y: 200 },
       data: {
-        label: 'İşleniyor Mesajı',
-        icon: '⏳',
-        messageText: 'Fotoğrafınız AI tarafından işleniyor... ✨\n\nBu 10-15 saniye sürebilir.',
+        label: 'Isleniyor',
+        icon: 'WAIT',
+        messageText: 'Fotografin AI tarafindan isleniyor. Bu 10-15 saniye surebilir.',
         imageUrl: null,
         buttons: [],
         statistics: {
@@ -158,32 +138,24 @@ export const hairRestorationFlow: AutomationFlow = {
         },
       } as MessageNodeData,
     },
-
-    // 6. Result with Appointment
     {
       id: 'result-final',
       type: 'result',
-      position: { x: 250, y: 1350 },
+      position: { x: 1800, y: 200 },
       data: {
-        label: 'Sonuç & Randevu',
-        icon: '🎨',
+        label: 'Sonuc ve Randevu',
+        icon: 'FIN',
         outputTemplate:
-          'İşte yeni saç modeliniz! 💖\n\nBeğendiniz mi? Salonumuza gelerek bu görünümü elde edebilirsiniz! 💇‍♀️',
+          'Yeni sac modelin hazir! Salonumuzda bu gorunumu gercege donusturebiliriz.',
         imageUrl: '/media/hairchange3.webp',
         appointmentButton: {
-          text: 'Randevu Al 📅',
+          text: 'Randevu Al',
           phoneNumber: '905449422355',
-          autoMessage: 'Merhaba! Saç değişimi için randevu almak istiyorum 💇‍♀️',
+          autoMessage: 'Merhaba! Sac degisimi icin randevu almak istiyorum.',
         },
         delayedMessages: [
-          {
-            delay: 2,
-            text: '🌟 Salon Adı: SwordNest Hair Studio',
-          },
-          {
-            delay: 3,
-            text: '📍 Adres: İstanbul, Kadıköy\n⏰ Çalışma saatleri: 09:00 - 19:00',
-          },
+          { delay: 2, text: 'Salon: SwordNest Hair Studio' },
+          { delay: 3, text: 'Adres: Istanbul, Kadikoy. Calisma saatleri 09:00 - 19:00.' },
         ],
         statistics: {
           sent: 24,
@@ -199,30 +171,10 @@ export const hairRestorationFlow: AutomationFlow = {
   ] as FlowNode[],
 
   edges: [
-    {
-      id: 'e-trigger-welcome',
-      source: 'trigger-1',
-      target: 'message-welcome',
-      type: 'default',
-    },
-    {
-      id: 'e-welcome-img1',
-      source: 'message-welcome',
-      target: 'image-req-1',
-      type: 'default',
-    },
-    {
-      id: 'e-img1-style',
-      source: 'image-req-1',
-      target: 'message-style',
-      type: 'default',
-    },
-    {
-      id: 'e-style-processing',
-      source: 'message-style',
-      target: 'message-processing',
-      type: 'default',
-    },
+    { id: 'e-trigger-welcome', source: 'trigger-1', target: 'message-welcome', type: 'default' },
+    { id: 'e-welcome-img1', source: 'message-welcome', target: 'image-req-1', type: 'default' },
+    { id: 'e-img1-style', source: 'image-req-1', target: 'message-style', type: 'default' },
+    { id: 'e-style-processing', source: 'message-style', target: 'message-processing', type: 'default' },
     {
       id: 'e-processing-result',
       source: 'message-processing',
@@ -241,19 +193,19 @@ export const hairRestorationFlow: AutomationFlow = {
 
   createdAt: '2024-01-15T10:30:00Z',
   updatedAt: new Date().toISOString(),
-
   totalInteractions: 3420,
   totalCompletions: 2890,
   averageCompletionTime: 45,
 };
 
-/**
- * Sample Car Color Changer Flow
- */
+// ---------------------------------------------------------------------------
+// Car Color Changer Flow
+// ---------------------------------------------------------------------------
+
 export const carColorChangerFlow: AutomationFlow = {
   id: 'flow-instagram-car-color-changer',
-  name: 'Araba Renk Değiştirme AI',
-  description: 'Arabanızın rengini AI ile değiştirin',
+  name: 'Araba Renk Degistirme AI',
+  description: 'Arabanin rengini AI ile degistir.',
   templateId: 'instagram-car-color-changer',
   instagramAccountId: 'acc-2',
 
@@ -269,10 +221,10 @@ export const carColorChangerFlow: AutomationFlow = {
     {
       id: 'trigger-car',
       type: 'trigger',
-      position: { x: 100, y: 100 },
+      position: { x: 50, y: 200 },
       data: {
-        label: 'Kullanıcı "araba" yazdı',
-        icon: '🚗',
+        label: 'Kullanici "araba" yazdi',
+        icon: 'TR',
         keywords: ['araba', 'car', 'renk'],
         exactMatch: false,
         statistics: {
@@ -287,11 +239,11 @@ export const carColorChangerFlow: AutomationFlow = {
     {
       id: 'message-car-welcome',
       type: 'message',
-      position: { x: 100, y: 250 },
+      position: { x: 400, y: 200 },
       data: {
-        label: 'Hoşgeldin Mesajı',
-        icon: '💬',
-        messageText: 'Merhaba! 🚗 Arabanızın rengini AI ile değiştirebilirim.',
+        label: 'Hosgeldin Mesaji',
+        icon: 'MSG',
+        messageText: 'Merhaba! Arabanizin rengini AI ile degistirebilirim.',
         imageUrl: null,
         buttons: [],
         statistics: {
@@ -306,11 +258,11 @@ export const carColorChangerFlow: AutomationFlow = {
     {
       id: 'result-car',
       type: 'result',
-      position: { x: 100, y: 450 },
+      position: { x: 750, y: 200 },
       data: {
-        label: 'Sonuç',
-        icon: '🎨',
-        outputTemplate: 'İşte yeni renkteki arabanız! 🚗✨',
+        label: 'Sonuc',
+        icon: 'FIN',
+        outputTemplate: 'Yeni renkteki araban hazir!',
         imageUrl: null,
         statistics: {
           sent: 10,
@@ -324,18 +276,8 @@ export const carColorChangerFlow: AutomationFlow = {
   ] as FlowNode[],
 
   edges: [
-    {
-      id: 'e-trigger-welcome',
-      source: 'trigger-car',
-      target: 'message-car-welcome',
-      type: 'default',
-    },
-    {
-      id: 'e-welcome-result',
-      source: 'message-car-welcome',
-      target: 'result-car',
-      type: 'default',
-    },
+    { id: 'e-trigger-welcome', source: 'trigger-car', target: 'message-car-welcome', type: 'default' },
+    { id: 'e-welcome-result', source: 'message-car-welcome', target: 'result-car', type: 'default' },
   ] as FlowEdge[],
 
   settings: {
@@ -347,19 +289,19 @@ export const carColorChangerFlow: AutomationFlow = {
 
   createdAt: '2024-02-01T14:20:00Z',
   updatedAt: new Date().toISOString(),
-
   totalInteractions: 450,
   totalCompletions: 380,
   averageCompletionTime: 35,
 };
 
-/**
- * Sample Aesthetic AI Flow
- */
+// ---------------------------------------------------------------------------
+// Aesthetic Flow
+// ---------------------------------------------------------------------------
+
 export const aestheticAIFlow: AutomationFlow = {
   id: 'flow-instagram-aesthetic-bald',
   name: 'Aesthetic AI',
-  description: 'Estetik AI dönüşümleri',
+  description: 'Estetik danismanligi icin otomatik akis.',
   templateId: 'instagram-aesthetic-bald',
   instagramAccountId: 'acc-3',
 
@@ -375,10 +317,10 @@ export const aestheticAIFlow: AutomationFlow = {
     {
       id: 'trigger-aesthetic',
       type: 'trigger',
-      position: { x: 100, y: 100 },
+      position: { x: 50, y: 200 },
       data: {
-        label: 'Kullanıcı "estetik" yazdı',
-        icon: '✨',
+        label: 'Kullanici "estetik" yazdi',
+        icon: 'TR',
         keywords: ['aesthetic', 'estetik'],
         exactMatch: false,
         statistics: {
@@ -393,11 +335,11 @@ export const aestheticAIFlow: AutomationFlow = {
     {
       id: 'message-aesthetic-info',
       type: 'message',
-      position: { x: 100, y: 250 },
+      position: { x: 400, y: 200 },
       data: {
-        label: 'Bilgi Mesajı',
-        icon: '💬',
-        messageText: 'Estetik dönüşümler için AI sistemimiz çalışıyor! ✨',
+        label: 'Bilgi Mesaji',
+        icon: 'MSG',
+        messageText: 'Estetik cozumlerimiz icin AI sistemimiz hazir.',
         imageUrl: null,
         buttons: [],
         statistics: {
@@ -412,12 +354,7 @@ export const aestheticAIFlow: AutomationFlow = {
   ] as FlowNode[],
 
   edges: [
-    {
-      id: 'e-trigger-info',
-      source: 'trigger-aesthetic',
-      target: 'message-aesthetic-info',
-      type: 'default',
-    },
+    { id: 'e-trigger-info', source: 'trigger-aesthetic', target: 'message-aesthetic-info', type: 'default' },
   ] as FlowEdge[],
 
   settings: {
@@ -429,121 +366,411 @@ export const aestheticAIFlow: AutomationFlow = {
 
   createdAt: '2024-02-10T09:15:00Z',
   updatedAt: new Date().toISOString(),
-
   totalInteractions: 0,
   totalCompletions: 0,
   averageCompletionTime: 0,
 };
 
-/**
- * Sample Nail Transformation Flow
- */
-export const nailTransformationFlow: AutomationFlow = {
-  id: 'flow-instagram-nail-transformation',
-  name: 'Tırnak Tasarım AI',
-  description: 'Tırnak tasarımlarınızı AI ile dönüştürün',
-  templateId: 'instagram-nail-transformation',
-  instagramAccountId: 'acc-4',
+// ---------------------------------------------------------------------------
+// Pet Products Flow
+// ---------------------------------------------------------------------------
 
+export const petProductsFlow: AutomationFlow = {
+  id: 'flow-pet-products',
+  name: 'Evcil Hayvan Ürünleri AI',
+  description: 'Evcil hayvanlara tasma ve kiyafet deneme',
+  templateId: 'pet-products',
+  instagramAccountId: 'acc-1',
   status: 'inactive',
   testUsers: [],
-
   trigger: {
-    keywords: ['tırnak', 'nail', 'manikür'],
+    keywords: ['tasma', 'kıyafet', 'pet', 'köpek', 'kedi'],
     exactMatch: false,
   },
-
   nodes: [
     {
-      id: 'trigger-nail',
+      id: 'trigger-pet',
       type: 'trigger',
-      position: { x: 100, y: 100 },
+      position: { x: 50, y: 200 },
       data: {
-        label: 'Kullanıcı "tırnak" yazdı',
-        icon: '💅',
-        keywords: ['tırnak', 'nail', 'manikür'],
+        label: 'Kullanici "pet" yazdi',
+        icon: 'TR',
+        keywords: ['tasma', 'kıyafet', 'pet'],
         exactMatch: false,
-        statistics: {
-          sent: 0,
-          delivered: 0,
-          deliveredRate: 0,
-          opened: 0,
-          openedRate: 0,
-        },
+        statistics: { sent: 0, delivered: 0, deliveredRate: 0, opened: 0, openedRate: 0 },
       } as TriggerNodeData,
     },
     {
-      id: 'message-nail-welcome',
+      id: 'message-pet-welcome',
       type: 'message',
-      position: { x: 100, y: 250 },
+      position: { x: 400, y: 200 },
       data: {
-        label: 'Hoşgeldin Mesajı',
-        icon: '💬',
-        messageText: 'Tırnak tasarımlarınızı AI ile değiştirebilirim! 💅✨',
+        label: 'Evcil Hayvan Mesaji',
+        icon: 'MSG',
+        messageText: 'Evcil hayvaniniz icin tasma veya kiyafet denemek ister misiniz? 🐾',
         imageUrl: null,
-        buttons: [],
-        statistics: {
-          sent: 0,
-          delivered: 0,
-          deliveredRate: 0,
-          opened: 0,
-          openedRate: 0,
-        },
+        buttons: [
+          { id: 'btn-pet-start', text: 'Evet!', type: 'whatsapp' },
+          { id: 'btn-pet-cancel', text: 'Hayir', type: 'cancel' },
+        ],
+        statistics: { sent: 0, delivered: 0, deliveredRate: 0, opened: 0, openedRate: 0 },
       } as MessageNodeData,
     },
-  ] as FlowNode[],
-
+  ],
   edges: [
-    {
-      id: 'e-trigger-welcome',
-      source: 'trigger-nail',
-      target: 'message-nail-welcome',
-      type: 'default',
-    },
-  ] as FlowEdge[],
-
+    { id: 'e-pet-1', source: 'trigger-pet', target: 'message-pet-welcome', animated: false },
+  ],
+  createdAt: '2025-01-15T10:00:00Z',
+  updatedAt: '2025-01-15T10:00:00Z',
   settings: {
     followerOnly: false,
-    dailyQuota: 800,
+    dailyQuota: 1000,
     usedQuota: 0,
     quotaResetPeriod: 'daily',
   },
-
-  createdAt: '2024-02-15T11:00:00Z',
-  updatedAt: new Date().toISOString(),
-
   totalInteractions: 0,
   totalCompletions: 0,
   averageCompletionTime: 0,
 };
 
-/**
- * All mock flows
- */
+// ---------------------------------------------------------------------------
+// Car Wheels Flow
+// ---------------------------------------------------------------------------
+
+export const carWheelsFlow: AutomationFlow = {
+  id: 'flow-car-wheels',
+  name: 'Araba Jant/Lastik AI',
+  description: 'Arabaya jant veya lastik deneme',
+  templateId: 'car-wheels',
+  instagramAccountId: 'acc-1',
+  status: 'inactive',
+  testUsers: [],
+  trigger: {
+    keywords: ['jant', 'lastik', 'wheels', 'tires'],
+    exactMatch: false,
+  },
+  nodes: [
+    {
+      id: 'trigger-wheels',
+      type: 'trigger',
+      position: { x: 50, y: 200 },
+      data: {
+        label: 'Kullanici "jant" yazdi',
+        icon: 'TR',
+        keywords: ['jant', 'lastik'],
+        exactMatch: false,
+        statistics: { sent: 0, delivered: 0, deliveredRate: 0, opened: 0, openedRate: 0 },
+      } as TriggerNodeData,
+    },
+    {
+      id: 'message-wheels-welcome',
+      type: 'message',
+      position: { x: 400, y: 200 },
+      data: {
+        label: 'Jant Mesaji',
+        icon: 'MSG',
+        messageText: 'Arabaniza farkli jant veya lastik denemek ister misiniz? 🚗',
+        imageUrl: null,
+        buttons: [
+          { id: 'btn-wheels-start', text: 'Evet!', type: 'whatsapp' },
+          { id: 'btn-wheels-cancel', text: 'Hayir', type: 'cancel' },
+        ],
+        statistics: { sent: 0, delivered: 0, deliveredRate: 0, opened: 0, openedRate: 0 },
+      } as MessageNodeData,
+    },
+  ],
+  edges: [
+    { id: 'e-wheels-1', source: 'trigger-wheels', target: 'message-wheels-welcome', animated: false },
+  ],
+  createdAt: '2025-01-15T11:00:00Z',
+  updatedAt: '2025-01-15T11:00:00Z',
+  settings: {
+    followerOnly: false,
+    dailyQuota: 1000,
+    usedQuota: 0,
+    quotaResetPeriod: 'daily',
+  },
+  totalInteractions: 0,
+  totalCompletions: 0,
+  averageCompletionTime: 0,
+};
+
+// ---------------------------------------------------------------------------
+// Wall Paint Flow
+// ---------------------------------------------------------------------------
+
+export const wallPaintFlow: AutomationFlow = {
+  id: 'flow-wall-paint',
+  name: 'Duvar Rengi/Duvar Kağıdı AI',
+  description: 'Duvar rengini veya desenini degistirme',
+  templateId: 'wall-paint',
+  instagramAccountId: 'acc-2',
+  status: 'inactive',
+  testUsers: [],
+  trigger: {
+    keywords: ['duvar', 'boya', 'wallpaper', 'wall'],
+    exactMatch: false,
+  },
+  nodes: [
+    {
+      id: 'trigger-wall',
+      type: 'trigger',
+      position: { x: 50, y: 200 },
+      data: {
+        label: 'Kullanici "duvar" yazdi',
+        icon: 'TR',
+        keywords: ['duvar', 'boya'],
+        exactMatch: false,
+        statistics: { sent: 0, delivered: 0, deliveredRate: 0, opened: 0, openedRate: 0 },
+      } as TriggerNodeData,
+    },
+    {
+      id: 'message-wall-welcome',
+      type: 'message',
+      position: { x: 400, y: 200 },
+      data: {
+        label: 'Duvar Mesaji',
+        icon: 'MSG',
+        messageText: 'Duvarlariniza farkli renk veya desen denemek ister misiniz? 🎨',
+        imageUrl: null,
+        buttons: [
+          { id: 'btn-wall-start', text: 'Evet!', type: 'whatsapp' },
+          { id: 'btn-wall-cancel', text: 'Hayir', type: 'cancel' },
+        ],
+        statistics: { sent: 0, delivered: 0, deliveredRate: 0, opened: 0, openedRate: 0 },
+      } as MessageNodeData,
+    },
+  ],
+  edges: [
+    { id: 'e-wall-1', source: 'trigger-wall', target: 'message-wall-welcome', animated: false },
+  ],
+  createdAt: '2025-01-15T12:00:00Z',
+  updatedAt: '2025-01-15T12:00:00Z',
+  settings: {
+    followerOnly: false,
+    dailyQuota: 1000,
+    usedQuota: 0,
+    quotaResetPeriod: 'daily',
+  },
+  totalInteractions: 0,
+  totalCompletions: 0,
+  averageCompletionTime: 0,
+};
+
+// ---------------------------------------------------------------------------
+// Furniture Placement Flow
+// ---------------------------------------------------------------------------
+
+export const furniturePlacementFlow: AutomationFlow = {
+  id: 'flow-furniture-placement',
+  name: 'Mobilya Yerleştirme AI',
+  description: 'Odaya mobilya yerleştirme ve deneme',
+  templateId: 'furniture-placement',
+  instagramAccountId: 'acc-2',
+  status: 'inactive',
+  testUsers: [],
+  trigger: {
+    keywords: ['mobilya', 'koltuk', 'masa', 'furniture'],
+    exactMatch: false,
+  },
+  nodes: [
+    {
+      id: 'trigger-furniture',
+      type: 'trigger',
+      position: { x: 50, y: 200 },
+      data: {
+        label: 'Kullanici "mobilya" yazdi',
+        icon: 'TR',
+        keywords: ['mobilya', 'koltuk'],
+        exactMatch: false,
+        statistics: { sent: 0, delivered: 0, deliveredRate: 0, opened: 0, openedRate: 0 },
+      } as TriggerNodeData,
+    },
+    {
+      id: 'message-furniture-welcome',
+      type: 'message',
+      position: { x: 400, y: 200 },
+      data: {
+        label: 'Mobilya Mesaji',
+        icon: 'MSG',
+        messageText: 'Odaniza farkli mobilyalar yerleştirmek ister misiniz? 🛋',
+        imageUrl: null,
+        buttons: [
+          { id: 'btn-furniture-start', text: 'Evet!', type: 'whatsapp' },
+          { id: 'btn-furniture-cancel', text: 'Hayir', type: 'cancel' },
+        ],
+        statistics: { sent: 0, delivered: 0, deliveredRate: 0, opened: 0, openedRate: 0 },
+      } as MessageNodeData,
+    },
+  ],
+  edges: [
+    { id: 'e-furniture-1', source: 'trigger-furniture', target: 'message-furniture-welcome', animated: false },
+  ],
+  createdAt: '2025-01-15T13:00:00Z',
+  updatedAt: '2025-01-15T13:00:00Z',
+  settings: {
+    followerOnly: false,
+    dailyQuota: 1000,
+    usedQuota: 0,
+    quotaResetPeriod: 'daily',
+  },
+  totalInteractions: 0,
+  totalCompletions: 0,
+  averageCompletionTime: 0,
+};
+
+// ---------------------------------------------------------------------------
+// Clothes Try-On Flow
+// ---------------------------------------------------------------------------
+
+export const clothesTryOnFlow: AutomationFlow = {
+  id: 'flow-clothes-tryon',
+  name: 'Elbise/Kıyafet Deneme AI',
+  description: 'Kiyafet ve elbise sanal deneme',
+  templateId: 'clothes-tryon',
+  instagramAccountId: 'acc-3',
+  status: 'active',
+  testUsers: [],
+  trigger: {
+    keywords: ['elbise', 'kıyafet', 'clothes', 'dress'],
+    exactMatch: false,
+  },
+  nodes: [
+    {
+      id: 'trigger-clothes',
+      type: 'trigger',
+      position: { x: 50, y: 200 },
+      data: {
+        label: 'Kullanici "elbise" yazdi',
+        icon: 'TR',
+        keywords: ['elbise', 'kıyafet'],
+        exactMatch: false,
+        statistics: { sent: 15, delivered: 15, deliveredRate: 100, opened: 14, openedRate: 93 },
+      } as TriggerNodeData,
+    },
+    {
+      id: 'message-clothes-welcome',
+      type: 'message',
+      position: { x: 400, y: 200 },
+      data: {
+        label: 'Kiyafet Mesaji',
+        icon: 'MSG',
+        messageText: 'Farkli kiyafetleri sanal olarak denemek ister misiniz? 👗',
+        imageUrl: null,
+        buttons: [
+          { id: 'btn-clothes-start', text: 'Evet!', type: 'whatsapp' },
+          { id: 'btn-clothes-cancel', text: 'Hayir', type: 'cancel' },
+        ],
+        statistics: { sent: 15, delivered: 15, deliveredRate: 100, opened: 14, openedRate: 93 },
+      } as MessageNodeData,
+    },
+  ],
+  edges: [
+    { id: 'e-clothes-1', source: 'trigger-clothes', target: 'message-clothes-welcome', animated: false },
+  ],
+  createdAt: '2025-01-15T14:00:00Z',
+  updatedAt: '2025-01-15T14:00:00Z',
+  settings: {
+    followerOnly: false,
+    dailyQuota: 1000,
+    usedQuota: 15,
+    quotaResetPeriod: 'daily',
+  },
+  totalInteractions: 15,
+  totalCompletions: 12,
+  averageCompletionTime: 180,
+};
+
+// ---------------------------------------------------------------------------
+// Jewelry Flow
+// ---------------------------------------------------------------------------
+
+export const jewelryFlow: AutomationFlow = {
+  id: 'flow-jewelry',
+  name: 'Takı Deneme AI',
+  description: 'Kolye, küpe, bileklik sanal deneme',
+  templateId: 'jewelry',
+  instagramAccountId: 'acc-3',
+  status: 'active',
+  testUsers: [],
+  trigger: {
+    keywords: ['takı', 'kolye', 'küpe', 'jewelry'],
+    exactMatch: false,
+  },
+  nodes: [
+    {
+      id: 'trigger-jewelry',
+      type: 'trigger',
+      position: { x: 50, y: 200 },
+      data: {
+        label: 'Kullanici "takı" yazdi',
+        icon: 'TR',
+        keywords: ['takı', 'kolye'],
+        exactMatch: false,
+        statistics: { sent: 8, delivered: 8, deliveredRate: 100, opened: 8, openedRate: 100 },
+      } as TriggerNodeData,
+    },
+    {
+      id: 'message-jewelry-welcome',
+      type: 'message',
+      position: { x: 400, y: 200 },
+      data: {
+        label: 'Taki Mesaji',
+        icon: 'MSG',
+        messageText: 'Farkli takilari sanal olarak denemek ister misiniz? 💍',
+        imageUrl: null,
+        buttons: [
+          { id: 'btn-jewelry-start', text: 'Evet!', type: 'whatsapp' },
+          { id: 'btn-jewelry-cancel', text: 'Hayir', type: 'cancel' },
+        ],
+        statistics: { sent: 8, delivered: 8, deliveredRate: 100, opened: 8, openedRate: 100 },
+      } as MessageNodeData,
+    },
+  ],
+  edges: [
+    { id: 'e-jewelry-1', source: 'trigger-jewelry', target: 'message-jewelry-welcome', animated: false },
+  ],
+  createdAt: '2025-01-15T15:00:00Z',
+  updatedAt: '2025-01-15T15:00:00Z',
+  settings: {
+    followerOnly: false,
+    dailyQuota: 1000,
+    usedQuota: 8,
+    quotaResetPeriod: 'daily',
+  },
+  totalInteractions: 8,
+  totalCompletions: 7,
+  averageCompletionTime: 150,
+};
+
+// ---------------------------------------------------------------------------
+// Utilities
+// ---------------------------------------------------------------------------
+
 export const mockFlows: AutomationFlow[] = [
   hairRestorationFlow,
   carColorChangerFlow,
   aestheticAIFlow,
-  nailTransformationFlow,
+  petProductsFlow,
+  carWheelsFlow,
+  wallPaintFlow,
+  furniturePlacementFlow,
+  clothesTryOnFlow,
+  jewelryFlow,
 ];
 
-/**
- * Get flow by ID
- */
 export function getMockFlowById(id: string): AutomationFlow | undefined {
   return mockFlows.find((flow) => flow.id === id);
 }
 
-/**
- * Get flows by account ID
- */
 export function getMockFlowsByAccount(accountId: string): AutomationFlow[] {
   return mockFlows.filter((flow) => flow.instagramAccountId === accountId);
 }
 
-/**
- * Get active flows only
- */
 export function getActiveFlows(): AutomationFlow[] {
   return mockFlows.filter((flow) => flow.status === 'active');
 }
+
+
+
+

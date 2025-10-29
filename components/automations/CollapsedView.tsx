@@ -1,15 +1,12 @@
-'use client';
+﻿'use client';
 
 import Image from 'next/image';
-import { Button } from '@/components';
-import { ChevronDownIcon } from '@heroicons/react/24/outline';
+import { useRouter } from 'next/navigation';
 import { AutomationTemplate } from '@/lib/automations/types';
+import { getAutomationLandingUrl } from '@/lib/utils/automation-slugs';
 
 interface CollapsedViewProps {
   template: AutomationTemplate;
-  onToggle: () => void;
-  onUse: () => void;
-  isUsing: boolean;
   isActivated?: boolean;
   isHovered?: boolean;
   onMouseEnter?: () => void;
@@ -18,40 +15,46 @@ interface CollapsedViewProps {
 
 export function CollapsedView({
   template,
-  onToggle,
-  onUse,
-  isUsing,
   isActivated,
   isHovered,
   onMouseEnter,
   onMouseLeave
 }: CollapsedViewProps) {
-  // Get images based on category
-  const hasImages = template.category === 'Hair Restoration';
+  const router = useRouter();
+
+  // Map template ID to image filenames
+  const getImagePath = (type: 'before' | 'style' | 'result'): string | null => {
+    const imageMap: Record<string, { before: string; style: string; result: string }> = {
+      'instagram-bald-to-haired': { before: 'hairchange1', style: 'hairchange2', result: 'hairchange3' },
+      'instagram-aesthetic-bald': { before: 'kel1', style: 'kel2', result: 'kel3' },
+      'instagram-car-color-changer': { before: 'carcolor1', style: 'carcolor2', result: 'carcolor3' },
+      'pet-products': { before: 'pet1', style: 'pet2', result: 'pet3' },
+      'car-wheels': { before: 'rim1', style: 'rim2', result: 'rim3' },
+      'wall-paint': { before: 'wall1', style: 'wall2', result: 'wall3' },
+      'furniture-placement': { before: 'furniture1', style: 'furniture2', result: 'furniture3' },
+      'clothes-tryon': { before: 'dress1', style: 'dress2', result: 'dress3' },
+      'jewelry': { before: 'jewel1', style: 'jewel2', result: 'jewel3' },
+    };
+
+    const images = imageMap[template.id];
+    return images ? `/media/${images[type]}.webp` : null;
+  };
+
   const getPlaceholderEmoji = (type: 'before' | 'style' | 'result') => {
     if (template.category === 'Aesthetic AI') {
       if (type === 'before') return '👤';
       if (type === 'style') return '💅';
       return '💎';
     }
-    if (template.category === 'Nail Transformation') {
-      if (type === 'before') return '✋';
-      if (type === 'style') return '💅';
-      return '💖';
-    }
-    if (template.category === 'Car Color Changer') {
-      if (type === 'before') return '🚗';
-      if (type === 'style') return '🎨';
-      return '✨';
-    }
     return '📸';
   };
 
   return (
     <div
-      className={`group relative rounded-3xl bg-white border border-neutral-200/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_60px_rgb(0,0,0,0.08)] transition-all duration-500 ${
+      className={`group relative rounded-3xl bg-white border border-neutral-200/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_60px_rgb(0,0,0,0.08)] transition-all duration-500 cursor-pointer ${
         isHovered === false ? 'blur-sm scale-[0.98] opacity-60' : ''
       }`}
+      onClick={() => router.push(getAutomationLandingUrl(template.id))}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
@@ -75,51 +78,51 @@ export function CollapsedView({
         <div className="mb-6">
           <div className="flex items-center justify-center gap-2">
             {/* Before image */}
-            <div className="relative w-20 h-20 rounded-xl overflow-hidden border-2 border-neutral-200 shadow-md transform hover:scale-105 transition-transform duration-300">
-              {hasImages ? (
-                <Image src="/media/hairchange1.webp" alt="Before" fill className="object-cover" />
-              ) : (
-                <div className="absolute inset-0 bg-gradient-to-br from-neutral-100 to-neutral-200 flex items-center justify-center">
-                  <span className="text-2xl">{getPlaceholderEmoji('before')}</span>
-                </div>
-              )}
-              <div className="absolute bottom-1 left-1 right-1 text-center">
-                <span className="text-[8px] font-semibold bg-white/90 px-1.5 py-0.5 rounded">Before</span>
+            <div className="flex flex-col items-center gap-1">
+              <div className="relative w-20 h-20 rounded-xl overflow-hidden border-2 border-neutral-200 shadow-md transform hover:scale-105 transition-transform duration-300">
+                {getImagePath('before') ? (
+                  <Image src={getImagePath('before')!} alt="Before" fill className="object-cover" priority />
+                ) : (
+                  <div className="absolute inset-0 bg-gradient-to-br from-neutral-100 to-neutral-200 flex items-center justify-center">
+                    <span className="text-2xl">{getPlaceholderEmoji('before')}</span>
+                  </div>
+                )}
               </div>
+              <span className="text-[9px] font-semibold text-neutral-600">Before</span>
             </div>
 
             {/* Plus symbol */}
-            <span className="text-2xl font-bold text-primary-600 transform group-hover:rotate-180 transition-transform duration-500">+</span>
+            <span className="text-2xl font-bold text-primary-600 transform group-hover:rotate-180 transition-transform duration-500 mb-3">+</span>
 
             {/* Style image */}
-            <div className="relative w-20 h-20 rounded-xl overflow-hidden border-2 border-neutral-200 shadow-md transform hover:scale-105 transition-transform duration-300">
-              {hasImages ? (
-                <Image src="/media/hairchange2.webp" alt="Style" fill className="object-cover" />
-              ) : (
-                <div className="absolute inset-0 bg-gradient-to-br from-primary-100 to-accent-100 flex items-center justify-center">
-                  <span className="text-2xl">{getPlaceholderEmoji('style')}</span>
-                </div>
-              )}
-              <div className="absolute bottom-1 left-1 right-1 text-center">
-                <span className="text-[8px] font-semibold bg-white/90 px-1.5 py-0.5 rounded">Style</span>
+            <div className="flex flex-col items-center gap-1">
+              <div className="relative w-20 h-20 rounded-xl overflow-hidden border-2 border-neutral-200 shadow-md transform hover:scale-105 transition-transform duration-300">
+                {getImagePath('style') ? (
+                  <Image src={getImagePath('style')!} alt="Style" fill className="object-cover" priority />
+                ) : (
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary-100 to-accent-100 flex items-center justify-center">
+                    <span className="text-2xl">{getPlaceholderEmoji('style')}</span>
+                  </div>
+                )}
               </div>
+              <span className="text-[9px] font-semibold text-neutral-600">Style</span>
             </div>
 
             {/* Equals symbol */}
-            <span className="text-2xl font-bold text-accent-600 transform group-hover:scale-110 transition-transform duration-500">=</span>
+            <span className="text-2xl font-bold text-accent-600 transform group-hover:scale-110 transition-transform duration-500 mb-3">=</span>
 
             {/* After image */}
-            <div className="relative w-20 h-20 rounded-xl overflow-hidden border-2 border-accent-300 shadow-lg transform hover:scale-105 transition-transform duration-300">
-              {hasImages ? (
-                <Image src="/media/hairchange3.webp" alt="Result" fill className="object-cover" />
-              ) : (
-                <div className="absolute inset-0 bg-gradient-to-br from-accent-100 via-primary-100 to-accent-200 flex items-center justify-center">
-                  <span className="text-2xl">{getPlaceholderEmoji('result')}</span>
-                </div>
-              )}
-              <div className="absolute bottom-1 left-1 right-1 text-center">
-                <span className="text-[8px] font-semibold bg-white/90 px-1.5 py-0.5 rounded">Result</span>
+            <div className="flex flex-col items-center gap-1">
+              <div className="relative w-20 h-20 rounded-xl overflow-hidden border-2 border-accent-300 shadow-lg transform hover:scale-105 transition-transform duration-300">
+                {getImagePath('result') ? (
+                  <Image src={getImagePath('result')!} alt="Result" fill className="object-cover" priority />
+                ) : (
+                  <div className="absolute inset-0 bg-gradient-to-br from-accent-100 via-primary-100 to-accent-200 flex items-center justify-center">
+                    <span className="text-2xl">{getPlaceholderEmoji('result')}</span>
+                  </div>
+                )}
               </div>
+              <span className="text-[9px] font-semibold text-neutral-600">Result</span>
             </div>
           </div>
         </div>
@@ -134,34 +137,17 @@ export function CollapsedView({
           </p>
         </div>
 
-        {/* Action buttons */}
-        <div className="flex gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={onToggle}
-            className="flex-1 border-2 border-neutral-200 hover:border-neutral-300 hover:bg-neutral-50"
-          >
-            <span className="flex items-center gap-1.5 text-xs">
-              Details
-              <ChevronDownIcon className="w-3.5 h-3.5" />
-            </span>
-          </Button>
-          <Button
-            variant="primary"
-            size="sm"
-            onClick={onUse}
-            loading={isUsing}
-            className={`flex-1 shadow-lg hover:shadow-xl text-xs ${
-              isActivated
-                ? 'bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600'
-                : 'bg-gradient-to-r from-primary-500 to-accent-500 hover:from-primary-600 hover:to-accent-600'
-            }`}
-          >
-            {isActivated ? 'Update' : 'Use'}
-          </Button>
+        {/* Action button */}
+        <div className="text-center">
+          <button className="px-4 py-2 text-sm font-medium text-neutral-900 border border-neutral-900 rounded-lg hover:bg-neutral-900 hover:text-white transition-all">
+            İncele →
+          </button>
         </div>
       </div>
     </div>
   );
 }
+
+
+
+

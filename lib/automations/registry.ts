@@ -2,8 +2,13 @@ import { AutomationTemplate, TemplateRegistry } from './types';
 import {
   hairRestorationTemplate,
   aestheticAITemplate,
-  nailTransformationTemplate,
   carColorChangerTemplate,
+  petProductsTemplate,
+  carWheelsTemplate,
+  wallPaintTemplate,
+  furniturePlacementTemplate,
+  clothesTryOnTemplate,
+  jewelryTemplate,
 } from './templates';
 
 /**
@@ -24,8 +29,13 @@ class AutomationRegistryImpl implements TemplateRegistry {
   private initializeTemplates(): void {
     this.registerTemplate(hairRestorationTemplate);
     this.registerTemplate(aestheticAITemplate);
-    this.registerTemplate(nailTransformationTemplate);
     this.registerTemplate(carColorChangerTemplate);
+    this.registerTemplate(petProductsTemplate);
+    this.registerTemplate(carWheelsTemplate);
+    this.registerTemplate(wallPaintTemplate);
+    this.registerTemplate(furniturePlacementTemplate);
+    this.registerTemplate(clothesTryOnTemplate);
+    this.registerTemplate(jewelryTemplate);
   }
 
   /**

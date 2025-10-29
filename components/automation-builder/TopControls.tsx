@@ -100,9 +100,9 @@ export function TopControls() {
           {/* Progress Bar */}
           <div className="flex-1 max-w-md">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-semibold text-neutral-600">Daily Quota</span>
+              <span className="text-xs font-semibold text-neutral-600">Total Quota</span>
               <span className="text-xs font-semibold text-neutral-700">
-                {currentAccount.usedQuota} / {currentAccount.totalQuota} ({Math.round(quotaPercentage)}%)
+                {currentAccount.totalQuota}
               </span>
             </div>
 
