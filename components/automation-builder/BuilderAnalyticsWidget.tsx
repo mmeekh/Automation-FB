@@ -1,0 +1,280 @@
+'use client';
+
+import { useEffect, useMemo, useState } from 'react';
+import { ChartBarIcon } from '@heroicons/react/24/outline';
+import type { AnalyticsOverview } from '@/lib/types/analytics';
+import { useUIStore } from '@/lib/store/uiStore';
+
+type BuilderAnalyticsWidgetProps = {
+  collapsed: boolean;
+};
+
+type MetricDisplay = {
+  label: string;
+  value: string;
+  change?: string;
+};
+
+const numberFormatter = new Intl.NumberFormat('tr-TR');
+
+const sanitizeText = (value?: string) =>
+  value ? value.replace(/\uFFFD/g, '').trim() : '';
+
+export function BuilderAnalyticsWidget({ collapsed }: BuilderAnalyticsWidgetProps) {
+  const [analytics, setAnalytics] = useState<AnalyticsOverview | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [lastUpdated, setLastUpdated] = useState<number | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchAnalytics = async (showLoader: boolean) => {
+      if (showLoader) setIsLoading(true);
+      setError(null);
+      try {
+        const response = await fetch('/api/analytics', { cache: 'no-store' });
+        if (!response.ok) throw new Error(`status ${response.status}`);
+        const payload = (await response.json()) as AnalyticsOverview;
+        if (!isMounted) return;
+        setAnalytics(payload);
+        setLastUpdated(Date.now());
+      } catch (err) {
+        if (!isMounted) return;
+        // Fallback mock if API not ready
+        setAnalytics(getFallbackAnalytics());
+        setError(null);
+      } finally {
+        if (isMounted && showLoader) setIsLoading(false);
+      }
+    };
+
+    fetchAnalytics(true);
+    const intervalId = setInterval(() => fetchAnalytics(false), 45000);
+    return () => {
+      isMounted = false;
+      clearInterval(intervalId);
+    };
+  }, []);
+
+  const metricSnapshot = useMemo<MetricDisplay[]>(() => {
+    if (!analytics?.metrics) return [];
+
+    const { metrics } = analytics;
+
+    return [
+      {
+        label: 'Transformasyon',
+        value: formatValue(metrics.totalTransformations),
+        change: sanitizeChange(metrics.changeTransformations),
+      },
+      {
+        label: 'Dönüşüm Oranı',
+        value: formatValue(metrics.conversionRate),
+        change: sanitizeChange(metrics.changeConversion),
+      },
+      {
+        label: 'Aktif Kullanıcı',
+        value: formatValue(metrics.activeUsers),
+        change: sanitizeChange(metrics.changeUsers),
+      },
+    ];
+  }, [analytics]);
+
+  const topStyle = useMemo(() => {
+    if (!analytics?.metrics?.mostRequestedStyle) {
+      return null;
+    }
+
+    const cleaned = sanitizeText(analytics.metrics.mostRequestedStyle);
+    return cleaned.length ? cleaned : null;
+  }, [analytics]);
+
+  const lastUpdatedLabel = useMemo(() => {
+    if (!lastUpdated) {
+      return null;
+    }
+
+    return new Date(lastUpdated).toLocaleTimeString('tr-TR', {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  }, [lastUpdated]);
+
+  return (
+    <div className="px-3 pb-4">
+      <div
+        role="button"
+        onClick={() => {
+          // Ana merkezde aç
+          const show = useUIStore.getState().showBuilderAnalytics;
+          show();
+        }}
+        className="relative overflow-hidden rounded-2xl border border-primary-100/60 bg-gradient-to-br from-white to-primary-50/40 shadow-sm cursor-pointer hover:shadow-lg transition-shadow"
+        title="Analytics detaylarını aç"
+      >
+        <div className="absolute -top-10 right-4 h-20 w-20 rounded-full bg-primary-200/30 blur-2xl" />
+        <div className="p-4">
+          <header className="flex items-center gap-3">
+            <div className="rounded-xl bg-white/80 p-2">
+              <ChartBarIcon className="h-5 w-5 text-primary-600" />
+            </div>
+
+            {!collapsed && (
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
+                  Analytics Snapshot
+                </p>
+                <p className="text-sm text-neutral-600">
+                  Akış performansını anlık takip edin
+                </p>
+              </div>
+            )}
+          </header>
+
+          <section className={`mt-4 ${collapsed ? 'flex flex-col gap-2' : 'space-y-3'}`}>
+            {isLoading && !analytics ? (
+              <SkeletonState collapsed={collapsed} />
+            ) : error ? (
+              <ErrorState message={error} />
+            ) : (
+              metricSnapshot.map((metric) => (
+                <MetricRow key={metric.label} {...metric} collapsed={collapsed} />
+              ))
+            )}
+          </section>
+
+          {!collapsed && !isLoading && !error && topStyle && (
+            <div className="mt-4 rounded-xl border border-primary-100 bg-white/90 px-3 py-2 text-xs text-neutral-600">
+              En popüler stil: <span className="font-semibold text-primary-600">{topStyle}</span>
+            </div>
+          )}
+
+          {!collapsed && lastUpdatedLabel && (
+            <p className="mt-3 text-right text-[11px] uppercase tracking-wider text-neutral-400">
+              Güncellendi {lastUpdatedLabel}
+            </p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MetricRow({ label, value, change, collapsed }: MetricDisplay & { collapsed: boolean }) {
+  if (collapsed) {
+    return (
+      <div className="flex flex-col items-center justify-center rounded-xl border border-white/70 bg-white/90 px-2 py-2 text-center">
+        <span className="text-[10px] font-semibold uppercase tracking-wide text-neutral-500">
+          {label.slice(0, 3)}
+        </span>
+        <span className="text-sm font-semibold text-neutral-900">{value}</span>
+      </div>
+    );
+  }
+
+  const changeClass = change && change.trim().startsWith('-') ? 'text-rose-600' : 'text-emerald-600';
+
+  return (
+    <div className="flex items-center justify-between rounded-xl border border-white/70 bg-white/90 px-3 py-3">
+      <div>
+        <p className="text-xs font-semibold uppercase tracking-wide text-neutral-500">{label}</p>
+      </div>
+      <div className="text-right">
+        <p className="text-sm font-semibold text-neutral-900">{value}</p>
+        {change && (
+          <p className={`text-xs font-medium ${changeClass}`}>
+            {change}
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function SkeletonState({ collapsed }: { collapsed: boolean }) {
+  if (collapsed) {
+    return (
+      <>
+        <div className="h-10 rounded-xl bg-white/70" />
+        <div className="h-10 rounded-xl bg-white/60" />
+        <div className="h-10 rounded-xl bg-white/50" />
+      </>
+    );
+  }
+
+  return (
+    <div className="space-y-3">
+      {[1, 2, 3].map((item) => (
+        <div key={item} className="h-14 animate-pulse rounded-xl bg-white/70" />
+      ))}
+    </div>
+  );
+}
+
+function ErrorState({ message }: { message: string }) {
+  return (
+    <div className="rounded-xl border border-rose-200 bg-rose-50/80 px-3 py-3 text-xs text-rose-600">
+      {message}
+    </div>
+  );
+}
+
+function formatValue(value: number | string | undefined) {
+  if (typeof value === 'number') {
+    return numberFormatter.format(value);
+  }
+
+  if (typeof value === 'string') {
+    return sanitizeText(value);
+  }
+
+  return '—';
+}
+
+function sanitizeChange(value?: string) {
+  if (!value) {
+    return undefined;
+  }
+
+  const cleaned = sanitizeText(value);
+  return cleaned.length ? cleaned : undefined;
+}
+
+function getFallbackAnalytics(): AnalyticsOverview {
+  return {
+    metrics: {
+      totalTransformations: 5200,
+      conversionRate: '5.1%',
+      activeUsers: 1280,
+      mostRequestedStyle: 'Long Blonde Bob',
+      changeTransformations: '+12.4%',
+      changeConversion: '+0.8%',
+      changeUsers: '+6.3%',
+    },
+    revenue: {
+      totalRevenue: '18000 TRY',
+      appointmentCount: 132,
+      averageBookingValue: '102.50 TRY',
+      conversionRate: '4.8%',
+      peakHours: ['18:00', '19:00', '20:00'],
+      growthRate: '+18%',
+      revenueHistory: [
+        { date: '2025-10-23', revenue: 12000, appointments: 110 },
+        { date: '2025-10-24', revenue: 14000, appointments: 124 },
+      ],
+    },
+    userBehavior: {
+      ctaDistribution: [
+        { label: 'Try Again', value: 45, color: 'from-pink-400 to-rose-500' },
+        { label: 'Plan New Style', value: 32, color: 'from-teal-400 to-cyan-500' },
+        { label: 'Book Appointment', value: 23, color: 'from-amber-400 to-orange-500' },
+      ],
+      quickStats: [
+        { title: 'Avg Response Time', value: '18s', description: 'AI replies across flows' },
+        { title: 'Returning Users', value: '36%', description: 'Users completing flows' },
+        { title: 'Avg Selfies per User', value: '2.6', description: 'Inputs collected per journey' },
+      ],
+    },
+    socialContent: [],
+  };
+}

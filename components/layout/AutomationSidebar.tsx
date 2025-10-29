@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { AccountSwitcher } from './AccountSwitcher';
 import { AutomationSwitcher } from './AutomationSwitcher';
@@ -11,21 +11,22 @@ import {
   ChartBarIcon,
   Cog6ToothIcon,
   QuestionMarkCircleIcon,
-  UserCircleIcon,
 } from '@heroicons/react/24/outline';
 import { SparklesIcon } from '@heroicons/react/24/solid';
+import { useUIStore } from '@/lib/store/uiStore';
+import { BuilderAnalyticsWidget } from '@/components/automation-builder/BuilderAnalyticsWidget';
 
 interface NavItem {
   name: string;
   href: string;
   icon: React.ComponentType<{ className?: string }>;
   badge?: number;
+  onClick?: () => void;
 }
 
-const navItems: NavItem[] = [
+const navItemsBase: NavItem[] = [
   { name: 'Home', href: '/dashboard', icon: HomeIcon },
   { name: 'Automation', href: '/automations', icon: SparklesIcon },
-  { name: 'Analytics', href: '/analytics', icon: ChartBarIcon },
 ];
 
 const bottomItems: NavItem[] = [
@@ -35,7 +36,29 @@ const bottomItems: NavItem[] = [
 
 export function AutomationSidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const builderView = useUIStore((s) => s.builderView);
+  const showBuilderAnalytics = useUIStore((s) => s.showBuilderAnalytics);
+  const showBuilderFlow = useUIStore((s) => s.showBuilderFlow);
   const [isOpen, setIsOpen] = useState(false);
+
+  const isOnBuilderPage = pathname.includes('/automations/builder/');
+
+  const navItems: NavItem[] = [
+    ...navItemsBase,
+    {
+      name: 'Analytics',
+      href: isOnBuilderPage ? pathname : '/automations',
+      icon: ChartBarIcon,
+      onClick: () => {
+        if (isOnBuilderPage) {
+          showBuilderAnalytics();
+        } else {
+          router.push('/automations');
+        }
+      },
+    },
+  ];
 
   return (
     <motion.div
@@ -83,30 +106,27 @@ export function AutomationSidebar() {
       {/* Navigation Items */}
       <nav className="flex-1 px-3 py-6 space-y-2 overflow-y-auto">
         {navItems.map((item) => {
-          const isActive = pathname.startsWith(item.href);
+          const isAnalyticsItem = item.name === 'Analytics';
+          const isActive = isAnalyticsItem
+            ? isOnBuilderPage && builderView === 'analytics'
+            : pathname.startsWith(item.href);
           const Icon = item.icon;
 
-          return (
-            <Link
-              key={item.name}
-              href={item.href}
-              className={`flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200 group ${
-                isActive
-                  ? 'bg-gradient-to-r from-primary-500 to-accent-500 text-white shadow-lg'
-                  : 'text-neutral-600 hover:bg-neutral-50'
-              }`}
-            >
+          const commonClass = `flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200 group ${
+            isActive
+              ? 'bg-gradient-to-r from-primary-500 to-accent-500 text-white shadow-lg'
+              : 'text-neutral-600 hover:bg-neutral-50'
+          }`;
+
+          const content = (
+            <>
               <Icon
                 className={`w-5 h-5 flex-shrink-0 ${
                   isActive ? 'text-white' : 'text-neutral-500 group-hover:text-primary-500'
                 }`}
               />
-
               <motion.span
-                animate={{
-                  opacity: isOpen ? 1 : 0,
-                  display: isOpen ? 'inline-block' : 'none',
-                }}
+                animate={{ opacity: isOpen ? 1 : 0, display: isOpen ? 'inline-block' : 'none' }}
                 transition={{ duration: 0.15 }}
                 className={`font-medium whitespace-nowrap ${
                   isActive ? 'text-white' : 'text-neutral-700 group-hover:translate-x-1 transition-transform'
@@ -114,7 +134,6 @@ export function AutomationSidebar() {
               >
                 {item.name}
               </motion.span>
-
               {isOpen && item.badge && (
                 <motion.span
                   initial={{ opacity: 0, scale: 0.8 }}
@@ -125,10 +144,22 @@ export function AutomationSidebar() {
                   {item.badge}
                 </motion.span>
               )}
+            </>
+          );
+
+          return item.onClick ? (
+            <button key={item.name} onClick={item.onClick} className={commonClass} type="button">
+              {content}
+            </button>
+          ) : (
+            <Link key={item.name} href={item.href} className={commonClass}>
+              {content}
             </Link>
           );
         })}
       </nav>
+
+      <BuilderAnalyticsWidget collapsed={!isOpen} />
 
       {/* Bottom Section */}
       <div className="border-t border-neutral-100 px-3 py-4 space-y-2">

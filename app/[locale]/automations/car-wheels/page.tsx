@@ -124,34 +124,6 @@ export default function CarWheelsPage() {
             <FAQSection faq={carWheelsContent.faq} />
           </div>
         </div>
-
-        {/* CTA Section */}
-        <div className="bg-gradient-to-br from-primary-600 to-accent-600 py-24">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8">
-            <h2 className="text-4xl font-bold text-white sm:text-5xl">
-              Hazır mısınız? Hemen Başlayın!
-            </h2>
-            <p className="text-xl text-primary-100 max-w-2xl mx-auto">
-              İlk 100 dönüşüm ücretsiz. Kredi kartı gerekmez. 5 dakikada kurulum.
-            </p>
-            <div className="flex flex-wrap gap-4 justify-center">
-              <Button
-                onClick={handleLaunch}
-                size="lg"
-                className="bg-white text-primary-700 hover:bg-neutral-100 shadow-xl"
-              >
-                Otomasyonu Başlat →
-              </Button>
-              <Button
-                variant="outline"
-                size="lg"
-                className="border-2 border-white text-white hover:bg-white/10"
-              >
-                Demo Talep Et
-              </Button>
-            </div>
-          </div>
-        </div>
       </main>
     </>
   );

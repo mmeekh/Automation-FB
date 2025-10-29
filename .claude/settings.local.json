@@ -42,7 +42,13 @@
       "Bash(do echo \"=== $file ===\" cat \"$file\")",
       "Bash(timeout 5 curl:*)",
       "Bash(echo:*)",
-      "Bash(docker compose:*)"
+      "Bash(docker compose:*)",
+      "Bash(npm run type-check:*)",
+      "Bash(npm run lint)",
+      "Bash(ls:*)",
+      "Bash(for file in \"car-wheels\" \"clothes-tryon\" \"furniture-placement\" \"jewelry\" \"pet-products\" \"wall-paint\")",
+      "Bash(do echo \"Processing: $file\")",
+      "Bash(done)"
     ],
     "deny": [],
     "ask": []

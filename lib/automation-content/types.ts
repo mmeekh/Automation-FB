@@ -33,6 +33,7 @@ export interface AutomationContent {
     type: 'user' | 'bot';
     content: string;
     image?: string;
+    imageAlt?: string;
   }[];
   metadata: {
     keywords: string[];

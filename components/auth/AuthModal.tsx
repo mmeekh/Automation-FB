@@ -4,11 +4,20 @@ import { type FormEvent, type MouseEvent, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { XMarkIcon } from '@heroicons/react/24/outline';
+import { motion } from 'framer-motion';
 import { useStore } from '@/lib/store';
 import { Button } from '@/components/ui/Button';
 
+
 const GoogleIcon = () => (
-  <svg className="w-5 h-5" viewBox="0 0 24 24" aria-hidden="true">
+  <motion.svg
+    className="w-7 h-7"
+    viewBox="0 0 24 24"
+    aria-hidden="true"
+    whileHover={{ scale: 1.15, rotate: -5 }}
+    whileTap={{ scale: 0.95 }}
+    transition={{ type: "spring", stiffness: 400, damping: 17 }}
+  >
     <path
       fill="#4285F4"
       d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.38-1.04 2.55-2.22 3.34v2.77h3.58c2.1-1.94 3.28-4.79 3.28-8.12z"
@@ -25,16 +34,47 @@ const GoogleIcon = () => (
       fill="#EA4335"
       d="M12 4.74c1.62 0 3.07.56 4.21 1.67l3.15-3.15C17.45 1.4 14.97.33 12 .33 7.7.33 3.98 2.8 2.17 6.05l2.7 2.22C5.73 5.66 8.15 4.74 12 4.74z"
     />
-  </svg>
+  </motion.svg>
 );
 
 const InstagramIcon = () => (
-  <svg className="w-5 h-5" viewBox="0 0 24 24" aria-hidden="true">
-    <rect x="3" y="3" width="18" height="18" rx="5" fill="#E1306C" />
+  <motion.svg
+    className="w-9 h-9"
+    viewBox="0 0 24 24"
+    aria-hidden="true"
+    whileHover={{ scale: 1.15, rotate: 5 }}
+    whileTap={{ scale: 0.95 }}
+    transition={{ type: "spring", stiffness: 400, damping: 17 }}
+  >
+    <defs>
+      <radialGradient id="instagramGradient" cx="30%" cy="107%" r="150%">
+        <stop offset="0%" stopColor="#FDF497" />
+        <stop offset="5%" stopColor="#FDF497" />
+        <stop offset="45%" stopColor="#FD5949" />
+        <stop offset="60%" stopColor="#D6249F" />
+        <stop offset="90%" stopColor="#285AEB" />
+      </radialGradient>
+    </defs>
+    <motion.rect
+      x="3"
+      y="3"
+      width="18"
+      height="18"
+      rx="5"
+      fill="url(#instagramGradient)"
+      animate={{
+        boxShadow: ["0 0 0px rgba(225, 48, 108, 0)", "0 0 20px rgba(225, 48, 108, 0.5)", "0 0 0px rgba(225, 48, 108, 0)"]
+      }}
+      transition={{
+        duration: 2,
+        repeat: Infinity,
+        ease: "easeInOut"
+      }}
+    />
     <circle cx="12" cy="12" r="4.5" fill="none" stroke="white" strokeWidth="1.8" />
     <circle cx="12" cy="12" r="2.2" fill="white" />
     <circle cx="16.2" cy="7.8" r="1.1" fill="white" />
-  </svg>
+  </motion.svg>
 );
 
 interface SocialButtonProps {
@@ -51,11 +91,11 @@ function SocialButton({ onClick, disabled, loading, icon, label }: SocialButtonP
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className="flex h-12 w-20 items-center justify-center rounded-lg border border-neutral-200 bg-white shadow-sm transition hover:border-neutral-300 hover:shadow-md disabled:opacity-50"
+      className="flex h-14 w-24 items-center justify-center rounded-lg border border-neutral-200 bg-white shadow-sm transition hover:border-neutral-300 hover:shadow-md disabled:opacity-50"
       aria-label={label}
     >
       {loading ? (
-        <div className="h-5 w-5 rounded-full border-2 border-neutral-400 border-t-transparent animate-spin" />
+        <div className="h-6 w-6 rounded-full border-2 border-neutral-400 border-t-transparent animate-spin" />
       ) : (
         icon
       )}
@@ -70,10 +110,12 @@ export function AuthModal() {
   const setUser = useStore((state) => state.setUser);
 
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loadingProvider, setLoadingProvider] = useState<'email' | 'google' | 'instagram' | null>(null);
 
   const trimmedEmail = useMemo(() => email.trim(), [email]);
-  const emailDisabled = trimmedEmail.length === 0 || loadingProvider !== null;
+  const showPasswordField = trimmedEmail.length > 0;
+  const emailDisabled = trimmedEmail.length === 0 || (showPasswordField && password.length === 0) || loadingProvider !== null;
 
   if (!isAuthModalOpen) return null;
 
@@ -148,18 +190,40 @@ export function AuthModal() {
             </p>
           </div>
 
-          <form onSubmit={handleEmailSubmit} className="space-y-3">
-            <label htmlFor="auth-email" className="text-sm font-medium text-neutral-800 text-left">
-              E-posta adresi
-            </label>
-            <input
-              id="auth-email"
-              type="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              placeholder="E-posta adresinizi girin"
-              className="w-full rounded-lg border border-neutral-300 px-4 py-3 text-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-200 transition"
-            />
+          <form onSubmit={handleEmailSubmit} className="space-y-4">
+            <div>
+              <label htmlFor="auth-email" className="block text-sm font-medium text-neutral-800 mb-2">
+                E-posta adresi
+              </label>
+              <input
+                id="auth-email"
+                type="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                placeholder="E-posta adresinizi girin"
+                className="w-full rounded-lg border border-neutral-300 px-4 py-3 text-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-200 transition"
+                required
+              />
+            </div>
+
+            {showPasswordField && (
+              <div>
+                <label htmlFor="auth-password" className="block text-sm font-medium text-neutral-800 mb-2">
+                  Şifre
+                </label>
+                <input
+                  id="auth-password"
+                  type="password"
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                  placeholder="Şifrenizi girin"
+                  className="w-full rounded-lg border border-neutral-300 px-4 py-3 text-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-200 transition"
+                  required
+                  minLength={6}
+                />
+              </div>
+            )}
+
             <Button
               type="submit"
               size="lg"

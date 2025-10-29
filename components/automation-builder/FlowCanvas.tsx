@@ -30,20 +30,12 @@ const nodeTypes = {
 export function FlowCanvas() {
   const { currentFlow, onNodesChange, onEdgesChange, isEditMode } = useFlowStore();
 
-  if (!currentFlow) {
-    return (
-      <div className="w-full h-full flex items-center justify-center bg-neutral-100">
-        <p className="text-neutral-500">No flow loaded</p>
-      </div>
-    );
-  }
-
   /**
    * Handle new connections (edges)
    */
   const onConnect = useCallback(
     (connection: Connection) => {
-      if (!isEditMode) return; // Only allow connections in edit mode
+      if (!currentFlow || !isEditMode) return; // Only allow connections in edit mode
 
       const newEdge: FlowEdge = {
         id: `e-${connection.source}-${connection.target}`,
@@ -60,8 +52,16 @@ export function FlowCanvas() {
         },
       ]);
     },
-    [currentFlow.edges, onEdgesChange, isEditMode]
+    [currentFlow, onEdgesChange, isEditMode]
   );
+
+  if (!currentFlow) {
+    return (
+      <div className="w-full h-full flex items-center justify-center bg-neutral-100">
+        <p className="text-neutral-500">No flow loaded</p>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full h-full">

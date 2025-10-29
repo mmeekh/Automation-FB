@@ -24,16 +24,6 @@ interface UIStore {
   showSaveConfirmation: boolean;
   setShowSaveConfirmation: (show: boolean) => void;
 
-  // Right-side analytics panel
-  isAnalyticsPanelOpen: boolean;
-  openAnalyticsPanel: () => void;
-  closeAnalyticsPanel: () => void;
-
-  // Builder center view (flow or analytics)
-  builderView: 'flow' | 'analytics';
-  showBuilderFlow: () => void;
-  showBuilderAnalytics: () => void;
-
   // Loading states
   isSavingFlow: boolean;
   setIsSavingFlow: (saving: boolean) => void;
@@ -101,27 +91,7 @@ export const useUIStore = create<UIStore>()(
       showSaveConfirmation: false,
 
       setShowSaveConfirmation: (show) => {
-      set({ showSaveConfirmation: show });
-      },
-
-      // Analytics panel
-      isAnalyticsPanelOpen: false,
-
-      openAnalyticsPanel: () => {
-        set({ isAnalyticsPanelOpen: true, isNodeEditorOpen: false, editingNodeId: null });
-      },
-
-      closeAnalyticsPanel: () => {
-        set({ isAnalyticsPanelOpen: false });
-      },
-
-      // Builder center view
-      builderView: 'flow',
-      showBuilderFlow: () => {
-        set({ builderView: 'flow' });
-      },
-      showBuilderAnalytics: () => {
-        set({ builderView: 'analytics' });
+        set({ showSaveConfirmation: show });
       },
 
       // Loading
@@ -172,3 +142,4 @@ export const useUIStore = create<UIStore>()(
     }
   )
 );
+

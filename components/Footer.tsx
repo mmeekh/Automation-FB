@@ -7,15 +7,15 @@ import { usePathname } from 'next/navigation';
 export function Footer() {
   const pathname = usePathname();
 
-  if (pathname?.includes('/automations/builder/')) {
-    return null;
-  }
-
   const locale = useMemo(() => {
     if (!pathname) return 'en';
     const [, maybeLocale] = pathname.split('/');
     return maybeLocale && maybeLocale.length > 0 ? maybeLocale : 'en';
   }, [pathname]);
+
+  if (pathname?.includes('/automations/builder/')) {
+    return null;
+  }
 
   const withLocale = (segment: string) => {
     if (!segment || segment === '/') {

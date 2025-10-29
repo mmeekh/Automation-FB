@@ -13,7 +13,6 @@ import { useStore } from '@/lib/store';
 const NAV_ITEMS = [
   { key: 'dashboard', href: 'dashboard' },
   { key: 'automations', href: 'automations' },
-  { key: 'analytics', href: 'analytics' },
   { key: 'blog', href: 'blog' },
   { key: 'pricing', href: 'pricing' },
 ] as const;
