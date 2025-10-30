@@ -155,6 +155,9 @@ export const carColorChangeContent: AutomationContent = {
       id: 'msg-8',
       type: 'bot',
       content: 'Beğendiniz mi? Fiyat teklifi almak için tıklayın 💰',
+      button: {
+        text: 'Randevu Al',
+      },
     },
   ],
 

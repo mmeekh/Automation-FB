@@ -5,9 +5,7 @@ import clsx from 'clsx';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { useUIStore } from '@/lib/store/uiStore';
 import type { AnalyticsOverview } from '@/lib/types/analytics';
-import { AnalyticsMetricCard } from '@/components/analytics/AnalyticsMetricCard';
 import { RealtimeHighlights } from '@/components/analytics/RealtimeHighlights';
-import { TrendingUp } from 'lucide-react';
 
 export function AnalyticsPanel() {
   const { isAnalyticsPanelOpen, closeAnalyticsPanel } = useUIStore();
@@ -36,27 +34,7 @@ export function AnalyticsPanel() {
     }
   }, [isAnalyticsPanelOpen]);
 
-  const metrics = useMemo(() => {
-    const m = data?.metrics;
-    if (!m) return null;
-    return [
-      {
-        title: 'Toplam Transformasyon',
-        value: formatMetric(m.totalTransformations),
-        change: clean(m.changeTransformations),
-      },
-      {
-        title: 'Dönüşüm Oranı',
-        value: formatMetric(m.conversionRate),
-        change: clean(m.changeConversion),
-      },
-      {
-        title: 'Aktif Kullanıcı',
-        value: formatMetric(m.activeUsers),
-        change: clean(m.changeUsers),
-      },
-    ];
-  }, [data]);
+  // Metrics grid kaldırıldı
 
   if (!isAnalyticsPanelOpen) return null;
 
@@ -115,19 +93,7 @@ export function AnalyticsPanel() {
               </div>
             )}
 
-            {!loading && !error && metrics && (
-              <div className="grid grid-cols-1 gap-4">
-                {metrics.map((m) => (
-                  <AnalyticsMetricCard
-                    key={m.title}
-                    title={m.title}
-                    value={m.value}
-                    change={m.change}
-                    icon={TrendingUp}
-                  />
-                ))}
-              </div>
-            )}
+            {/* Metrics grid kaldırıldı */}
 
             {!loading && !error && (
               <RealtimeHighlights />

@@ -150,6 +150,17 @@ export function PhoneMockup({ chatPreview }: PhoneMockupProps) {
                           {message.content}
                         </div>
                       )}
+
+                      {message.button && (
+                        <div className={hasText || hasImage ? "px-4 pb-3" : "p-0"}>
+                          <button
+                            type="button"
+                            className="w-full rounded-lg bg-gradient-to-r from-primary-500 to-accent-500 px-4 py-2.5 text-sm font-semibold text-white shadow-md hover:shadow-lg transition-all hover:scale-[1.02]"
+                          >
+                            {message.button.text}
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </motion.div>
                 );

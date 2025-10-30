@@ -155,6 +155,9 @@ export const wallPaintContent: AutomationContent = {
       id: 'msg-8',
       type: 'bot',
       content: 'Beğendiniz mi? Ürün detayları ve fiyat için tıklayın 🛒',
+      button: {
+        text: 'Randevu Al',
+      },
     },
   ],
 

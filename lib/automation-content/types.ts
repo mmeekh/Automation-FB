@@ -34,6 +34,10 @@ export interface AutomationContent {
     content: string;
     image?: string;
     imageAlt?: string;
+    button?: {
+      text: string;
+      url?: string;
+    };
   }[];
   metadata: {
     keywords: string[];

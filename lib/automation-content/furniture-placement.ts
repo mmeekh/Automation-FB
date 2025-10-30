@@ -155,6 +155,9 @@ export const furniturePlacementContent: AutomationContent = {
       id: 'msg-8',
       type: 'bot',
       content: 'Beğendiniz mi? Satın almak için tıklayın 🛒',
+      button: {
+        text: 'Randevu Al',
+      },
     },
   ],
 

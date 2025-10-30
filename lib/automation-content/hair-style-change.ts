@@ -156,6 +156,9 @@ export const hairStyleChangeContent: AutomationContent = {
       id: 'msg-8',
       type: 'bot',
       content: 'Bu stili denemek için randevu almak ister misiniz? 📅',
+      button: {
+        text: 'Randevu Al',
+      },
     },
   ],
 
