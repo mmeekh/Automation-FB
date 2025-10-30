@@ -22,6 +22,51 @@ interface BlogPost {
 
 const posts: BlogPost[] = [
   {
+    id: 'instagram-dm-chatbot-seo',
+    title: 'Instagram DM Chatbot SEO Playbook',
+    summary:
+      'English-first guide to align keywords, DM flows, and booking automation for organic growth. | TR: Anahtar kelime ve DM akisi uyumu.',
+    category: 'Growth',
+    readingTime: '9 min · 9 dk',
+    publishedAt: '18 October 2025',
+    author: {
+      name: 'Naz Aydin',
+      role: 'Growth Strategist',
+      avatar: '/media/avatars/naz.png',
+    },
+    cover: '/media/main1.webp',
+  },
+  {
+    id: 'ugc-automation-engine',
+    title: 'UGC Automation Engine for Instagram DM Sales',
+    summary:
+      'Blueprint for injecting user-generated content into automated DM funnels. | TR: UGC ile DM satis hizlandirma.',
+    category: 'Playbooks',
+    readingTime: '8 min · 8 dk',
+    publishedAt: '16 October 2025',
+    author: {
+      name: 'Deniz Kurt',
+      role: 'Lifecycle Lead',
+      avatar: '/media/avatars/deniz.png',
+    },
+    cover: '/media/main2.webp',
+  },
+  {
+    id: 'privacy-compliance-automation',
+    title: 'Privacy-First Instagram Automation Checklist',
+    summary:
+      'Consent, retention, and audit tactics for KVKK & GDPR-ready DM workflows. | TR: KVKK/GDPR uyum rehberi.',
+    category: 'Compliance',
+    readingTime: '10 min · 10 dk',
+    publishedAt: '15 October 2025',
+    author: {
+      name: 'Efe Arslan',
+      role: 'Compliance Officer',
+      avatar: '/media/avatars/efe.png',
+    },
+    cover: '/media/blog6.webp',
+  },
+  {
     id: 'ai-hair-studio',
     title: 'AI ile sac tasariminda 5 pratik adim',
     summary:
