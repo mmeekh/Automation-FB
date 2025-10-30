@@ -32,6 +32,537 @@ interface BlogPost {
 }
 
 const blogPosts: Record<string, BlogPost> = {
+  'instagram-dm-chatbot-seo': {
+    id: 'instagram-dm-chatbot-seo',
+    title: 'Instagram DM Chatbot SEO Playbook for Instant Conversions',
+    summary:
+      'Turn organic Instagram profile visits into booked calls with keyword-matched DM automation. | TR: Organik profili DM\'de randevuya ceviren anahtar kelime uyumlu otomasyon.',
+    metaDescription:
+      'Comprehensive Instagram SEO and DM chatbot strategy covering keyword intent mapping, bio optimisation, automated funnels, analytics, and Facebook App Review evidence.',
+    keywords: [
+      'Instagram SEO strategy',
+      'DM chatbot automation',
+      'Instagram keyword mapping',
+      'organic conversion playbook',
+      'Instagram bio optimisation',
+      'Facebook App Review evidence',
+      'booking automation',
+      'LookLab growth guide',
+    ],
+    category: 'Growth',
+    readingTime: '9 min · 9 dk',
+    publishedAt: '18 October 2025',
+    author: {
+      name: 'Naz Aydin',
+      role: 'Growth Strategist',
+      avatar: '/media/avatars/naz.png',
+    },
+    cover: '/media/main1.webp',
+    content: (
+      <div className="prose prose-lg max-w-none">
+        <h2>Why Instagram SEO Needs a DM Chatbot Companion</h2>
+        <p>
+          Seventy-four percent of Instagram profile visitors leave within 30 seconds unless they see an engaging next
+          step. An SEO-optimised bio that triggers the right DM chatbot keeps them in the funnel, repeats their search
+          keyword, and books the next action automatically.
+        </p>
+        <p className="text-sm text-neutral-500 italic">
+          TR: Instagram profiline gelen organik ziyaretcilerin %74'u 30 saniye icinde ayriliyor. Anahtar kelime ile tetiklenen DM botu, kullaniciyi tutup sonraki adimi otomatiklesitirir.
+        </p>
+
+        <h2>Step 1: Map Search Intent to Automated DM Flows</h2>
+        <p>
+          Align every organic keyword with the welcome copy, buttons, and offer in your chatbot. Use the grid below to
+          plan the exact phrasing before you build flows inside LookLab.
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>Search Intent</th>
+              <th>Priority Keyword</th>
+              <th>DM Opening Line</th>
+              <th>Primary CTA</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Transactional</td>
+              <td>"{`brand + book appointment`}"</td>
+              <td>"Great to see you! Ready to choose your appointment slot?"</td>
+              <td>Calendar embed</td>
+            </tr>
+            <tr>
+              <td>Commercial research</td>
+              <td>"{`brand + pricing`}"</td>
+              <td>"I can price the right package in 30 seconds. What result are you after?"</td>
+              <td>Pricing carousel</td>
+            </tr>
+            <tr>
+              <td>Local discovery</td>
+              <td>"{`service + district`}"</td>
+              <td>"Want to see real results from clients in {`district`}?"</td>
+              <td>Case study story</td>
+            </tr>
+          </tbody>
+        </table>
+        <p className="text-sm text-neutral-500 italic">
+          TR: Her anahtar kelime icin DM acilis cümlesi ve CTA'yi tablo ile netlestirin; Boylece LookLab akislari hatasiz kurulur.
+        </p>
+
+        <h2>Step 2: Optimise the Instagram Profile for SEO Signals</h2>
+        <p>
+          Algorithm-friendly profiles mirror the same keywords as your chatbot. Refresh these four elements every week
+          to maintain consistency across Google, Instagram Search, and Meta verification.
+        </p>
+        <ul>
+          <li>
+            <strong>Bio headline:</strong> Lead with service keywords and the automated promise (e.g. "AI hair makeover
+            bookings in 60 seconds").
+          </li>
+          <li>
+            <strong>Link in bio:</strong> Append UTM tags (<code>utm_source=instagram</code>, <code>utm_medium=organic</code>,
+            <code>utm_campaign=dm-chatbot</code>) and match the headline in the hero section.
+          </li>
+          <li>
+            <strong>Pinned stories:</strong> Title covers after each intent — FAQ, Pricing, Proof — and reuse the exact
+            CTA buttons from the DM flow.
+          </li>
+          <li>
+            <strong>Caption template:</strong> Add a PS line that invites readers to DM the target keyword so the
+            automation activates instantly.
+          </li>
+        </ul>
+        <p className="text-sm text-neutral-500 italic">
+          TR: Bio, link, story ve aciklama sablonlarinda ayni anahtar kelimeyi kullanarak SEO tutarliligi saglayin.
+        </p>
+
+        <h2>Step 3: Build a Three-Stage DM Funnel</h2>
+        <p>
+          Convert searchers by matching their intent, collecting context, and offering a frictionless booking path.
+          Recreate the following stages in LookLab:
+        </p>
+        <ol>
+          <li>
+            <strong>Entry node:</strong> Capture the searched keyword via session parameters and echo it within the first
+            15 words.
+          </li>
+          <li>
+            <strong>Decision buttons:</strong> Offer choices such as "See pricing", "Preview results", and "Book a slot"
+            to fast-track intent.
+          </li>
+          <li>
+            <strong>Conversion node:</strong> Embed your booking form, instant quote, or discount code so there is no
+            need for manual follow-up.
+          </li>
+        </ol>
+        <p className="text-sm text-neutral-500 italic">
+          TR: Uc adimli funnel yapisi (giris, karar, donusum) organik aramalarda %18+ randevu orani saglar.
+        </p>
+
+        <h2>Step 4: Prove SEO Impact with Unified Reporting</h2>
+        <p>
+          Combine Google Search Console, Meta Insights, and LookLab analytics in a single Looker Studio dashboard. Track
+          intent-to-DM conversion, CTA clicks per keyword cluster, and booked appointments per 100 visits.
+        </p>
+        <ul>
+          <li>
+            <strong>Profile visits → DM starts:</strong> Target a 22% conversion for top intent keywords.
+          </li>
+          <li>
+            <strong>CTA completion rate:</strong> Monitor which button closes the most deals for each query.
+          </li>
+          <li>
+            <strong>DM to booking:</strong> Sustaining an 18%+ close rate proves organic acquisition efficiency.
+          </li>
+        </ul>
+        <p className="text-sm text-neutral-500 italic">
+          TR: Google Search Console, Meta Insights ve LookLab verilerini tek raporda birlestirerek SEO etkisini ispat edin.
+        </p>
+
+        <h2>Step 5: Pre-Answer App Review Compliance Questions</h2>
+        <p>
+          Facebook reviewers expect evidence that your automation respects user intent and data boundaries. Prepare
+          annotated screenshots of the keyword-specific flow, webhook logs that show opt-in, and your data retention
+          policy.
+        </p>
+        <ul>
+          <li>Upload a screen recording that highlights the keyword echo inside the welcome message.</li>
+          <li>Export webhook logs showing consent capture and booking confirmation.</li>
+          <li>Attach a one-page retention statement that states where chat data lives and when it is deleted.</li>
+        </ul>
+        <p className="text-sm text-neutral-500 italic">
+          TR: App Review icin ekran kaydi, webhook logu ve veri saklama politikasini dosyalayarak onay surecini hizlandirin.
+        </p>
+
+        <div className="mt-12 rounded-3xl bg-primary-600/10 p-8">
+          <h3 className="text-2xl font-bold text-primary-700">Double Organic Bookings in 14 Days</h3>
+          <p>
+            Activate LookLab’s pre-built SEO chatbot template, personalise the keyword matrix, and trigger automated
+            booking flows the moment someone lands on your Instagram profile.
+          </p>
+          <p className="text-sm text-neutral-500 italic">
+            TR: LookLab sablonunu kullanarak anahtar kelime matrisini ozellestirin ve organik DM'leri iki katina cikarın.
+          </p>
+          <Button className="mt-6 bg-primary-600 hover:bg-primary-700">Launch the template</Button>
+        </div>
+      </div>
+    ),
+  },
+
+  'ugc-automation-engine': {
+    id: 'ugc-automation-engine',
+    title: 'UGC Automation Engine: From Instagram DM to Checkout in 7 Steps',
+    summary:
+      'Deploy social proof at scale by feeding user-generated content directly into DM funnels. | TR: UGC iceriklerini DM akislariyla bulusturup satisi hizlandirin.',
+    metaDescription:
+      'Learn how to build a UGC automation engine for Instagram DMs with source mapping, dynamic galleries, social proof distribution, conversion copy, and ROI reporting.',
+    keywords: [
+      'UGC automation engine',
+      'Instagram social proof funnel',
+      'DM commerce strategy',
+      'influencer whitelisting workflow',
+      'Instagram conversion optimisation',
+      'LookLab playbook',
+      'user generated content marketing',
+      'DM sales automation',
+    ],
+    category: 'Playbooks',
+    readingTime: '8 min · 8 dk',
+    publishedAt: '16 October 2025',
+    author: {
+      name: 'Deniz Kurt',
+      role: 'Lifecycle Lead',
+      avatar: '/media/avatars/deniz.png',
+    },
+    cover: '/media/main2.webp',
+    content: (
+      <div className="prose prose-lg max-w-none">
+        <h2>What Is a UGC Automation Engine?</h2>
+        <p>
+          A user-generated content (UGC) automation engine activates social proof the moment someone messages you. By
+          pairing influencer clips, review screenshots, and customer stories with automated DM logic, you shorten the
+          path from curiosity to conversion.
+        </p>
+        <p className="text-sm text-neutral-500 italic">
+          TR: UGC otomasyon motoru, influencer paylasimlari ve musteri yorumlarini DM akislariyla eslestirerek meraktan satin almaya giden yolu kisaltir.
+        </p>
+
+        <h2>Step 1: Audit and Tag Every UGC Source</h2>
+        <p>
+          List each asset in a spreadsheet or LookLab CRM export and assign consistent tags so the right proof appears
+          in the right DM thread.
+        </p>
+        <ul>
+          <li>
+            <strong>Influencer partnerships:</strong> Store signed whitelisting agreements and pre-approved CTAs inside
+            LookLab folders.
+          </li>
+          <li>
+            <strong>Organic campaign posts:</strong> Auto-tag stories and reels captured via your branded hashtag or
+            mention webhook.
+          </li>
+          <li>
+            <strong>Video testimonials:</strong> Convert TikTok and Reels reviews into square clips that play seamlessly in
+            a DM carousel.
+          </li>
+        </ul>
+        <p className="text-sm text-neutral-500 italic">
+          TR: Her UGC kaynagina tutarli etiket vererek dogru sosyal kanitin dogru DM sohbetinde gozukmesini saglayin.
+        </p>
+
+        <h2>Step 2: Build a Dynamic DM Showcase</h2>
+        <p>
+          Use LookLab’s gallery node to serve a personalised highlight reel. Populate each slide with metadata that
+          speaks to the buyer’s intent.
+        </p>
+        <ol>
+          <li>Product or service category</li>
+          <li>Headline proof (e.g. "{`7,000+ clients rated us 4.9/5`}")</li>
+          <li>Creator or customer name and handle</li>
+          <li>Direct CTA such as "Claim the same routine" or "Start a free trial"</li>
+        </ol>
+        <p className="text-sm text-neutral-500 italic">
+          TR: LookLab galerilerinde kategori, kanit basligi, kisi adi ve dogrudan CTA alanlarini doldurun.
+        </p>
+
+        <h2>Step 3: Automate Social Proof Distribution</h2>
+        <p>
+          Connect Zapier or Make to ingest fresh reviews daily. Trigger LookLab webhooks that assign the correct tag,
+          update the asset library, and refresh your DM carousel without manual uploads.
+        </p>
+        <ul>
+          <li>Sync TikTok, Instagram, and YouTube playlists into a single Google Drive folder.</li>
+          <li>Use a naming convention (<code>creator-intent-format-date</code>) to keep automation rules clean.</li>
+          <li>Notify your compliance lead automatically if a creator revokes permission.
+          </li>
+        </ul>
+        <p className="text-sm text-neutral-500 italic">
+          TR: Zapier/Make entegrasyonlariyla yeni yorumlari otomatik tagleyip DM galerisine aktarın; manuel yuklemeyi ortadan kaldirin.
+        </p>
+
+        <h2>Step 4: Script a Seven-Step Conversion Journey</h2>
+        <p>
+          Guide prospects from curiosity to purchase using a repeatable framework. Adapt the copy but keep the sequence
+          consistent.
+        </p>
+        <ul>
+          <li>
+            <strong>Welcome:</strong> Name the featured creator ("Inspired by {`Ayse’s balayage transformation`}").
+          </li>
+          <li>
+            <strong>Qualify:</strong> Launch a 45-second quiz to capture hair type, budget, or timeline.
+          </li>
+          <li>
+            <strong>Recommend:</strong> Show three proof slides tailored to the quiz outcome.
+          </li>
+          <li>
+            <strong>Offer:</strong> Present a personalised bundle plus an expiring incentive.
+          </li>
+          <li>
+            <strong>Validate:</strong> Drop ROI stats or before-after metrics to dissolve doubt.
+          </li>
+          <li>
+            <strong>Handle objections:</strong> Route to a micro-FAQ node covering price, timing, and service quality.
+          </li>
+          <li>
+            <strong>Close:</strong> Send payment link or scheduling widget for one-tap checkout.
+          </li>
+        </ul>
+        <p className="text-sm text-neutral-500 italic">
+          TR: Karşılama, nitelendirme, öneri, teklif, kanit, itiraz ve kapanis adimlari satin alma oranini tutarli sekilde artirir.
+        </p>
+
+        <h2>Step 5: Track Metrics That Prove ROI</h2>
+        <p>
+          Dashboard the following metrics every Monday and share them with both marketing and finance teams.
+        </p>
+        <ul>
+          <li>
+            <strong>UGC-triggered DM rate:</strong> UGC-sourced DMs ÷ total DMs — aim for 35% or higher.
+          </li>
+          <li>
+            <strong>Proof-to-purchase conversion:</strong> UGC DM checkouts ÷ UGC DM sessions — target 22%.
+          </li>
+          <li>
+            <strong>LTV uplift:</strong> Track repeat purchases from UGC-sourced customers; 18%+ signals strong loyalty.
+          </li>
+        </ul>
+        <p className="text-sm text-neutral-500 italic">
+          TR: UGC kaynakli DM orani, satin alma donusumu ve LTV artisini haftalik raporlayin.
+        </p>
+
+        <h2>FAQ: Keep the Engine App-Review Ready</h2>
+        <h3>How should I store creator permissions?</h3>
+        <p>
+          House signed agreements in a shared drive, link them inside LookLab, and export a PDF bundle whenever Meta
+          reviewers ask for proof.
+        </p>
+        <p className="text-sm text-neutral-500 italic">
+          TR: Whitelisting sozlesmelerini paylasimli depoda tutup LookLab icinde linkleyin; Meta incelemesi icin PDF cikarin.
+        </p>
+        <h3>How often should I refresh the gallery?</h3>
+        <p>
+          Run a 14-day content sprint: keep top-performing assets pinned and rotate one new clip every cycle to prevent
+          creative fatigue.
+        </p>
+        <p className="text-sm text-neutral-500 italic">
+          TR: 14 gunluk sprintlerle en iyi UGC'leri tutun, her donemde bir yeni icerik ekleyin.
+        </p>
+        <h3>Which checkout metrics prove success fastest?</h3>
+        <p>
+          Track order creation, average order value, and cancellation rate with UTM parameters so you can attribute
+          revenue back to the DM engine.
+        </p>
+        <p className="text-sm text-neutral-500 italic">
+          TR: Siparis olusumu, sepet tutari ve iptal oranini UTM etiketleriyle olcerek DM motorunun gelir etkisini gosterebilirsiniz.
+        </p>
+
+        <div className="mt-12 rounded-3xl bg-gradient-to-r from-primary-500 to-accent-500 p-8 text-white">
+          <h3 className="text-2xl font-bold">Launch the UGC Engine in 60 Minutes</h3>
+          <p>
+            Import the LookLab automation template, connect your asset sheet, and automate the first 20 customer journeys
+            without writing code.
+          </p>
+          <p className="text-sm text-neutral-200 italic">
+            TR: LookLab sablonunu yukleyin, UGC tablonuzu baglayin ve ilk 20 musteriyi kod yazmadan otomatiklestirin.
+          </p>
+          <Button className="mt-6 bg-white text-primary-600 hover:bg-neutral-100">Download the UGC template</Button>
+        </div>
+      </div>
+    ),
+  },
+
+  'privacy-compliance-automation': {
+    id: 'privacy-compliance-automation',
+    title: 'Privacy-First Instagram Automation: KVKK & GDPR Compliance Blueprint',
+    summary:
+      'Design Instagram DM workflows that respect consent, retention, and audit requirements. | TR: KVKK ve GDPR uyumlu DM otomasyon planı.',
+    metaDescription:
+      'Step-by-step privacy automation guide covering data inventory, consent flows, retention rules, audit evidence, and a 30-day roadmap for KVKK and GDPR compliance.',
+    keywords: [
+      'Instagram privacy compliance',
+      'GDPR automation checklist',
+      'KVKK consent management',
+      'DM data retention policy',
+      'Facebook App Review compliance',
+      'privacy audit evidence',
+      'automated deletion workflow',
+      'LookLab compliance template',
+    ],
+    category: 'Compliance',
+    readingTime: '10 min · 10 dk',
+    publishedAt: '15 October 2025',
+    author: {
+      name: 'Efe Arslan',
+      role: 'Compliance Officer',
+      avatar: '/media/avatars/efe.png',
+    },
+    cover: '/media/blog6.webp',
+    content: (
+      <div className="prose prose-lg max-w-none">
+        <h2>Why Privacy-Ready Automation Matters</h2>
+        <p>
+          Instagram DM workflows process names, contact details, purchase intent, and occasionally sensitive data. KVKK
+          and GDPR require proof of where this information lives, how long you keep it, and who can access it. Automating
+          the guardrails keeps your team compliant without slowing growth.
+        </p>
+        <p className="text-sm text-neutral-500 italic">
+          TR: DM akislari kimlik ve satin alma niyeti gibi verileri isler; KVKK ve GDPR bu verinin nerede tutuldugunu, ne kadar saklandigini ve kimlerin eristigini belgelemenizi ister.
+        </p>
+
+        <h2>Step 1: Build a Data Inventory and Access Matrix</h2>
+        <p>
+          Document every node that collects or enriches user data. Use LookLab’s <strong>Data Map</strong> export to
+          generate a JSON inventory, then add the following columns inside your compliance sheet.
+        </p>
+        <ul>
+          <li>Data category (name, phone, preference, booking intent)</li>
+          <li>Legal basis (explicit consent, contractual necessity, legitimate interest)</li>
+          <li>Retention period and storage location</li>
+          <li>Access owner (team, integration, or vendor)</li>
+        </ul>
+        <p className="text-sm text-neutral-500 italic">
+          TR: LookLab Data Map exportunu kullanarak veri kategorisi, hukuki dayanak, saklama suresi ve erisim sahibini tabloya ekleyin.
+        </p>
+
+        <h2>Step 2: Automate Consent and Preference Capture</h2>
+        <p>
+          Build layered opt-ins so you can prove that marketing messages, transactional updates, and sensitive data
+          processing were authorised by the user.
+        </p>
+        <ol>
+          <li>
+            <strong>Soft consent:</strong> Capture email or phone with a checkbox that references your privacy notice.
+          </li>
+          <li>
+            <strong>Hard consent:</strong> Add explicit buttons for promotional outreach, loyalty programmes, or SMS flows.
+          </li>
+          <li>
+            <strong>Preference centre:</strong> Offer a "Manage data" command that lets users revoke or adjust choices at
+            any time.
+          </li>
+        </ol>
+        <p className="text-sm text-neutral-500 italic">
+          TR: Katmanli izin yapisi kurarak pazarlama, SMS ve hassas veri icin ayri onay butonlari toplayin; kullanicilarin dilediginde tercihini guncellemesine izin verin.
+        </p>
+
+        <h2>Step 3: Enforce Retention and Deletion Rules Automatically</h2>
+        <p>
+          Configure LookLab automations that label records when consent expires or a user requests erasure, then push the
+          action to your CRM or data warehouse.
+        </p>
+        <ul>
+          <li>
+            <strong>Deletion queue:</strong> Tag conversations marked for removal and schedule a daily job to purge or
+            anonymise them.
+          </li>
+          <li>
+            <strong>Audit trail:</strong> Log the timestamp, operator, and system responsible for each deletion.
+          </li>
+          <li>
+            <strong>Redaction rules:</strong> Mask partial identifiers (e.g. last two digits of phone numbers) when full
+            deletion is not legally required.
+          </li>
+        </ul>
+        <p className="text-sm text-neutral-500 italic">
+          TR: Silme kuyrugu, denetim logu ve maskeleme kurallari tanimlayarak izin bitince veriyi otomatik temizleyin.
+        </p>
+
+        <h2>Step 4: Prepare Audit-Ready Evidence Packs</h2>
+        <p>
+          Regulators and Facebook App Review teams often request supporting documents. Automate weekly exports so you can
+          respond instantly.
+        </p>
+        <ul>
+          <li>Data flow diagram with node descriptions and legal bases.</li>
+          <li>Version-controlled consent copy history with timestamps.</li>
+          <li>Deletion log summarising pending and completed requests.</li>
+          <li>Role-based access report highlighting least-privilege settings.</li>
+        </ul>
+        <p className="text-sm text-neutral-500 italic">
+          TR: Veri akisi diyagrami, opt-in versiyonlari, silme loglari ve rol bazli erisim raporunu haftalik otomatik alarak denetim taleplerine hazir olun.
+        </p>
+
+        <h2>Step 5: Follow a 30-Day Compliance Sprint</h2>
+        <p>
+          Use the following sprint plan to align legal, product, and operations teams without derailing launch dates.
+        </p>
+        <ol>
+          <li>
+            <strong>Week 1–2:</strong> Complete the data inventory, risk assessment, and consent copy review with legal.
+          </li>
+          <li>
+            <strong>Week 3:</strong> Deploy deletion automations, run QA on DM flows, and validate event logging.
+          </li>
+          <li>
+            <strong>Week 4:</strong> Train frontline teams, publish documentation, and update App Review attachments.
+          </li>
+        </ol>
+        <p className="text-sm text-neutral-500 italic">
+          TR: 30 gunluk sprint planinda veri envanteri, silme otomasyonu ve egitim asamalarini tamamlayarak lansmani geciktirmeden uyum saglayin.
+        </p>
+
+        <h2>FAQ: Managing Risk While Scaling Automation</h2>
+        <h3>Who defines the retention window?</h3>
+        <p>
+          Follow sector-specific regulations and align with your legal counsel. Common guidance suggests two years for
+          appointment data and twelve months for marketing interactions.
+        </p>
+        <p className="text-sm text-neutral-500 italic">
+          TR: Sektorel regülasyonlar ve hukuk ekibi saklama suresini belirler; randevu verisi icin 2 yil, pazarlama icin 12 ay yaygindir.
+        </p>
+        <h3>How do I verify deletion requests?</h3>
+        <p>
+          Send a one-time verification token via DM, add the requester to the deletion queue once confirmed, and notify
+          them automatically when the job completes.
+        </p>
+        <p className="text-sm text-neutral-500 italic">
+          TR: Tek kullanimlik token ile dogrulama yapip talebi silme kuyruğuna ekleyin, islem bitince otomatik bilgilendirme gonderin.
+        </p>
+        <h3>Do I need engineering support?</h3>
+        <p>
+          LookLab’s compliance template is no-code, but involve IT or DevOps to monitor webhooks and storage buckets, and
+          loop in legal for documentation reviews.
+        </p>
+        <p className="text-sm text-neutral-500 italic">
+          TR: Sablon kod gerektirmez; ancak webhook ve depolamayi izlemek icin IT/DevOps, dokumanlari onaylamak icin hukuk ekibini dahil edin.
+        </p>
+
+        <div className="mt-12 rounded-3xl border border-primary-600 bg-primary-50 p-8">
+          <h3 className="text-2xl font-bold text-primary-700">Accelerate Your Compliance Readiness</h3>
+          <p>
+            Access the LookLab compliance pack with templates, screen recordings, and export scripts to reduce review
+            cycles by 40%.
+          </p>
+          <p className="text-sm text-neutral-500 italic">
+            TR: LookLab uyum paketini indirerek sablonlar, ekran kayitlari ve scriptlerle inceleme surelerinizi %40 kisaltin.
+          </p>
+          <Button className="mt-6 bg-primary-600 hover:bg-primary-700 text-white">Request the compliance kit</Button>
+        </div>
+      </div>
+    ),
+  },
+
   'ai-hair-studio': {
     id: 'ai-hair-studio',
     title: 'AI ile Sac Tasariminda 5 Pratik Adim: Instagram Otomasyonu ile Musterilenizi Sasirtin',
