@@ -345,8 +345,6 @@ export function AutomationSwitcher({ collapsed, onMenuStateChange }: AutomationS
                       ? 'border-primary-200 bg-gradient-to-r from-primary-50 to-accent-50 shadow-sm'
                       : 'border-transparent hover:bg-gradient-to-r hover:from-primary-50 hover:to-accent-50 hover:border-primary-200'
                   } ${
-                    !isActive ? 'opacity-80' : ''
-                  } ${
                     isDropTarget ? 'border-dashed border-primary-300 bg-primary-50/40' : ''
                   } ${isDragging ? 'opacity-70 ring-2 ring-primary-200' : ''}`}
                 >
@@ -356,7 +354,7 @@ export function AutomationSwitcher({ collapsed, onMenuStateChange }: AutomationS
                     </div>
                   </div>
 
-                  <div className="flex-1 overflow-hidden">
+                  <div className={`flex-1 overflow-hidden ${isActive ? '' : 'opacity-60'}`}>
                     <p
                       className={`text-sm font-semibold truncate transition-colors ${
                         isActive ? 'text-neutral-800 group-hover:text-primary-700' : 'text-neutral-500'
@@ -395,7 +393,7 @@ export function AutomationSwitcher({ collapsed, onMenuStateChange }: AutomationS
                 {isMenuOpen && (
                   <div
                     ref={setMenuRef(automation.templateId)}
-                    className="absolute right-0 top-full z-50 mt-2 w-56 rounded-xl border border-neutral-200 bg-white p-2 shadow-xl"
+                    className="absolute right-0 top-full z-50 mt-2 w-56 rounded-xl border border-neutral-200 bg-white p-2 shadow-xl pointer-events-auto"
                     onClick={(event) => event.stopPropagation()}
                   >
                     <button
