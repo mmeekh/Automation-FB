@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
 } from 'react';
+import clsx from 'clsx';
 import Image from 'next/image';
 import { useAccountStore } from '@/lib/store/accountStore';
 import { useUIStore } from '@/lib/store/uiStore';
@@ -193,48 +194,56 @@ export function AccountSwitcher({ collapsed, onMenuStateChange }: AccountSwitche
                   selectAccount(account.id);
                 }
               }}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all border-2 ${
+              className={clsx(
+                'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all border-2',
                 isSelected
                   ? 'bg-gradient-to-r from-primary-50 to-accent-50 border-primary-200'
                   : 'border-transparent hover:bg-neutral-50'
-              } ${account.isActive ? '' : 'opacity-80'}`}
+              )}
             >
-              {/* Avatar */}
-              <div className="relative flex-shrink-0">
-                <div
-                  className={`w-10 h-10 rounded-full overflow-hidden ${
-                    isSelected ? 'ring-2 ring-primary-500 ring-offset-2' : ''
-                  }`}
-                >
-                  <Image
-                    src={account.profilePicture}
-                    alt={account.username}
-                    width={40}
-                    height={40}
-                    className="object-cover"
-                  />
+              <div
+                className={clsx(
+                  'flex items-center gap-3 flex-1 min-w-0 transition-opacity',
+                  !account.isActive && 'opacity-60'
+                )}
+              >
+                {/* Avatar */}
+                <div className="relative flex-shrink-0">
+                  <div
+                    className={`w-10 h-10 rounded-full overflow-hidden ${
+                      isSelected ? 'ring-2 ring-primary-500 ring-offset-2' : ''
+                    }`}
+                  >
+                    <Image
+                      src={account.profilePicture}
+                      alt={account.username}
+                      width={40}
+                      height={40}
+                      className="object-cover"
+                    />
+                  </div>
+
+                  {/* Active flows indicator */}
+                  {account.activeFlowsCount > 0 && (
+                    <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-green-500 border-2 border-white flex items-center justify-center">
+                      <span className="text-[10px] font-bold text-white">
+                        {account.activeFlowsCount}
+                      </span>
+                    </div>
+                  )}
                 </div>
 
-                {/* Active flows indicator */}
-                {account.activeFlowsCount > 0 && (
-                  <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-green-500 border-2 border-white flex items-center justify-center">
-                    <span className="text-[10px] font-bold text-white">
-                      {account.activeFlowsCount}
-                    </span>
-                  </div>
-                )}
-              </div>
-
-              {/* Account Info */}
-              <div className="flex-1 text-left overflow-hidden">
-                <p
-                  className={`text-sm font-semibold truncate ${
-                    isSelected ? 'text-primary-700' : 'text-neutral-800'
-                  }`}
-                >
-                  @{account.username}
-                </p>
-                <p className="text-xs text-neutral-500 truncate">{account.displayName}</p>
+                {/* Account Info */}
+                <div className="flex-1 text-left overflow-hidden">
+                  <p
+                    className={`text-sm font-semibold truncate ${
+                      isSelected ? 'text-primary-700' : 'text-neutral-800'
+                    }`}
+                  >
+                    @{account.username}
+                  </p>
+                  <p className="text-xs text-neutral-500 truncate">{account.displayName}</p>
+                </div>
               </div>
 
               <div className="ml-auto flex items-center gap-3">
@@ -252,10 +261,16 @@ export function AccountSwitcher({ collapsed, onMenuStateChange }: AccountSwitche
                         event.stopPropagation();
                         setOpenMenuId((prev) => (prev === account.id ? null : account.id));
                       }}
-                      className="relative flex h-9 w-9 items-center justify-center rounded-lg text-neutral-400 transition hover:bg-neutral-100 hover:text-neutral-700 focus:outline-none focus:ring-2 focus:ring-primary-200"
+                      className={clsx(
+                        'relative flex h-9 w-9 items-center justify-center rounded-lg transition focus:outline-none focus:ring-2 focus:ring-primary-200 focus:ring-offset-1',
+                        isMenuOpen
+                          ? 'bg-gradient-to-r from-primary-500 to-accent-500 text-white shadow-lg'
+                          : 'bg-white text-neutral-400 shadow-sm hover:bg-neutral-100 hover:text-neutral-700'
+                      )}
                       aria-label="Account actions"
+                      aria-expanded={isMenuOpen}
                     >
-                      <Bars3Icon className="h-5 w-5" />
+                      <Bars3Icon className={clsx('h-5 w-5 transition-transform', isMenuOpen && 'scale-110')} />
                     </button>
 
                     {isMenuOpen && (
@@ -296,14 +311,16 @@ export function AccountSwitcher({ collapsed, onMenuStateChange }: AccountSwitche
                           <span>Ortak kredi havuzu</span>
                           <div
                             className={`flex items-center justify-center w-5 h-5 rounded-full border-2 ${
-                              account.includedInCreditPool ? 'border-green-500' : 'border-red-500'
+                              account.includedInCreditPool
+                                ? 'border-green-500 bg-green-50'
+                                : 'border-neutral-300 bg-white'
                             }`}
                           >
-                            {account.includedInCreditPool ? (
-                              <span className="text-green-500 text-xs">✓</span>
-                            ) : (
-                              <span className="text-red-500 text-xs">✕</span>
-                            )}
+                            <span
+                              className={`w-2.5 h-2.5 rounded-full ${
+                                account.includedInCreditPool ? 'bg-green-500' : 'bg-neutral-300'
+                              }`}
+                            />
                           </div>
                         </button>
                         <button
