@@ -104,22 +104,6 @@ export function FlowCanvas() {
         />
       </ReactFlow>
 
-      {/* Edit Mode Indicator */}
-      {!isEditMode && (
-        <div className="absolute top-4 left-1/2 -translate-x-1/2 z-10">
-          <div className="px-4 py-2 bg-blue-500 text-white text-sm font-semibold rounded-full shadow-lg">
-            View mode - click "Edit Automation" to make changes
-          </div>
-        </div>
-      )}
-
-      {isEditMode && (
-        <div className="absolute top-4 left-1/2 -translate-x-1/2 z-10">
-          <div className="px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white text-sm font-semibold rounded-full shadow-lg animate-pulse">
-            Edit mode - drag nodes or click a card to update content
-          </div>
-        </div>
-      )}
     </div>
   );
 }

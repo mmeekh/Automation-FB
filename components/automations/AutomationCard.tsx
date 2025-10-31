@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { AutomationTemplate } from '@/lib/automations/types';
 import { CollapsedView } from './CollapsedView';
 import { useAutomationStore } from '@/lib/store/automationStore';
@@ -14,7 +15,13 @@ interface AutomationCardProps {
 
 export function AutomationCard({ template, isHovered, onMouseEnter, onMouseLeave }: AutomationCardProps) {
   const { isActivated } = useAutomationStore();
-  const isActive = isActivated(template.id);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isActive = mounted ? isActivated(template.id) : false;
 
   return (
     <CollapsedView

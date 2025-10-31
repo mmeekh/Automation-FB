@@ -13,7 +13,7 @@ export function Footer() {
     return maybeLocale && maybeLocale.length > 0 ? maybeLocale : 'en';
   }, [pathname]);
 
-  if (pathname?.includes('/automations/builder/')) {
+  if (pathname?.includes('/automations/builder')) {
     return null;
   }
 

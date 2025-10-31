@@ -14,7 +14,6 @@ import {
 } from '@heroicons/react/24/outline';
 import { SparklesIcon } from '@heroicons/react/24/solid';
 import { useUIStore } from '@/lib/store/uiStore';
-import { BuilderAnalyticsWidget } from '@/components/automation-builder/BuilderAnalyticsWidget';
 
 interface NavItem {
   name: string;
@@ -24,10 +23,7 @@ interface NavItem {
   onClick?: () => void;
 }
 
-const navItemsBase: NavItem[] = [
-  { name: 'Home', href: '/dashboard', icon: HomeIcon },
-  { name: 'Automation', href: '/automations', icon: SparklesIcon },
-];
+const navItemsBase: NavItem[] = [{ name: 'Home', href: '/dashboard', icon: HomeIcon }];
 
 const bottomItems: NavItem[] = [
   { name: 'Settings', href: '/automation-settings', icon: Cog6ToothIcon },
@@ -42,19 +38,31 @@ export function AutomationSidebar() {
   const showBuilderFlow = useUIStore((s) => s.showBuilderFlow);
   const [isOpen, setIsOpen] = useState(false);
 
-  const isOnBuilderPage = pathname.includes('/automations/builder/');
+  const isOnBuilderPage = pathname.includes('/automations/builder');
 
   const navItems: NavItem[] = [
     ...navItemsBase,
     {
+      name: 'Automation',
+      href: '/automations',
+      icon: SparklesIcon,
+      onClick: () => {
+        if (isOnBuilderPage) {
+          showBuilderFlow();
+        } else {
+          router.push('/automations');
+        }
+      },
+    },
+    {
       name: 'Analytics',
-      href: isOnBuilderPage ? pathname : '/automations',
+      href: '/automations/builder',
       icon: ChartBarIcon,
       onClick: () => {
         if (isOnBuilderPage) {
           showBuilderAnalytics();
         } else {
-          router.push('/automations');
+          router.push('/automations/builder?view=analytics');
         }
       },
     },
@@ -107,9 +115,21 @@ export function AutomationSidebar() {
       <nav className="flex-1 px-3 py-6 space-y-2 overflow-y-auto">
         {navItems.map((item) => {
           const isAnalyticsItem = item.name === 'Analytics';
-          const isActive = isAnalyticsItem
-            ? isOnBuilderPage && builderView === 'analytics'
-            : pathname.startsWith(item.href);
+          const isAutomationItem = item.name === 'Automation';
+          let isActive: boolean;
+
+          if (isOnBuilderPage) {
+            if (isAnalyticsItem) {
+              isActive = builderView === 'analytics';
+            } else if (isAutomationItem) {
+              isActive = builderView !== 'analytics';
+            } else {
+              isActive = pathname.startsWith(item.href);
+            }
+          } else {
+            isActive = pathname.startsWith(item.href);
+          }
+
           const Icon = item.icon;
 
           const commonClass = `flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200 group ${
@@ -158,8 +178,6 @@ export function AutomationSidebar() {
           );
         })}
       </nav>
-
-      <BuilderAnalyticsWidget collapsed={!isOpen} />
 
       {/* Bottom Section */}
       <div className="border-t border-neutral-100 px-3 py-4 space-y-2">

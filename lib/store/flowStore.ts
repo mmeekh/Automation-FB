@@ -6,6 +6,34 @@ import { AutomationFlow, FlowNode, FlowEdge, FlowNodeData } from '../types/flow'
 import { getMockFlowById } from '../mock-data/flows';
 import {  applyNodeChanges, applyEdgeChanges, NodeChange, EdgeChange } from 'reactflow';
 
+function cloneNode(node: FlowNode): FlowNode {
+  return {
+    ...node,
+    position: { ...node.position },
+    data: JSON.parse(JSON.stringify(node.data)),
+  };
+}
+
+function cloneEdge(edge: FlowEdge): FlowEdge {
+  return { ...edge };
+}
+
+function cloneNodes(nodes: FlowNode[]): FlowNode[] {
+  return nodes.map((node) => cloneNode(node));
+}
+
+function cloneEdges(edges: FlowEdge[]): FlowEdge[] {
+  return edges.map((edge) => cloneEdge(edge));
+}
+
+function cloneFlow(flow: AutomationFlow): AutomationFlow {
+  return {
+    ...flow,
+    nodes: cloneNodes(flow.nodes),
+    edges: cloneEdges(flow.edges),
+  };
+}
+
 /**
  * History state for undo/redo
  */
@@ -76,11 +104,15 @@ export const useFlowStore = create<FlowStore>()(
        * Load a flow by ID
        */
       loadFlow: (flowId) => {
-        const flow = getMockFlowById(flowId);
+        const sourceFlow = getMockFlowById(flowId);
+        if (!sourceFlow) return;
+
+        const flow = cloneFlow(sourceFlow);
+
         if (flow) {
           set({
             currentFlow: flow,
-            history: [{ nodes: flow.nodes, edges: flow.edges }],
+            history: [{ nodes: cloneNodes(flow.nodes), edges: cloneEdges(flow.edges) }],
             historyIndex: 0,
             isEditMode: false,
             hasUnsavedChanges: false,
@@ -261,8 +293,8 @@ export const useFlowStore = create<FlowStore>()(
         if (!currentFlow) return;
 
         const newHistoryState: HistoryState = {
-          nodes: currentFlow.nodes,
-          edges: currentFlow.edges,
+          nodes: cloneNodes(currentFlow.nodes),
+          edges: cloneEdges(currentFlow.edges),
         };
 
         // Remove future history if we're not at the end
@@ -295,8 +327,8 @@ export const useFlowStore = create<FlowStore>()(
         set({
           currentFlow: {
             ...currentFlow,
-            nodes: previousState.nodes,
-            edges: previousState.edges,
+            nodes: cloneNodes(previousState.nodes),
+            edges: cloneEdges(previousState.edges),
           },
           historyIndex: newIndex,
           hasUnsavedChanges: true,
@@ -316,8 +348,8 @@ export const useFlowStore = create<FlowStore>()(
         set({
           currentFlow: {
             ...currentFlow,
-            nodes: nextState.nodes,
-            edges: nextState.edges,
+            nodes: cloneNodes(nextState.nodes),
+            edges: cloneEdges(nextState.edges),
           },
           historyIndex: newIndex,
           hasUnsavedChanges: true,
@@ -397,10 +429,7 @@ export const useFlowStore = create<FlowStore>()(
     {
       name: 'flow-storage',
       // Don't persist history (too large)
-      partialize: (state) => ({
-        currentFlow: state.currentFlow,
-        isEditMode: state.isEditMode,
-      }),
+      partialize: () => ({}),
     }
   )
 );

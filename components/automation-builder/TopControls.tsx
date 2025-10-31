@@ -18,7 +18,7 @@ export function TopControls() {
   const router = useRouter();
   const { currentFlow, isEditMode, hasUnsavedChanges, undo, redo, canUndo, canRedo, saveFlow, enterEditMode, exitEditMode } = useFlowStore();
   const { getCurrentAccount } = useAccountStore();
-  const { isSavingFlow, setIsSavingFlow, showNotification } = useUIStore();
+  const { isSavingFlow, setIsSavingFlow, showNotification, builderView } = useUIStore();
 
   const currentAccount = getCurrentAccount();
   const [flowStatus, setFlowStatus] = useState<FlowStatus>(currentFlow?.status || 'inactive');
@@ -121,69 +121,71 @@ export function TopControls() {
           </div>
 
           {/* Status Switcher & Edit Button */}
-          <div className="flex items-center gap-4 ml-8">
-            {/* 3-Way Status Switch */}
-            <div className="flex items-center gap-2 p-1 bg-neutral-100 rounded-xl">
-              <button
-                onClick={() => setFlowStatus('inactive')}
-                disabled={isEditMode}
-                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
-                  flowStatus === 'inactive'
-                    ? 'bg-neutral-700 text-white shadow-lg'
-                    : 'text-neutral-600 hover:text-neutral-900'
-                } ${isEditMode ? 'opacity-50 cursor-not-allowed' : ''}`}
-              >
-                ○ Inactive
-              </button>
+          {builderView === 'flow' && (
+            <div className="flex items-center gap-4 ml-8">
+              {/* 3-Way Status Switch */}
+              <div className="flex items-center gap-2 p-1 bg-neutral-100 rounded-xl">
+                <button
+                  onClick={() => setFlowStatus('inactive')}
+                  disabled={isEditMode}
+                  className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+                    flowStatus === 'inactive'
+                      ? 'bg-neutral-700 text-white shadow-lg'
+                      : 'text-neutral-600 hover:text-neutral-900'
+                  } ${isEditMode ? 'opacity-50 cursor-not-allowed' : ''}`}
+                >
+                  ○ Inactive
+                </button>
 
-              <button
-                onClick={() => setFlowStatus('test')}
-                disabled={isEditMode}
-                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
-                  flowStatus === 'test'
-                    ? 'bg-gradient-to-r from-yellow-500 to-orange-500 text-white shadow-lg'
-                    : 'text-neutral-600 hover:text-neutral-900'
-                } ${isEditMode ? 'opacity-50 cursor-not-allowed' : ''}`}
-              >
-                ● Test
-              </button>
+                <button
+                  onClick={() => setFlowStatus('test')}
+                  disabled={isEditMode}
+                  className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+                    flowStatus === 'test'
+                      ? 'bg-gradient-to-r from-yellow-500 to-orange-500 text-white shadow-lg'
+                      : 'text-neutral-600 hover:text-neutral-900'
+                  } ${isEditMode ? 'opacity-50 cursor-not-allowed' : ''}`}
+                >
+                  ● Test
+                </button>
 
-              <button
-                onClick={() => setFlowStatus('active')}
-                disabled={isEditMode}
-                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
-                  flowStatus === 'active'
-                    ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg'
-                    : 'text-neutral-600 hover:text-neutral-900'
-                } ${isEditMode ? 'opacity-50 cursor-not-allowed' : ''}`}
-              >
-                ● Active
-              </button>
+                <button
+                  onClick={() => setFlowStatus('active')}
+                  disabled={isEditMode}
+                  className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+                    flowStatus === 'active'
+                      ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg'
+                      : 'text-neutral-600 hover:text-neutral-900'
+                  } ${isEditMode ? 'opacity-50 cursor-not-allowed' : ''}`}
+                >
+                  ● Active
+                </button>
+              </div>
+
+              {/* Edit/Save Button */}
+              {!isEditMode ? (
+                <Button
+                  variant="outline"
+                  size="lg"
+                  onClick={enterEditMode}
+                  className="border-2"
+                >
+                  Edit Automation
+                </Button>
+              ) : (
+                <Button
+                  variant="primary"
+                  size="lg"
+                  onClick={handleSave}
+                  loading={isSavingFlow}
+                  disabled={!hasUnsavedChanges}
+                  className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 shadow-lg"
+                >
+                  {isSavingFlow ? 'Saving...' : 'Save Changes'}
+                </Button>
+              )}
             </div>
-
-            {/* Edit/Save Button */}
-            {!isEditMode ? (
-              <Button
-                variant="outline"
-                size="lg"
-                onClick={enterEditMode}
-                className="border-2"
-              >
-                Edit Automation
-              </Button>
-            ) : (
-              <Button
-                variant="primary"
-                size="lg"
-                onClick={handleSave}
-                loading={isSavingFlow}
-                disabled={!hasUnsavedChanges}
-                className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 shadow-lg"
-              >
-                {isSavingFlow ? 'Saving...' : 'Save Changes'}
-              </Button>
-            )}
-          </div>
+          )}
         </div>
       </div>
     </div>

@@ -1,6 +1,5 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { Header } from '@/components/layout/Header';
 import { PhoneMockup } from '@/components/automation-landing/PhoneMockup';
 import { HeroSection } from '@/components/automation-landing/HeroSection';
@@ -9,12 +8,13 @@ import { UseCaseSection } from '@/components/automation-landing/UseCaseSection';
 import { FAQSection } from '@/components/automation-landing/FAQSection';
 import { carColorChangeContent } from '@/lib/automation-content/car-color-change';
 import { Button } from '@/components/ui/Button';
+import { useAutomationLauncher } from '@/lib/hooks/useAutomationLauncher';
 
 export default function CarColorChangePage() {
-  const router = useRouter();
+  const launchAutomation = useAutomationLauncher();
 
   const handleLaunch = () => {
-    router.push('/automations/builder/car-color-changer');
+    launchAutomation('instagram-car-color-changer');
   };
 
   return (

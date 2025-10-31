@@ -1,6 +1,5 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { Header } from '@/components/layout/Header';
 import { PhoneMockup } from '@/components/automation-landing/PhoneMockup';
 import { HeroSection } from '@/components/automation-landing/HeroSection';
@@ -9,12 +8,13 @@ import { UseCaseSection } from '@/components/automation-landing/UseCaseSection';
 import { FAQSection } from '@/components/automation-landing/FAQSection';
 import { hairStyleChangeContent } from '@/lib/automation-content';
 import { Button } from '@/components/ui/Button';
+import { useAutomationLauncher } from '@/lib/hooks/useAutomationLauncher';
 
 export default function HairStyleChangePage() {
-  const router = useRouter();
+  const launchAutomation = useAutomationLauncher();
 
   const handleLaunch = () => {
-    router.push('/automations/builder/instagram-bald-to-haired');
+    launchAutomation('instagram-bald-to-haired');
   };
 
   return (

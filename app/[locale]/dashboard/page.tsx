@@ -1,409 +1,215 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useTranslations, useLocale } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
-import {
-  Button,
-  Card,
-  CardBadge,
-  CardHeader,
-  CardTitle,
-  FloatingFeatureCard,
-  Header,
-  MetricCard,
-  QuickAction,
-  AITemplateCard,
-} from '@/components';
+import { Button, Header } from '@/components';
 import { FlipWords } from '@/components/ui/FlipWords';
 import { useStore } from '@/lib/store';
-import { fetchDashboardData, mockUser } from '@/lib/api';
-import { formatNumber } from '@/lib/utils';
 import {
   RocketLaunchIcon,
   PlayIcon,
-  PlusIcon,
   SparklesIcon as SparklesSolidIcon,
-  FaceSmileIcon,
   BoltIcon,
+  FaceSmileIcon,
   ArrowRightIcon,
 } from '@heroicons/react/24/solid';
 
+const featureCards = [
+  {
+    title: 'Launch proven flows',
+    description: 'Pick from Instagram DM funnels for lead capture, appointment booking, and AI-powered concierge experiences.',
+    icon: SparklesSolidIcon,
+    accent: 'from-primary-500 to-accent-500',
+  },
+  {
+    title: 'Automate every response',
+    description: 'Trigger AI replies, follow-ups, and media drops automatically—no engineering tickets or Zapier chain needed.',
+    icon: BoltIcon,
+    accent: 'from-orange-500 to-pink-500',
+  },
+  {
+    title: 'Keep it personal',
+    description: 'Layer account-level personalization so every prospect gets human-sounding guidance tailored to their goal.',
+    icon: FaceSmileIcon,
+    accent: 'from-emerald-500 to-teal-500',
+  },
+];
+
+const workflowSteps = [
+  {
+    title: 'Pick a template',
+    description: 'Choose an automation playbook crafted for Instagram—from inbound lead capture to post-purchase upsell.',
+  },
+  {
+    title: 'Drag, drop, customize',
+    description: 'Edit copy, AI actions, and wait steps visually. Add paths for every intent without touching code.',
+  },
+  {
+    title: 'Launch and iterate',
+    description: 'Activate with one click, then monitor replies and conversions from the same workspace.',
+  },
+];
+
+const automationStats = [
+  { value: '120+', label: 'prebuilt automation steps' },
+  { value: '45s', label: 'average launch time' },
+  { value: '24/7', label: 'always-on follow up' },
+];
+
+const automationOutcomes = [
+  'Capture every DM lead with tailored flows',
+  'Route VIPs to human reps while AI nurtures the rest',
+  'Measure replies, bookings, and revenue in real time',
+];
+
 export default function DashboardPage() {
   const t = useTranslations('dashboard');
-  const locale = useLocale();
   const router = useRouter();
-  const { user, accounts, workflows, setUser, setAccounts, setWorkflows, toggleWorkflow, openAuthModal } = useStore();
+  const { user, openAuthModal } = useStore();
 
-  useEffect(() => {
+  const handleGetStarted = () => {
     if (!user) {
-      // Don't auto-login, let user sign in manually
+      openAuthModal();
       return;
     }
+    router.push('/automations');
+  };
 
-    fetchDashboardData().then(data => {
-      setAccounts(data.accounts);
-      setWorkflows(data.workflows);
-    });
-  }, [user, setAccounts, setWorkflows]);
+  const handleWatchDemo = () => {
+    router.push('/automations');
+  };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-gradient-to-b from-white via-neutral-50 to-primary-50/20">
       <Header />
 
-      {/* Hero Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
-        <div className="flex justify-center items-center mb-12 sm:mb-16 lg:mb-20">
-          <div className="text-center max-w-4xl">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 sm:mb-8 leading-tight">
-              <span className="block text-neutral-900">Automate your social media</span>
-              <span className="block text-neutral-900">
-                <span className="inline-flex items-baseline justify-center gap-2 flex-wrap sm:flex-nowrap">
-                  <FlipWords
-                    words={["workflows", "engagement", "growth", "automation"]}
-                    className="font-bold bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent"
-                    duration={2000}
-                  />
-                  <span className="descender-safe">effortlessly.</span>
-                </span>
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 lg:py-20">
+        <div className="text-center max-w-4xl mx-auto mb-16 lg:mb-20">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 sm:mb-8 leading-tight">
+            <span className="block text-neutral-900">Automate your social media</span>
+            <span className="block text-neutral-900">
+              <span className="inline-flex items-baseline justify-center gap-2 flex-wrap sm:flex-nowrap">
+                <FlipWords
+                  words={['workflows', 'engagement', 'growth', 'automation']}
+                  className="font-bold bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent"
+                  duration={2000}
+                />
+                <span className="descender-safe">effortlessly.</span>
               </span>
-            </h1>
-            <p className="text-lg sm:text-xl lg:text-2xl text-neutral-600 mb-8 sm:mb-10 max-w-3xl mx-auto">
-              Choose ready-made flows, connect your account, and launch automations in minutes.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 justify-center">
-              <Button size="lg" className="hover-glow hover-lift text-lg px-8 py-6">
-                <RocketLaunchIcon className="w-6 h-6" />
-                {t('hero.getStarted')}
-              </Button>
-              <Button variant="secondary" size="lg" className="hover-lift text-lg px-8 py-6">
-                <PlayIcon className="w-6 h-6" />
-                {t('hero.watchDemo')}
-              </Button>
-            </div>
-          </div>
-        </div>
-
-        {/* Dashboard Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
-          {/* Connected Accounts */}
-          <Card className="card-enter hover-lift">
-            <CardHeader>
-              <CardTitle>{t('accounts.title')}</CardTitle>
-              <CardBadge>{accounts.length} {t('accounts.badge')}</CardBadge>
-            </CardHeader>
-            <div className="space-y-3 sm:space-y-4">
-              {accounts.map((account) => (
-                <div key={account.id} className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl
-                  bg-gradient-to-br from-white to-neutral-100 
-                  shadow-neu-sm hover:shadow-neu-md transition-all hover-lift cursor-pointer">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full 
-                    bg-gradient-to-r from-primary-500 to-accent-500 
-                    flex items-center justify-center text-white font-semibold flex-shrink-0">
-                    {account.username.charAt(1).toUpperCase()}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="font-semibold text-neutral-800 truncate">{account.username}</div>
-                    <div className="text-xs sm:text-sm text-neutral-600">
-                      {formatNumber(account.followers)} {t('accounts.followers')} • {account.posts} {t('accounts.posts')}
-                    </div>
-                  </div>
-                  <span className="px-2 sm:px-3 py-1 rounded-full text-xs font-semibold bg-primary-100 text-primary-600 flex-shrink-0">
-                    {t('accounts.badge')}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </Card>
-
-          {/* Active Workflows */}
-          <Card className="card-enter hover-lift" style={{ animationDelay: '0.1s' }}>
-            <CardHeader>
-              <CardTitle>{t('workflows.title')}</CardTitle>
-              <CardBadge>
-                {workflows.filter(w => w.status === 'active').length} {t('workflows.badge')}
-              </CardBadge>
-            </CardHeader>
-            <div className="space-y-3 sm:space-y-4">
-              {workflows.map((workflow) => (
-                <div key={workflow.id} className="p-4 sm:p-5 rounded-xl 
-                  bg-gradient-to-br from-white to-neutral-100 
-                  shadow-neu-sm hover:shadow-neu-md transition-all hover-lift">
-                  <div className="flex items-start justify-between mb-3 gap-2">
-                    <div className="font-semibold text-neutral-800 text-sm sm:text-base">{workflow.name}</div>
-                    <span className={`text-xs font-semibold flex items-center gap-1 flex-shrink-0 
-                      ${workflow.status === 'active' ? 'text-green-600' : 'text-neutral-400'}`}>
-                      <span className={`w-2 h-2 rounded-full bg-current ${workflow.status === 'active' ? 'animate-pulse' : ''}`} />
-                      {workflow.status === 'active' ? t('workflows.active') : t('workflows.inactive')}
-                    </span>
-                  </div>
-                  <p className="text-xs sm:text-sm text-neutral-600 mb-3 sm:mb-4">{workflow.description}</p>
-                  <div className="flex flex-col sm:flex-row gap-2">
-                    <Button
-                      size="sm"
-                      variant={workflow.status === 'active' ? 'secondary' : 'primary'}
-                      onClick={() => toggleWorkflow(workflow.id)}
-                      className="w-full sm:w-auto hover-glow"
-                    >
-                      {workflow.status === 'active' ? t('workflows.stop') : t('workflows.start')}
-                    </Button>
-                    <Button size="sm" variant="secondary" className="w-full sm:w-auto">
-                      {t('workflows.edit')}
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Card>
-
-          {/* Analytics */}
-          <Card className="card-enter hover-lift" style={{ animationDelay: '0.2s' }}>
-            <CardHeader>
-              <CardTitle>{t('analytics.title')}</CardTitle>
-              <CardBadge>{t('analytics.badge')}</CardBadge>
-            </CardHeader>
-            <div className="grid grid-cols-2 gap-3 sm:gap-4">
-              <MetricCard value="2,847" label={t('analytics.newFollowers')} change="+12.5%" positive />
-              <MetricCard value="89.2%" label={t('analytics.engagementRate')} change="+5.3%" positive />
-              <MetricCard value="156" label={t('analytics.postsPublished')} change="-2.1%" />
-              <MetricCard value="4.2K" label={t('analytics.comments')} change="+18.7%" positive />
-            </div>
-          </Card>
-
-          {/* Quick Actions */}
-          <Card className="card-enter hover-lift" style={{ animationDelay: '0.3s' }}>
-            <CardHeader>
-              <CardTitle>{t('quickActions.title')}</CardTitle>
-              <CardBadge>{t('quickActions.badge')}</CardBadge>
-            </CardHeader>
-            <div className="space-y-3">
-              <QuickAction icon={<PlusIcon className="w-5 h-5" />} title={t('quickActions.createAutomation')} action={t('quickActions.create')} />
-              <QuickAction icon="📄" title={t('quickActions.useTemplate')} action={t('quickActions.browse')} />
-              <QuickAction icon="🔗" title={t('quickActions.connectAccount')} action={t('quickActions.connect')} />
-            </div>
-          </Card>
-        </div>
-
-        {/* AI Automation Templates Section */}
-        <section className="mt-12 sm:mt-16 lg:mt-20">
-          {/* Section Header */}
-          <div className="text-center mb-8 sm:mb-12 space-y-4">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full 
-            bg-gradient-to-r from-primary-500 to-accent-500 
-            text-white text-sm font-semibold shadow-lg">
-              <SparklesSolidIcon className="w-5 h-5" />
-              <span>AI Powered</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold gradient-text">
-              Ready-to-Use Instagram Automations
-            </h2>
-            <p className="text-base sm:text-lg text-neutral-600 max-w-2xl mx-auto">
-              Transform your Instagram engagement with immersive AI-driven templates your team can plug in instantly.
-            </p>
-          </div>
-
-          {/* Template Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-8">
-            <AITemplateCard
-              id="instagram-hair-transformation"
-              name="Instagram Hair Transformation Automation"
-              description="Automatically replaces user selfies with salon-ready hairstyles using AI. 
-              Ideal for hair salons and beauty studios deploying viral DM flows."
-              icon={<SparklesSolidIcon className="w-7 h-7" />}
-              gradient="bg-gradient-to-br from-rose-400 via-fuchsia-500 to-rose-500"
-              accentColor="text-rose-600"
-              category="Beauty AI"
-              thumbnail={(
-                <div className="p-5 bg-gradient-to-br from-rose-50 via-white to-white space-y-4">
-                  <div className="flex items-center justify-between text-[11px] uppercase tracking-wide text-rose-400 font-semibold">
-                    <span>DM Workflow / Style Match</span>
-                    <span className="px-2 py-0.5 rounded-full bg-rose-100 text-rose-500 font-semibold normal-case">Live</span>
-                  </div>
-                  <div className="space-y-3">
-                    <div className="flex gap-3">
-                      <div className="flex h-9 w-9 items-center justify-center rounded-full 
-                      bg-gradient-to-br from-rose-500 to-fuchsia-500 
-                      text-xs font-semibold text-white">
-                        AI
-                      </div>
-                      <div className="flex-1 rounded-2xl border border-rose-100 bg-white/95 p-3 shadow-sm">
-                        <p className="text-[11px] font-semibold uppercase tracking-wide text-rose-400">LookLab Stylist</p>
-                        <p className="mt-1 text-sm text-neutral-600">
-                        Upload your selfie and choose a look. We render three hair swaps in 20 seconds.
-                      </p>
-                      </div>
-                    </div>
-                    <div className="ml-12 space-y-3">
-                      <div className="rounded-2xl border border-rose-100 bg-rose-50/80 p-3">
-                        <p className="text-xs font-semibold text-rose-500">Suggested style: Soft Fringe</p>
-                        <p className="mt-1 text-xs text-neutral-500">Send the before and after carousel straight into the chat.</p>
-                        <div className="mt-3 flex gap-2">
-                          <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-rose-200 to-rose-400 shadow-inner" />
-                          <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-amber-200 to-rose-300 shadow-inner" />
-                          <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-purple-200 to-rose-300 shadow-inner" />
-                        </div>
-                      </div>
-                      <div className="flex gap-2">
-                        <div className="flex-1 rounded-2xl border border-rose-100 bg-white/90 p-3 text-[11px] text-neutral-500">
-                          <div className="flex items-center gap-2">
-                            <span className="h-2 w-2 rounded-full bg-emerald-400" />
-                            Smart follow-up scheduled
-                          </div>
-                          <p className="mt-1 text-[10px] uppercase tracking-wide text-rose-300">Voucher DM sends five minutes later</p>
-                        </div>
-                        <div className="flex w-16 flex-col gap-2 rounded-2xl border border-rose-100 bg-white/70 p-2">
-                          <div className="h-10 rounded-lg bg-gradient-to-br from-rose-200/70 to-rose-100" />
-                          <div className="h-10 rounded-lg bg-gradient-to-br from-rose-300/70 to-fuchsia-200" />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            />
-
-            <AITemplateCard
-              id="instagram-nose-refinement"
-              name="Instagram Nose Refinement Automation"
-              description="AI-powered nose reshaping demo triggered directly from Instagram DMs. 
-              Built for aesthetic clinics and cosmetic consultants."
-              icon={<FaceSmileIcon className="w-7 h-7" />}
-              gradient="bg-gradient-to-br from-teal-400 via-cyan-500 to-teal-500"
-              accentColor="text-teal-600"
-              category="Aesthetic AI"
-              thumbnail={(
-                <div className="p-5 bg-gradient-to-br from-teal-50 via-white to-white space-y-4">
-                  <div className="flex items-center justify-between text-[11px] uppercase tracking-wide text-teal-400 font-semibold">
-                    <span>DM Trigger / Selfie Received</span>
-                    <span className="px-2 py-0.5 rounded-full bg-teal-100 text-teal-500 font-semibold normal-case">A/B Running</span>
-                  </div>
-                  <div className="space-y-3">
-                    <div className="flex gap-3">
-                      <div className="flex h-9 w-9 items-center justify-center rounded-full 
-                      bg-gradient-to-br from-teal-500 to-cyan-500 
-                      text-xs font-semibold text-white">
-                        AI
-                      </div>
-                      <div className="flex-1 rounded-2xl border border-teal-100 bg-white/95 p-3 shadow-sm">
-                        <p className="text-[11px] font-semibold uppercase tracking-wide text-teal-400">Contour Concierge</p>
-                        <p className="mt-1 text-sm text-neutral-600">
-                        Hi Leyla! Here is a natural refinement preview with balanced bridge and tip adjustments.
-                      </p>
-                      </div>
-                    </div>
-                    <div className="ml-12 space-y-3">
-                      <div className="rounded-2xl border border-teal-100 bg-teal-50/80 p-3">
-                        <div className="flex items-center justify-between text-xs font-medium text-teal-500">
-                          <span>Before and after canvas</span>
-                          <span className="rounded-full bg-white/80 px-2 py-0.5 text-[11px] text-neutral-500">0.6s render</span>
-                        </div>
-                        <div className="mt-3 grid grid-cols-2 gap-2">
-                          <div className="h-16 rounded-xl bg-gradient-to-br from-neutral-200 to-neutral-300" />
-                          <div className="h-16 rounded-xl border border-teal-200 bg-gradient-to-br from-white to-teal-50 shadow-inner" />
-                        </div>
-                      </div>
-                      <div className="flex w-fit items-center gap-2 rounded-full 
-                      border border-teal-100 bg-white/90 
-                      px-3 py-2 text-[11px] text-neutral-500">
-                        <span className="h-2 w-2 rounded-full bg-teal-400 animate-pulse" />
-                        Sends clinic call-to-action when reaction includes thumbs-up or higher
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            />
-
-            <AITemplateCard
-              id="instagram-bald-to-haired"
-              name="Instagram Bald-to-Haired Transformation Automation"
-              description="Converts bald or thinning hair selfies into realistic full-hair previews. 
-              Built for barbers and transplant centers wanting instant DM wow-factor."
-              icon={<BoltIcon className="w-7 h-7" />}
-              gradient="bg-gradient-to-br from-amber-400 via-orange-500 to-amber-500"
-              accentColor="text-amber-600"
-              category="Hair Restoration"
-              thumbnail={(
-                <div className="p-5 bg-gradient-to-br from-amber-50 via-white to-white space-y-4">
-                  <div className="flex items-center justify-between text-[11px] uppercase tracking-wide text-amber-500 font-semibold">
-                    <span>Story Reply / Hair Density Demo</span>
-                    <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-600 font-semibold normal-case">Preview Ready</span>
-                  </div>
-                  <div className="space-y-3">
-                    <div className="flex gap-3">
-                      <div className="flex h-9 w-9 items-center justify-center rounded-full 
-                      bg-gradient-to-br from-amber-500 to-orange-500 
-                      text-xs font-semibold text-white">
-                        AI
-                      </div>
-                      <div className="flex-1 rounded-2xl border border-amber-100 bg-white/95 p-3 shadow-sm">
-                        <p className="text-[11px] font-semibold uppercase tracking-wide text-amber-500">Regrowth Studio</p>
-                        <p className="mt-1 text-sm text-neutral-600">
-                        Your reconstructed hairline is live. Swipe through three density levels below.
-                      </p>
-                      </div>
-                    </div>
-                    <div className="ml-12 space-y-3">
-                      <div className="grid grid-cols-3 gap-2">
-                        <div className="rounded-2xl border border-amber-100 
-                        bg-gradient-to-br from-neutral-900/80 via-neutral-800/80 to-neutral-700/80 p-2">
-                          <div className="h-20 rounded-xl bg-gradient-to-br from-neutral-800 to-neutral-700" />
-                          <p className="mt-2 text-[11px] text-amber-100">Natural</p>
-                        </div>
-                        <div className="rounded-2xl border-2 border-amber-400 bg-gradient-to-br from-amber-200 to-amber-100 p-2 shadow-lg">
-                          <div className="h-20 rounded-xl bg-gradient-to-br from-amber-200 to-orange-200" />
-                          <p className="mt-2 text-[11px] font-semibold text-amber-600">Full Density</p>
-                        </div>
-                        <div className="rounded-2xl border border-amber-100 bg-gradient-to-br from-amber-100 to-orange-100 p-2">
-                          <div className="h-20 rounded-xl bg-gradient-to-br from-orange-200 to-rose-200" />
-                          <p className="mt-2 text-[11px] text-amber-500">Fade</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center justify-between rounded-2xl 
-                      border border-amber-100 bg-white/90 
-                      px-4 py-2 text-[11px] text-neutral-500">
-                        <span className="flex items-center gap-2">
-                          <span className="h-2 w-2 rounded-full bg-emerald-400" />
-                          92% request consult after interactive preview
-                        </span>
-                        <span className="rounded-full bg-amber-100 px-2 py-0.5 text-amber-600 font-semibold">
-                          CTA: Book visit
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            />
-          </div>
-
-          {/* Browse All Button */}
-          <div className="flex justify-center">
-            <Button
-              size="lg"
-              onClick={() => router.push(`/${locale}/automations`)}
-              className="group relative overflow-hidden
-              bg-gradient-to-r from-primary-500 via-accent-500 to-primary-600
-              shadow-[0_18px_38px_-18px_rgba(124,58,237,0.55)]
-              hover:from-primary-600 hover:via-accent-600 hover:to-primary-700
-              hover:shadow-[0_20px_44px_-16px_rgba(124,58,237,0.7)]"
-            >
-              <span className="pointer-events-none absolute inset-0 rounded-2xl 
-              bg-white/15 opacity-0 transition-opacity duration-300 group-hover:opacity-40" />
-              <span className="pointer-events-none absolute -inset-x-12 -top-24 h-32 
-              bg-gradient-to-r from-transparent via-white/40 to-transparent 
-              opacity-40 blur-3xl transition-opacity duration-300 group-hover:opacity-70" />
-              <span className="relative flex items-center gap-3">
-                <ArrowRightIcon className="w-5 h-5" />
-                Browse All Templates
-                <span className="rounded-full bg-white/20 px-2 py-0.5 text-xs font-semibold">120+</span>
-              </span>
+            </span>
+          </h1>
+          <p className="text-lg sm:text-xl lg:text-2xl text-neutral-600 mb-8 sm:mb-10 max-w-3xl mx-auto">
+            Choose ready-made flows, connect your account, and launch automations in minutes.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 justify-center">
+            <Button size="lg" className="hover-glow hover-lift text-lg px-8 py-6" onClick={handleGetStarted}>
+              <RocketLaunchIcon className="w-6 h-6" />
+              {t('hero.getStarted')}
+            </Button>
+            <Button variant="secondary" size="lg" className="hover-lift text-lg px-8 py-6" onClick={handleWatchDemo}>
+              <PlayIcon className="w-6 h-6" />
+              {t('hero.watchDemo')}
             </Button>
           </div>
-        </section>
+        </div>
+
+        <main className="space-y-16 sm:space-y-20">
+          <section className="grid gap-6 lg:grid-cols-3">
+            {featureCards.map(({ title, description, icon: Icon, accent }) => (
+              <div
+                key={title}
+                className="rounded-3xl border border-white/60 bg-white/80 p-8 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur-sm hover:shadow-[0_24px_70px_rgba(15,23,42,0.12)] transition-shadow"
+              >
+                <div className={`mb-5 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${accent}`}>
+                  <Icon className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-lg font-semibold text-neutral-900 mb-2">{title}</h3>
+                <p className="text-sm text-neutral-600 leading-relaxed">{description}</p>
+              </div>
+            ))}
+          </section>
+
+          <section className="grid gap-10 lg:grid-cols-2 lg:items-center">
+            <div className="space-y-6">
+              <div className="inline-flex items-center gap-2 rounded-full border border-primary-200 bg-primary-50/60 px-4 py-1 text-sm font-semibold text-primary-700">
+                <SparklesSolidIcon className="w-4 h-4" />
+                Visual Builder, Real Results
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-bold text-neutral-900">
+                All your Instagram automations in one canvas
+              </h2>
+              <p className="text-neutral-600 leading-relaxed">
+                Map customer journeys, drop AI responses, and orchestrate follow-up sequences without jumping between tools.
+                Every block is designed for Instagram so you can launch campaigns that feel personal and timely.
+              </p>
+              <ul className="space-y-3 text-sm text-neutral-700">
+                {automationOutcomes.map((item) => (
+                  <li key={item} className="flex items-start gap-3">
+                    <ArrowRightIcon className="mt-0.5 h-5 w-5 flex-shrink-0 text-primary-500" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="rounded-3xl border border-dashed border-primary-200 bg-white/70 p-6 sm:p-8 shadow-inner">
+              <h3 className="text-lg font-semibold text-neutral-900 mb-6">Go-live in three guided steps</h3>
+              <ol className="space-y-4">
+                {workflowSteps.map(({ title, description }, index) => (
+                  <li key={title} className="flex gap-4">
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-100 text-sm font-semibold text-primary-600">
+                      {index + 1}
+                    </span>
+                    <div>
+                      <h4 className="text-sm font-semibold text-neutral-900">{title}</h4>
+                      <p className="text-sm text-neutral-600 leading-relaxed">{description}</p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </section>
+
+          <section className="rounded-3xl bg-neutral-900 text-white px-6 py-10 sm:px-10 sm:py-12 flex flex-col md:flex-row md:items-center md:justify-between gap-10">
+            <div className="space-y-3 max-w-lg">
+              <p className="text-sm uppercase tracking-widest text-white/60">Numbers that compound</p>
+              <h3 className="text-2xl font-semibold leading-snug">
+                Automations that answer instantly, nurture non-stop, and hand warm leads to sales while you sleep.
+              </h3>
+            </div>
+            <div className="flex flex-wrap gap-6 md:gap-10">
+              {automationStats.map(({ value, label }) => (
+                <div key={label} className="flex flex-col">
+                  <span className="text-3xl font-bold text-white">{value}</span>
+                  <span className="text-sm text-white/70">{label}</span>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section className="rounded-3xl border border-primary-200/60 bg-white/80 px-6 py-10 sm:px-10 sm:py-12 backdrop-blur-sm">
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
+              <div className="max-w-2xl space-y-3">
+                <h3 className="text-2xl font-semibold text-neutral-900">Bring your automations to life today</h3>
+                <p className="text-neutral-600 leading-relaxed">
+                  Spin up flows for outreach, lead nurture, and customer support in a single afternoon. LookLab handles the AI,
+                  routing, and analytics so you can focus on the conversations that close deals.
+                </p>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Button size="lg" className="px-8" onClick={handleGetStarted}>
+                  <RocketLaunchIcon className="w-5 h-5" />
+                  {t('hero.getStarted')}
+                </Button>
+                <Button variant="outline" size="lg" className="px-8" onClick={handleWatchDemo}>
+                  See Automations
+                </Button>
+              </div>
+            </div>
+          </section>
+        </main>
       </section>
     </div>
   );
 }
-
 

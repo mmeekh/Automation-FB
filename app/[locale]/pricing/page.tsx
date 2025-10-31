@@ -6,6 +6,21 @@ import { CheckIcon } from '@heroicons/react/24/solid';
 
 const tiers = [
   {
+    id: 'test-drive',
+    name: 'Test Drive',
+    price: '$149',
+    period: '/month',
+    limit: '100 transformations/month',
+    highlight: 'For teams validating automations',
+    features: [
+      'DM automation (single template)',
+      'AI hair transformation',
+      'Shared AI credits',
+      'Email support',
+    ],
+    starter: true,
+  },
+  {
     id: 'stylist',
     name: 'Stylist',
     price: '$399',
@@ -98,7 +113,7 @@ export default function PricingPage() {
             </div>
           </header>
 
-          <section className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+          <section className="grid gap-8 md:grid-cols-2 xl:grid-cols-4">
             {tiers.map((tier) => (
               <article
                 key={tier.id}
@@ -109,6 +124,8 @@ export default function PricingPage() {
                     ? 'border-2 border-purple-500 bg-gradient-to-br from-purple-50 to-pink-50'
                     : tier.premium
                     ? 'border-2 border-blue-400 bg-gradient-to-br from-blue-50 to-cyan-50'
+                    : tier.starter
+                    ? 'border-2 border-emerald-400 bg-gradient-to-br from-emerald-50 to-teal-50'
                     : 'border-2 border-neutral-200'
                 }`}
               >
@@ -139,6 +156,8 @@ export default function PricingPage() {
                         ? 'bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent'
                         : tier.premium
                         ? 'bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent'
+                        : tier.starter
+                        ? 'bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent'
                         : 'text-neutral-900'
                     }`}>
                       {tier.name}
@@ -151,6 +170,8 @@ export default function PricingPage() {
                         ? 'bg-blue-100 text-blue-700'
                         : tier.recommended
                         ? 'bg-primary-100 text-primary-700'
+                        : tier.starter
+                        ? 'bg-emerald-100 text-emerald-700'
                         : 'bg-neutral-100 text-neutral-700'
                     }`}>
                       {tier.limit}
@@ -165,6 +186,8 @@ export default function PricingPage() {
                           ? 'bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent'
                           : tier.premium
                           ? 'bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent'
+                          : tier.starter
+                          ? 'bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent'
                           : 'text-neutral-900'
                       }`}>
                         {tier.price}
@@ -186,6 +209,8 @@ export default function PricingPage() {
                             ? 'text-blue-500'
                             : tier.recommended
                             ? 'text-primary-500'
+                            : tier.starter
+                            ? 'text-emerald-500'
                             : 'text-neutral-400'
                         }`} />
                         <span>{feature}</span>
@@ -203,8 +228,10 @@ export default function PricingPage() {
                           ? 'bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 shadow-lg hover:shadow-xl'
                           : tier.recommended
                           ? 'bg-gradient-to-r from-primary-600 to-accent-600 hover:from-primary-700 hover:to-accent-700 shadow-lg hover:shadow-xl'
+                          : tier.starter
+                          ? 'bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white shadow-lg hover:shadow-xl'
                           : 'bg-neutral-900 hover:bg-neutral-800 text-white'
-                      }`}
+                    }`}
                     >
                       {tier.id === 'enterprise' ? 'Contact Sales' : 'Choose Plan'}
                     </Button>
@@ -213,18 +240,6 @@ export default function PricingPage() {
               </article>
             ))}
           </section>
-
-          {/* Additional Info */}
-          <div className="text-center space-y-4">
-            <div className="inline-flex items-center gap-2 rounded-full border-2 border-neutral-200 bg-white px-6 py-3 shadow-sm">
-              <span className="text-sm font-semibold text-neutral-700">
-                ⚡ Average setup time: 3 business days
-              </span>
-            </div>
-            <p className="text-sm text-neutral-500">
-              All plans can be upgraded or downgraded at any time. No long-term contracts.
-            </p>
-          </div>
         </div>
       </main>
     </>

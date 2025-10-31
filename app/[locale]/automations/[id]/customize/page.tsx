@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
+import { useAutomationLauncher } from '@/lib/hooks/useAutomationLauncher';
 
 /**
  * Legacy customize page - redirects to new flow builder
@@ -9,15 +10,12 @@ import { useParams, useRouter } from 'next/navigation';
  */
 export default function CustomizePage() {
   const params = useParams();
-  const router = useRouter();
   const templateId = params.id as string;
+  const launchAutomation = useAutomationLauncher();
 
   useEffect(() => {
-    // Map template ID to flow ID
-    const flowId = `flow-${templateId}`;
-    // Redirect to new builder page
-    router.replace(`/automations/builder/${flowId}`);
-  }, [templateId, router]);
+    launchAutomation(templateId, { mode: 'replace' });
+  }, [templateId, launchAutomation]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-neutral-50 via-white to-primary-50/30">

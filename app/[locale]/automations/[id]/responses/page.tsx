@@ -7,13 +7,15 @@ import { ResponsesTable } from '@/components/responses/ResponsesTable';
 import { getMockResponsesByFlow } from '@/lib/mock-data/responses';
 import { Button } from '@/components/ui/Button';
 import { ArrowLeftIcon } from '@heroicons/react/24/outline';
-import Link from 'next/link';
+import { useAutomationLauncher } from '@/lib/hooks/useAutomationLauncher';
 
 export default function ResponsesPage() {
   const params = useParams();
   const flowId = params.id as string;
+  const templateId = flowId.startsWith('flow-') ? flowId.slice(5) : flowId;
   const user = useStore((state) => state.user);
   const openAuthModal = useStore((state) => state.openAuthModal);
+  const launchAutomation = useAutomationLauncher();
 
   // Get responses for this flow
   const responses = getMockResponsesByFlow(flowId);
@@ -43,12 +45,15 @@ export default function ResponsesPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
           <div className="mb-8">
-            <Link href={`/automations/builder/${flowId}`}>
-              <Button variant="outline" size="sm" className="mb-4">
-                <ArrowLeftIcon className="w-4 h-4" />
-                Otomasyona Dön
-              </Button>
-            </Link>
+            <Button
+              variant="outline"
+              size="sm"
+              className="mb-4"
+              onClick={() => launchAutomation(templateId, { mode: 'push' })}
+            >
+              <ArrowLeftIcon className="w-4 h-4" />
+              Otomasyona Dön
+            </Button>
             <h1 className="text-3xl font-bold text-neutral-900">
               Kullanıcı Yanıtları
             </h1>

@@ -1,6 +1,5 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { Header } from '@/components/layout/Header';
 import { PhoneMockup } from '@/components/automation-landing/PhoneMockup';
 import { HeroSection } from '@/components/automation-landing/HeroSection';
@@ -9,12 +8,13 @@ import { UseCaseSection } from '@/components/automation-landing/UseCaseSection';
 import { FAQSection } from '@/components/automation-landing/FAQSection';
 import { aestheticAIContent } from '@/lib/automation-content';
 import { Button } from '@/components/ui/Button';
+import { useAutomationLauncher } from '@/lib/hooks/useAutomationLauncher';
 
 export default function AestheticAILandingPage() {
-  const router = useRouter();
+  const launchAutomation = useAutomationLauncher();
 
   const handleLaunch = () => {
-    router.push('/automations/builder/instagram-aesthetic-bald');
+    launchAutomation('instagram-aesthetic-bald');
   };
 
   return (
@@ -159,4 +159,3 @@ export default function AestheticAILandingPage() {
     </>
   );
 }
-
