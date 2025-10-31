@@ -18,6 +18,7 @@ import { getMockFlowByTemplateId } from '@/lib/mock-data/flows';
 
 interface AutomationSwitcherProps {
   collapsed: boolean;
+  onMenuStateChange?: (isOpen: boolean) => void;
 }
 
 const emojiMap: Record<string, string> = {
@@ -32,7 +33,7 @@ const emojiMap: Record<string, string> = {
   jewelry: '💍',
 };
 
-export function AutomationSwitcher({ collapsed }: AutomationSwitcherProps) {
+export function AutomationSwitcher({ collapsed, onMenuStateChange }: AutomationSwitcherProps) {
   const { accounts, currentAccountId, loadAccounts } = useAccountStore();
   const accountId = currentAccountId ?? accounts[0]?.id ?? FALLBACK_ACCOUNT_ID;
 
@@ -50,9 +51,6 @@ export function AutomationSwitcher({ collapsed }: AutomationSwitcherProps) {
   const removeAutomation = useActiveAutomationStore((state) => state.removeAutomation);
   const toggleAutomationActive = useActiveAutomationStore(
     (state) => state.toggleAutomationActive
-  );
-  const toggleAutomationCreditPool = useActiveAutomationStore(
-    (state) => state.toggleAutomationCreditPool
   );
   const reorderAutomations = useActiveAutomationStore(
     (state) => state.reorderAutomations
@@ -128,6 +126,10 @@ export function AutomationSwitcher({ collapsed }: AutomationSwitcherProps) {
   }, [openMenuId]);
 
   useEffect(() => {
+    onMenuStateChange?.(Boolean(openMenuId));
+  }, [openMenuId, onMenuStateChange]);
+
+  useEffect(() => {
     setOpenMenuId(null);
   }, [accountId]);
 
@@ -136,7 +138,6 @@ export function AutomationSwitcher({ collapsed }: AutomationSwitcherProps) {
       activeAutomations.map((automation) => ({
         ...automation,
         isActive: automation.isActive ?? true,
-        includedInCreditPool: automation.includedInCreditPool ?? false,
       })),
     [activeAutomations]
   );
@@ -310,7 +311,6 @@ export function AutomationSwitcher({ collapsed }: AutomationSwitcherProps) {
               '⚡';
             const isCurrent = currentTemplateId === automation.templateId;
             const isActive = automation.isActive;
-            const includedInCreditPool = automation.includedInCreditPool;
             const isDragging = draggingId === automation.templateId;
             const isDropTarget =
               Boolean(draggingId) && draggingId !== automation.templateId && !isDragging;
@@ -324,12 +324,6 @@ export function AutomationSwitcher({ collapsed }: AutomationSwitcherProps) {
             const handleDeactivateClick = (event: ReactMouseEvent<HTMLButtonElement>) => {
               event.stopPropagation();
               toggleAutomationActive(accountId, automation.templateId);
-              // 不再关闭菜单，保持打开状态
-            };
-
-            const handleCreditToggle = (event: ReactMouseEvent<HTMLButtonElement>) => {
-              event.stopPropagation();
-              toggleAutomationCreditPool(accountId, automation.templateId);
               // 不再关闭菜单，保持打开状态
             };
 
@@ -384,12 +378,6 @@ export function AutomationSwitcher({ collapsed }: AutomationSwitcherProps) {
                       }`}
                     />
 
-                    {includedInCreditPool && (
-                      <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-600">
-                        Pool
-                      </span>
-                    )}
-
                     <button
                       type="button"
                       onClick={menuToggle}
@@ -422,22 +410,6 @@ export function AutomationSwitcher({ collapsed }: AutomationSwitcherProps) {
                         <span className={`w-2.5 h-2.5 rounded-full ${
                           isActive ? 'bg-red-500' : 'bg-green-500'
                         }`} />
-                      </div>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleCreditToggle}
-                      className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm text-neutral-700 transition hover:bg-neutral-100"
-                    >
-                      <span>Ortak kredi havuzu</span>
-                      <div className={`flex items-center justify-center w-5 h-5 rounded-full border-2 ${
-                        includedInCreditPool ? 'border-green-500' : 'border-red-500'
-                      }`}>
-                        {includedInCreditPool ? (
-                          <span className="text-green-500 text-xs">✓</span>
-                        ) : (
-                          <span className="text-red-500 text-xs">✕</span>
-                        )}
                       </div>
                     </button>
                     <button
