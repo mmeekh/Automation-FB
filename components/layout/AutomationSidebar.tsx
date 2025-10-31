@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
@@ -37,6 +37,33 @@ export function AutomationSidebar() {
   const showBuilderAnalytics = useUIStore((s) => s.showBuilderAnalytics);
   const showBuilderFlow = useUIStore((s) => s.showBuilderFlow);
   const [isOpen, setIsOpen] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const [childMenuState, setChildMenuState] = useState({
+    account: false,
+    automation: false,
+  });
+
+  const hasOpenMenu = childMenuState.account || childMenuState.automation;
+
+  const handleAccountMenuStateChange = useCallback((isOpenMenu: boolean) => {
+    setChildMenuState((prev) => ({ ...prev, account: isOpenMenu }));
+  }, []);
+
+  const handleAutomationMenuStateChange = useCallback((isOpenMenu: boolean) => {
+    setChildMenuState((prev) => ({ ...prev, automation: isOpenMenu }));
+  }, []);
+
+  useEffect(() => {
+    if (hasOpenMenu) {
+      setIsOpen(true);
+    }
+  }, [hasOpenMenu]);
+
+  useEffect(() => {
+    if (!hasOpenMenu && !isHovered) {
+      setIsOpen(false);
+    }
+  }, [hasOpenMenu, isHovered]);
 
   const isOnBuilderPage = pathname.includes('/automations/builder');
 
@@ -70,8 +97,16 @@ export function AutomationSidebar() {
 
   return (
     <motion.div
-      onMouseEnter={() => setIsOpen(true)}
-      onMouseLeave={() => setIsOpen(false)}
+      onMouseEnter={() => {
+        setIsHovered(true);
+        setIsOpen(true);
+      }}
+      onMouseLeave={() => {
+        setIsHovered(false);
+        if (!hasOpenMenu) {
+          setIsOpen(false);
+        }
+      }}
       animate={{
         width: isOpen ? '280px' : '70px',
       }}
@@ -103,12 +138,18 @@ export function AutomationSidebar() {
 
       {/* Account Switcher */}
       <div className="px-4 py-6 border-b border-neutral-100">
-        <AccountSwitcher collapsed={!isOpen} />
+        <AccountSwitcher
+          collapsed={!isOpen}
+          onMenuStateChange={handleAccountMenuStateChange}
+        />
       </div>
 
       {/* Automation Switcher */}
       <div className="px-4 py-6 border-b border-neutral-100">
-        <AutomationSwitcher collapsed={!isOpen} />
+        <AutomationSwitcher
+          collapsed={!isOpen}
+          onMenuStateChange={handleAutomationMenuStateChange}
+        />
       </div>
 
       {/* Navigation Items */}

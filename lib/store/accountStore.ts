@@ -26,6 +26,10 @@ interface AccountStore {
   // Quota management
   updateQuota: (accountId: string, usedQuota: number) => void;
   resetQuota: (accountId: string) => void;
+
+  // Account actions
+  toggleAccountActive: (accountId: string) => void;
+  toggleAccountCreditPool: (accountId: string) => void;
 }
 
 export const useAccountStore = create<AccountStore>()(
@@ -38,9 +42,15 @@ export const useAccountStore = create<AccountStore>()(
        * Load mock accounts
        */
       loadAccounts: () => {
+        const normalizedAccounts = mockAccounts.map((account) => ({
+          ...account,
+          isActive: account.isActive ?? true,
+          includedInCreditPool: account.includedInCreditPool ?? false,
+        }));
+
         set({
-          accounts: mockAccounts,
-          currentAccountId: mockAccounts[0]?.id || null,
+          accounts: normalizedAccounts,
+          currentAccountId: normalizedAccounts[0]?.id || null,
         });
       },
 
@@ -72,7 +82,14 @@ export const useAccountStore = create<AccountStore>()(
        */
       addAccount: (account) => {
         set((state) => ({
-          accounts: [...state.accounts, account],
+          accounts: [
+            ...state.accounts,
+            {
+              ...account,
+              isActive: account.isActive ?? true,
+              includedInCreditPool: account.includedInCreditPool ?? false,
+            },
+          ],
         }));
 
         // Auto-select if first account
@@ -131,6 +148,32 @@ export const useAccountStore = create<AccountStore>()(
                   ...acc,
                   usedQuota: 0,
                   quotaResetAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+                }
+              : acc
+          ),
+        }));
+      },
+
+      toggleAccountActive: (accountId) => {
+        set((state) => ({
+          accounts: state.accounts.map((acc) =>
+            acc.id === accountId
+              ? {
+                  ...acc,
+                  isActive: !(acc.isActive ?? true),
+                }
+              : acc
+          ),
+        }));
+      },
+
+      toggleAccountCreditPool: (accountId) => {
+        set((state) => ({
+          accounts: state.accounts.map((acc) =>
+            acc.id === accountId
+              ? {
+                  ...acc,
+                  includedInCreditPool: !(acc.includedInCreditPool ?? false),
                 }
               : acc
           ),

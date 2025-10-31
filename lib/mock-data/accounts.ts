@@ -19,6 +19,8 @@ export const mockAccounts: InstagramAccount[] = [
     totalQuota: 1000,
     usedQuota: 750,
     quotaResetAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+    isActive: true,
+    includedInCreditPool: true,
     settings: {
       timezone: 'Europe/Istanbul',
       language: 'tr',
@@ -44,6 +46,8 @@ export const mockAccounts: InstagramAccount[] = [
     totalQuota: 500,
     usedQuota: 320,
     quotaResetAt: new Date(Date.now() + 18 * 60 * 60 * 1000).toISOString(),
+    isActive: true,
+    includedInCreditPool: false,
     settings: {
       timezone: 'Europe/Istanbul',
       language: 'tr',
@@ -69,6 +73,8 @@ export const mockAccounts: InstagramAccount[] = [
     totalQuota: 1500,
     usedQuota: 1240,
     quotaResetAt: new Date(Date.now() + 20 * 60 * 60 * 1000).toISOString(),
+    isActive: true,
+    includedInCreditPool: true,
     settings: {
       timezone: 'Europe/Istanbul',
       language: 'en',
@@ -92,6 +98,8 @@ export const mockAccounts: InstagramAccount[] = [
     totalQuota: 1000,
     usedQuota: 0,
     quotaResetAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+    isActive: false,
+    includedInCreditPool: false,
     settings: {
       timezone: 'Europe/Istanbul',
       language: 'tr',
