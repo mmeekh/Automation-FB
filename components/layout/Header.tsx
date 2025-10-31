@@ -4,12 +4,13 @@ import { useState, useRef, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
-import { BellIcon, Bars3Icon, XMarkIcon, UserCircleIcon, Cog6ToothIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
+import { BellIcon, UserCircleIcon, Cog6ToothIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
 import { Button } from '@/components/ui/Button';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { useStore } from '@/lib/store';
 import { BLOG_CATEGORIES } from '@/lib/blog/data';
 import { AutomationRegistry } from '@/lib/automations';
+import Hamburger from '@/components/ui/Hamburger';
 
 // Navigation items - memoized outside component
 const NAV_ITEMS = [
@@ -256,16 +257,11 @@ export function Header() {
                 </Button>
               )}
 
-              <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="lg:hidden p-2 text-neutral-600 hover:text-primary-500 transition-colors rounded-lg hover:bg-white/50"
-              >
-                {mobileMenuOpen ? (
-                  <XMarkIcon className="w-6 h-6" />
-                ) : (
-                  <Bars3Icon className="w-6 h-6" />
-                )}
-              </button>
+              <Hamburger
+                open={mobileMenuOpen}
+                onToggle={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="lg:hidden text-neutral-600 hover:text-primary-500"
+              />
             </div>
           </div>
         </div>

@@ -193,14 +193,14 @@ export function AccountSwitcher({ collapsed, onMenuStateChange }: AccountSwitche
                   selectAccount(account.id);
                 }
               }}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all border-2 ${
+              className={`group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all border-2 ${
                 isSelected
                   ? 'bg-gradient-to-r from-primary-50 to-accent-50 border-primary-200'
                   : 'border-transparent hover:bg-neutral-50'
-              } ${account.isActive ? '' : 'opacity-80'}`}
+              }`}
             >
               {/* Avatar */}
-              <div className="relative flex-shrink-0">
+              <div className={`relative flex-shrink-0 ${account.isActive ? '' : 'opacity-60'}`}>
                 <div
                   className={`w-10 h-10 rounded-full overflow-hidden ${
                     isSelected ? 'ring-2 ring-primary-500 ring-offset-2' : ''
@@ -226,7 +226,7 @@ export function AccountSwitcher({ collapsed, onMenuStateChange }: AccountSwitche
               </div>
 
               {/* Account Info */}
-              <div className="flex-1 text-left overflow-hidden">
+              <div className={`flex-1 text-left overflow-hidden ${account.isActive ? '' : 'opacity-60'}`}>
                 <p
                   className={`text-sm font-semibold truncate ${
                     isSelected ? 'text-primary-700' : 'text-neutral-800'
@@ -261,7 +261,7 @@ export function AccountSwitcher({ collapsed, onMenuStateChange }: AccountSwitche
                     {isMenuOpen && (
                       <div
                         ref={setMenuRef(account.id)}
-                        className="absolute right-0 top-full z-50 mt-2 w-56 rounded-xl border border-neutral-200 bg-white p-2 shadow-xl"
+                        className="absolute right-0 top-full z-50 mt-2 w-56 rounded-xl border border-neutral-200 bg-white p-2 shadow-xl pointer-events-auto"
                         onClick={(event) => event.stopPropagation()}
                       >
                         <button
