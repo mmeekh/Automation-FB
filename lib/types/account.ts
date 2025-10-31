@@ -25,6 +25,10 @@ export interface InstagramAccount {
   usedQuota: number; // how much used today
   quotaResetAt: string; // when quota resets
 
+  // Account preferences
+  isActive?: boolean;
+  includedInCreditPool?: boolean;
+
   // Settings
   settings: {
     timezone: string; // 'Europe/Istanbul'
