@@ -15,7 +15,7 @@
 export const hairRestorationFlow: AutomationFlow = {
   id: 'flow-instagram-bald-to-haired',
   name: 'Sac Restorasyon AI',
-  description: 'Kullanicilarin sac modellerini AI ile degistirir',
+  description: 'Kullanicilarin sac modelini istedigi sac modeli ile degistirmesini saglar',
   templateId: 'instagram-bald-to-haired',
   instagramAccountId: 'acc-1',
 

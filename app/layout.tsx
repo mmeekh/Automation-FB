@@ -6,16 +6,19 @@ export const metadata: Metadata = {
   description: "Transform your Instagram engagement with AI-powered beauty and style automations",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  // Locale layout overrides these, but Next.js requires them at build-time
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html suppressHydrationWarning>
-      <body suppressHydrationWarning>{children}</body>
+    <html lang="tr">
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://unpkg.com/@tremor/react@3.18.7/dist/tremor.css"
+        />
+      </head>
+      <body>{children}</body>
     </html>
   );
 }
+
+
 

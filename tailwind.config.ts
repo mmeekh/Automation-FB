@@ -1,10 +1,52 @@
 import type { Config } from "tailwindcss";
 
+const tremorColorFamilies = [
+  'blue',
+  'cyan',
+  'sky',
+  'indigo',
+  'violet',
+  'purple',
+  'fuchsia',
+  'slate',
+  'gray',
+  'zinc',
+  'neutral',
+  'stone',
+  'red',
+  'orange',
+  'amber',
+  'yellow',
+  'lime',
+  'green',
+  'emerald',
+  'teal',
+  'pink',
+  'rose',
+];
+
 const config: Config = {
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
+  ],
+  safelist: [
+    {
+      pattern: new RegExp(
+        `^(bg|text|border|stroke|fill|ring)-(?:${tremorColorFamilies.join("|")})-(50|100|200|300|400|500|600|700|800|900)$`
+      ),
+    },
+    {
+      pattern: new RegExp(
+        `^data-\\[selected\\]:(bg|text|border)-(?:${tremorColorFamilies.join("|")})-(100|200|300|400|500)$`
+      ),
+    },
+    {
+      pattern: new RegExp(
+        `^hover:(bg|text|border)-(?:${tremorColorFamilies.join("|")})-(100|200|300|400|500)$`
+      ),
+    },
   ],
   theme: {
     extend: {

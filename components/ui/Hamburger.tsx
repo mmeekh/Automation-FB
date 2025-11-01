@@ -2,34 +2,49 @@
 import React from 'react';
 
 type Props = {
-  open: boolean;
   onToggle: () => void;
   className?: string;
 };
 
-export default function Hamburger({ open, onToggle, className }: Props) {
+export default function Hamburger({ onToggle, className }: Props) {
+  // Çizgi ortak stil (mutlak konumlu, currentColor)
+  const base: React.CSSProperties = {
+    position: 'absolute',
+    width: '24px',
+    height: '2px',
+    backgroundColor: 'currentColor',
+    borderRadius: '9999px',
+    left: '50%',
+  };
+
+  const topStyle: React.CSSProperties = {
+    ...base,
+    top: '50%',
+    transform: 'translate(-50%, -8px)',
+  };
+
+  const midStyle: React.CSSProperties = {
+    ...base,
+    top: '50%',
+    transform: 'translate(-50%, 0)',
+  };
+
+  const botStyle: React.CSSProperties = {
+    ...base,
+    top: '50%',
+    transform: 'translate(-50%, 8px)',
+  };
+
   return (
     <button
       type="button"
-      aria-label={open ? 'Close menu' : 'Open menu'}
+      aria-label="Toggle menu"
       onClick={onToggle}
-      className={`relative inline-flex h-10 w-10 items-center justify-center rounded-lg transition-colors hover:bg-white/50 focus:outline-none focus:ring-2 focus:ring-primary-200 ${className ?? ''}`.trim()}
+      className={`relative inline-flex h-10 w-10 items-center justify-center rounded-lg transition-colors hover:bg-white/50 focus:outline-none focus:ring-2 focus:ring-primary-200 ${className ?? ''}`}
     >
-      <span
-        className={`absolute block h-0.5 w-6 rounded bg-current transition-transform duration-300 ease-in-out ${
-          open ? 'translate-y-0 rotate-45' : '-translate-y-2'
-        }`}
-      />
-      <span
-        className={`absolute block h-0.5 w-6 rounded bg-current transition-all duration-300 ease-in-out ${
-          open ? 'opacity-0 scale-0' : 'opacity-100 scale-100'
-        }`}
-      />
-      <span
-        className={`absolute block h-0.5 w-6 rounded bg-current transition-transform duration-300 ease-in-out ${
-          open ? 'translate-y-0 -rotate-45' : 'translate-y-2'
-        }`}
-      />
+      <span style={topStyle} />
+      <span style={midStyle} />
+      <span style={botStyle} />
     </button>
   );
 }

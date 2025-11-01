@@ -258,7 +258,6 @@ export function Header() {
               )}
 
               <Hamburger
-                open={mobileMenuOpen}
                 onToggle={() => setMobileMenuOpen(!mobileMenuOpen)}
                 className="lg:hidden text-neutral-600 hover:text-primary-500"
               />

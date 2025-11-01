@@ -30,6 +30,7 @@ interface AccountStore {
   // Account actions
   toggleAccountActive: (accountId: string) => void;
   toggleAccountCreditPool: (accountId: string) => void;
+  reorderAccounts: (sourceAccountId: string, targetAccountId: string) => void;
 }
 
 export const useAccountStore = create<AccountStore>()(
@@ -178,6 +179,29 @@ export const useAccountStore = create<AccountStore>()(
               : acc
           ),
         }));
+      },
+
+      reorderAccounts: (sourceAccountId, targetAccountId) => {
+        set((state) => {
+          if (sourceAccountId === targetAccountId) {
+            return {};
+          }
+
+          const accountsCopy = [...state.accounts];
+          const fromIndex = accountsCopy.findIndex((acc) => acc.id === sourceAccountId);
+          const toIndex = accountsCopy.findIndex((acc) => acc.id === targetAccountId);
+
+          if (fromIndex === -1 || toIndex === -1) {
+            return {};
+          }
+
+          const [moved] = accountsCopy.splice(fromIndex, 1);
+          accountsCopy.splice(toIndex, 0, moved);
+
+          return {
+            accounts: accountsCopy,
+          };
+        });
       },
     }),
     {

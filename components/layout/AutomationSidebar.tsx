@@ -42,6 +42,7 @@ export function AutomationSidebar() {
     account: false,
     automation: false,
   });
+  const [wasForcedOpen, setWasForcedOpen] = useState(false);
 
   const hasOpenMenu = childMenuState.account || childMenuState.automation;
 
@@ -55,15 +56,28 @@ export function AutomationSidebar() {
 
   useEffect(() => {
     if (hasOpenMenu) {
+      if (!isHovered) {
+        setWasForcedOpen(true);
+      }
       setIsOpen(true);
     }
-  }, [hasOpenMenu]);
+  }, [hasOpenMenu, isHovered]);
 
   useEffect(() => {
     if (!hasOpenMenu && !isHovered) {
       setIsOpen(false);
+      setWasForcedOpen(false);
     }
   }, [hasOpenMenu, isHovered]);
+
+  const collapseSidebar = useCallback(() => {
+    if (isHovered && !wasForcedOpen) {
+      return;
+    }
+    setIsHovered(false);
+    setIsOpen(false);
+    setWasForcedOpen(false);
+  }, [isHovered, wasForcedOpen]);
 
   const isOnBuilderPage = pathname.includes('/automations/builder');
 
@@ -77,7 +91,7 @@ export function AutomationSidebar() {
         if (isOnBuilderPage) {
           showBuilderFlow();
         } else {
-          router.push('/automations');
+          router.push('/automations/builder');
         }
       },
     },
@@ -141,6 +155,7 @@ export function AutomationSidebar() {
         <AccountSwitcher
           collapsed={!isOpen}
           onMenuStateChange={handleAccountMenuStateChange}
+          onRequestCollapse={collapseSidebar}
         />
       </div>
 
@@ -149,6 +164,7 @@ export function AutomationSidebar() {
         <AutomationSwitcher
           collapsed={!isOpen}
           onMenuStateChange={handleAutomationMenuStateChange}
+          onRequestCollapse={collapseSidebar}
         />
       </div>
 

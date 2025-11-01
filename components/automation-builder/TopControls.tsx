@@ -14,6 +14,19 @@ import {
 
 type FlowStatus = 'inactive' | 'test' | 'active';
 
+const getQuotaStyle = (percentage: number) => {
+  if (percentage >= 90) {
+    return { bar: 'bg-red-500', text: 'text-red-600' };
+  }
+  if (percentage >= 75) {
+    return { bar: 'bg-orange-500', text: 'text-orange-500' };
+  }
+  if (percentage >= 50) {
+    return { bar: 'bg-yellow-500', text: 'text-yellow-500' };
+  }
+  return { bar: 'bg-green-500', text: 'text-green-600' };
+};
+
 export function TopControls() {
   const router = useRouter();
   const { currentFlow, isEditMode, hasUnsavedChanges, undo, redo, canUndo, canRedo, saveFlow, enterEditMode, exitEditMode } = useFlowStore();
@@ -25,7 +38,10 @@ export function TopControls() {
 
   if (!currentFlow || !currentAccount) return null;
 
-  const quotaPercentage = (currentAccount.usedQuota / currentAccount.totalQuota) * 100;
+  const quotaPercentage = currentAccount.totalQuota > 0
+    ? (currentAccount.usedQuota / currentAccount.totalQuota) * 100
+    : 0;
+  const { bar: totalQuotaBarClass, text: totalQuotaTextClass } = getQuotaStyle(quotaPercentage);
 
   const handleSave = async () => {
     setIsSavingFlow(true);
@@ -101,20 +117,14 @@ export function TopControls() {
           <div className="flex-1 max-w-md">
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs font-semibold text-neutral-600">Total Quota</span>
-              <span className="text-xs font-semibold text-neutral-700">
+              <span className={`text-xs font-semibold ${totalQuotaTextClass}`}>
                 {currentAccount.totalQuota}
               </span>
             </div>
 
             <div className="h-2.5 bg-neutral-200 rounded-full overflow-hidden">
               <div
-                className={`h-full transition-all duration-300 ${
-                  quotaPercentage > 90
-                    ? 'bg-red-500'
-                    : quotaPercentage > 70
-                    ? 'bg-yellow-500'
-                    : 'bg-gradient-to-r from-primary-500 to-accent-500'
-                }`}
+                className={`h-full transition-all duration-300 ${totalQuotaBarClass}`}
                 style={{ width: `${Math.min(quotaPercentage, 100)}%` }}
               />
             </div>
@@ -122,17 +132,17 @@ export function TopControls() {
 
           {/* Status Switcher & Edit Button */}
           {builderView === 'flow' && (
-            <div className="flex items-center gap-4 ml-8">
+            <div className="flex items-center gap-3 ml-4">
               {/* 3-Way Status Switch */}
-              <div className="flex items-center gap-2 p-1 bg-neutral-100 rounded-xl">
+              <div className="flex items-center gap-1 rounded-lg border border-neutral-200 bg-white/90 p-0.5 shadow-sm">
                 <button
                   onClick={() => setFlowStatus('inactive')}
                   disabled={isEditMode}
-                  className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+                  className={`px-3 py-1.5 text-xs font-semibold transition-all rounded-md ${
                     flowStatus === 'inactive'
-                      ? 'bg-neutral-700 text-white shadow-lg'
+                      ? 'bg-neutral-700 text-white shadow-md'
                       : 'text-neutral-600 hover:text-neutral-900'
-                  } ${isEditMode ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  } ${isEditMode ? 'opacity-60 cursor-not-allowed' : ''}`}
                 >
                   ○ Inactive
                 </button>
@@ -140,11 +150,11 @@ export function TopControls() {
                 <button
                   onClick={() => setFlowStatus('test')}
                   disabled={isEditMode}
-                  className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+                  className={`px-3 py-1.5 text-xs font-semibold transition-all rounded-md ${
                     flowStatus === 'test'
-                      ? 'bg-gradient-to-r from-yellow-500 to-orange-500 text-white shadow-lg'
+                      ? 'bg-gradient-to-r from-yellow-500 to-orange-500 text-white shadow-md'
                       : 'text-neutral-600 hover:text-neutral-900'
-                  } ${isEditMode ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  } ${isEditMode ? 'opacity-60 cursor-not-allowed' : ''}`}
                 >
                   ● Test
                 </button>
@@ -152,11 +162,11 @@ export function TopControls() {
                 <button
                   onClick={() => setFlowStatus('active')}
                   disabled={isEditMode}
-                  className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+                  className={`px-3 py-1.5 text-xs font-semibold transition-all rounded-md ${
                     flowStatus === 'active'
-                      ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg'
+                      ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-md'
                       : 'text-neutral-600 hover:text-neutral-900'
-                  } ${isEditMode ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  } ${isEditMode ? 'opacity-60 cursor-not-allowed' : ''}`}
                 >
                   ● Active
                 </button>
@@ -166,16 +176,16 @@ export function TopControls() {
               {!isEditMode ? (
                 <Button
                   variant="outline"
-                  size="lg"
+                  size="sm"
                   onClick={enterEditMode}
-                  className="border-2"
+                  className="border border-primary-500"
                 >
                   Edit Automation
                 </Button>
               ) : (
                 <Button
                   variant="primary"
-                  size="lg"
+                  size="md"
                   onClick={handleSave}
                   loading={isSavingFlow}
                   disabled={!hasUnsavedChanges}
