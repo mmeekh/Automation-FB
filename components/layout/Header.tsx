@@ -8,12 +8,17 @@ import { BellIcon, UserCircleIcon, Cog6ToothIcon, ArrowRightOnRectangleIcon } fr
 import { Button } from '@/components/ui/Button';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { useStore } from '@/lib/store';
+import { useAuth } from '@/lib/hooks/useAuth';
 import { BLOG_CATEGORIES } from '@/lib/blog/data';
+import { getBlogCategoryTheme } from '@/lib/blog/categoryThemes';
 import { AutomationRegistry } from '@/lib/automations';
 import Hamburger from '@/components/ui/Hamburger';
+import { getAutomationLandingUrl } from '@/lib/utils/automation-slugs';
 
 // Navigation items - memoized outside component
-const NAV_ITEMS = [
+type NavKey = 'dashboard' | 'automations' | 'blog' | 'pricing';
+
+const NAV_ITEMS: ReadonlyArray<{ key: NavKey; href: string }> = [
   { key: 'dashboard', href: 'dashboard' },
   { key: 'automations', href: 'automations' },
   { key: 'blog', href: 'blog' },
@@ -22,6 +27,9 @@ const NAV_ITEMS = [
 
 export function Header() {
   const t = useTranslations('nav');
+  const automationsT = useTranslations('automationsPage');
+  const authT = useTranslations('auth');
+  const userMenuT = useTranslations('header.userMenu');
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
@@ -30,6 +38,7 @@ export function Header() {
   const setAccounts = useStore((state) => state.setAccounts);
   const setWorkflows = useStore((state) => state.setWorkflows);
   const openAuthModal = useStore((state) => state.openAuthModal);
+  const { logout: authLogout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [hoveredMenu, setHoveredMenu] = useState<string | null>(null);
@@ -62,12 +71,18 @@ export function Header() {
     }
   }, [userMenuOpen]);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    // Call backend logout to clear HTTP-only cookie
+    await authLogout();
+
+    // Clear local state
     setUser(null);
     setAccounts([]);
     setWorkflows([]);
-    router.push(`/${locale}/dashboard`);
     setUserMenuOpen(false);
+
+    // Redirect to dashboard
+    router.push(`/${locale}/dashboard`);
   };
 
 
@@ -117,11 +132,15 @@ export function Header() {
                           : 'text-neutral-600 hover:text-primary-500 hover:bg-white/50'
                       }`}
                     >
-                      {t(key as any)}
+                      {t(key)}
                     </Link>
                     {hasDropdown && hoveredMenu === key && (
                       <div
-                        className="absolute left-0 top-full z-50 mt-2 w-80 rounded-3xl border border-neutral-200 bg-white shadow-[0_18px_46px_-16px_rgba(15,23,42,0.25)]"
+                        className={`absolute left-0 top-full z-50 mt-2 rounded-3xl border border-neutral-200 bg-white shadow-[0_18px_46px_-16px_rgba(15,23,42,0.25)] transition-all duration-200 ${
+                          key === 'blog'
+                            ? 'w-full sm:w-[36rem] xl:w-[44rem] 2xl:w-[52rem] max-w-[calc(100vw-2rem)]'
+                            : 'w-80'
+                        }`}
                         onMouseEnter={() => {
                           if (menuTimer.current) clearTimeout(menuTimer.current);
                           setHoveredMenu(key);
@@ -132,17 +151,30 @@ export function Header() {
                         }}
                       >
                         {key === 'blog' ? (
-                          <div className="flex flex-col gap-2 p-4">
-                            {BLOG_CATEGORIES.map((category) => (
-                              <Link
-                                key={category.slug}
-                                href={`/${locale}/blog/category/${category.slug}`}
-                                className="rounded-2xl px-4 py-3 transition hover:bg-primary-50"
-                              >
-                                <p className="text-sm font-semibold text-neutral-900">{category.title}</p>
-                                <p className="mt-1 text-xs text-neutral-500 line-clamp-2">{category.description}</p>
-                              </Link>
-                            ))}
+                          <div className="grid grid-cols-1 gap-3 p-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                            {BLOG_CATEGORIES.map((category) => {
+                              const theme = getBlogCategoryTheme(category.color);
+
+                              return (
+                                <Link
+                                  key={category.slug}
+                                  href={`/${locale}/blog/category/${category.slug}`}
+                                  className="block h-full rounded-2xl px-4 py-3 transition hover:bg-neutral-100"
+                                >
+                                  <div className="flex h-full items-start gap-3">
+                                    {category.icon && (
+                                      <div className={`mt-0.5 flex h-10 w-10 items-center justify-center rounded-lg ${theme.iconBg}`}>
+                                        <span className={`text-lg ${theme.iconText}`}>{category.icon}</span>
+                                      </div>
+                                    )}
+                                    <div className="flex-1">
+                                      <p className="text-sm font-semibold text-neutral-900">{category.title}</p>
+                                      <p className="mt-1 text-xs text-neutral-500 line-clamp-2">{category.description}</p>
+                                    </div>
+                                  </div>
+                                </Link>
+                              );
+                            })}
                           </div>
                         ) : (
                           <div className="flex flex-col">
@@ -150,7 +182,7 @@ export function Header() {
                               {automationTemplates.map((template) => (
                                 <Link
                                   key={template.id}
-                                  href={`/${locale}/automations/builder?template=${template.id}`}
+                                  href={getAutomationLandingUrl(template.id, locale)}
                                   className="block rounded-2xl px-4 py-3 transition hover:bg-primary-50"
                                 >
                                   <p className="text-sm font-semibold text-neutral-900">{template.name}</p>
@@ -162,12 +194,12 @@ export function Header() {
                                 </Link>
                               ))}
                             </div>
-                            <div className="border-t border-neutral-200 bg-neutral-50 px-4 py-3">
+                            <div className="border-t border-neutral-200 bg-neutral-50 px-4 py-3 rounded-b-3xl">
                               <Link
                                 href={`/${locale}/automations`}
                                 className="inline-flex items-center gap-2 text-xs font-semibold text-primary-600 hover:text-primary-700"
                               >
-                                Browse all automations
+                                {automationsT('browse')}
                                 <span aria-hidden>→</span>
                               </Link>
                             </div>
@@ -218,7 +250,7 @@ export function Header() {
                             className="flex items-center gap-3 px-4 py-3 text-sm text-neutral-700 hover:bg-primary-50 hover:text-primary-600 transition-colors"
                           >
                             <UserCircleIcon className="h-5 w-5 text-neutral-400" />
-                            <span>Profile</span>
+                            <span>{userMenuT('profile')}</span>
                           </Link>
                           <Link
                             href={`/${locale}/settings`}
@@ -227,7 +259,7 @@ export function Header() {
                             className="flex items-center gap-3 px-4 py-3 text-sm text-neutral-700 hover:bg-primary-50 hover:text-primary-600 transition-colors"
                           >
                             <Cog6ToothIcon className="h-5 w-5 text-neutral-400" />
-                            <span>Settings</span>
+                            <span>{t('settings')}</span>
                           </Link>
                           <div className="px-4 py-3">
                             <LanguageSwitcher />
@@ -240,7 +272,7 @@ export function Header() {
                             className="flex w-full items-center gap-3 px-4 py-3 text-sm font-semibold text-rose-600 hover:bg-rose-100 transition-colors"
                           >
                             <ArrowRightOnRectangleIcon className="h-5 w-5" />
-                            <span>Logout</span>
+                            <span>{authT('logout')}</span>
                           </button>
                         </div>
                       </div>
@@ -253,7 +285,7 @@ export function Header() {
                   onClick={openAuthModal}
                   className="hidden sm:inline-flex bg-neutral-900 text-white hover:bg-neutral-800"
                 >
-                  Sign in
+                  {authT('login')}
                 </Button>
               )}
 
@@ -286,7 +318,7 @@ export function Header() {
                         : 'text-neutral-700 hover:text-primary-500 hover:bg-white/50'
                     }`}
                   >
-                    {t(key as any)}
+                    {t(key)}
                     {active && (
                       <span className="absolute right-4 top-1/2 -translate-y-1/2 w-2 h-2 bg-accent-500 rounded-full animate-pulse" />
                     )}
@@ -316,7 +348,7 @@ export function Header() {
                       className="flex w-full items-center justify-center gap-2 rounded-lg bg-rose-100 px-4 py-2 text-sm font-semibold text-rose-600 hover:bg-rose-200 transition-colors"
                     >
                       <ArrowRightOnRectangleIcon className="h-4 w-4" />
-                      Logout
+                      {authT('logout')}
                     </button>
                   </div>
                 </div>
@@ -328,7 +360,7 @@ export function Header() {
                   }}
                   className="w-full bg-neutral-900 text-white hover:bg-neutral-800"
                 >
-                  Sign in
+                  {authT('login')}
                 </Button>
               )}
             </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { memo, ReactNode } from 'react';
+import { memo, ReactNode, MouseEvent } from 'react';
 import { Handle, Position, NodeProps } from 'reactflow';
 import { NodeStatistics } from '@/lib/types/flow';
 
@@ -27,12 +27,21 @@ export const BaseNode = memo(function BaseNode({
   onEdit,
   isEditable = false,
 }: BaseNodeProps) {
+  const handleNodeClick = (event: MouseEvent<HTMLDivElement>) => {
+    if (!isEditable || !onEdit) return;
+
+    const target = event.target as HTMLElement;
+    if (target.closest('.react-flow__handle')) {
+      return;
+    }
+
+    onEdit();
+  };
+
   return (
     <div
       className={`group relative ${isEditable ? 'cursor-pointer' : ''}`}
-      onDoubleClick={() => {
-        if (isEditable && onEdit) onEdit();
-      }}
+      onClick={handleNodeClick}
     >
       {/* Input Handle - Left */}
       {hasInput && (

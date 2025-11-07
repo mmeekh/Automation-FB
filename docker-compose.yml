@@ -8,9 +8,13 @@ services:
       - "3003:3003"
     environment:
       - NODE_ENV=development
-      - NEXT_PUBLIC_API_URL=http://localhost:3004
+      - NEXT_PUBLIC_API_URL=/api
       - WATCHPACK_POLLING=true
       - CHOKIDAR_USEPOLLING=true
+      - NEXT_PUBLIC_FACEBOOK_APP_ID=1122047696167049
+      - FACEBOOK_APP_SECRET=74263af13721723f24c37049311eb892
+      - JWT_SECRET=R8y-CgT4Z_1eH2mK0sWp9oXb6jQ5vN3uA7dLfGzVpY_aDqEeFfGgHhIiJjKkLlMmNn
+      - INSTAGRAM_API_VERSION=v18.0
     volumes:
       - .:/app
       - /app/node_modules

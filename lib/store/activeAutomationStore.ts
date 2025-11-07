@@ -13,6 +13,7 @@ interface ActiveAutomation {
   addedAt: string;
   isActive: boolean;
   includedInCreditPool: boolean;
+  followerModeEnabled?: boolean;
 }
 
 interface ActiveAutomationState {
@@ -24,6 +25,7 @@ interface ActiveAutomationState {
   clearAutomations: (accountId: string | null | undefined) => void;
   toggleAutomationActive: (accountId: string | null | undefined, templateId: string) => void;
   toggleAutomationCreditPool: (accountId: string | null | undefined, templateId: string) => void;
+  toggleAutomationFollowerMode: (accountId: string | null | undefined, templateId: string) => void;
   reorderAutomations: (
     accountId: string | null | undefined,
     sourceTemplateId: string,
@@ -38,6 +40,7 @@ const withDefaults = (automation: ActiveAutomation): ActiveAutomation => ({
   ...automation,
   isActive: automation.isActive ?? true,
   includedInCreditPool: automation.includedInCreditPool ?? false,
+  followerModeEnabled: automation.followerModeEnabled ?? false,
 });
 
 const normalizeList = (automations?: ActiveAutomation[]) =>
@@ -75,6 +78,7 @@ export const useActiveAutomationStore = create<ActiveAutomationState>()(
             addedAt: new Date().toISOString(),
             isActive: true,
             includedInCreditPool: false,
+            followerModeEnabled: false,
           };
 
           return {
@@ -186,6 +190,35 @@ export const useActiveAutomationStore = create<ActiveAutomationState>()(
             return {
               ...automation,
               includedInCreditPool: !automation.includedInCreditPool,
+            };
+          });
+
+          if (!mutated) {
+            return {};
+          }
+
+          return {
+            activeByAccount: {
+              ...state.activeByAccount,
+              [resolvedAccountId]: nextList,
+            },
+          };
+        });
+      },
+
+      toggleAutomationFollowerMode: (accountId, templateId) => {
+        const resolvedAccountId = resolveAccountId(accountId);
+        set((state) => {
+          const existing = normalizeList(state.activeByAccount[resolvedAccountId]);
+          let mutated = false;
+          const nextList = existing.map((automation) => {
+            if (automation.templateId !== templateId) {
+              return automation;
+            }
+            mutated = true;
+            return {
+              ...automation,
+              followerModeEnabled: !(automation.followerModeEnabled ?? false),
             };
           });
 

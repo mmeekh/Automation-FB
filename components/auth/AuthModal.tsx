@@ -2,11 +2,15 @@
 
 import { type FormEvent, type MouseEvent, useMemo, useState } from 'react';
 import Link from 'next/link';
-import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
+import { useLocale, useTranslations } from 'next-intl';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { motion } from 'framer-motion';
 import { useStore } from '@/lib/store';
 import { Button } from '@/components/ui/Button';
+import { useFacebookSDK } from '@/lib/hooks/useFacebookSDK';
+import { useAuth } from '@/lib/hooks/useAuth';
+import { useToast } from '@/lib/hooks/useToast';
 
 
 const GoogleIcon = () => (
@@ -105,6 +109,8 @@ function SocialButton({ onClick, disabled, loading, icon, label }: SocialButtonP
 
 export function AuthModal() {
   const t = useTranslations('auth');
+  const router = useRouter();
+  const locale = useLocale();
   const isAuthModalOpen = useStore((state) => state.isAuthModalOpen);
   const closeAuthModal = useStore((state) => state.closeAuthModal);
   const setUser = useStore((state) => state.setUser);
@@ -112,6 +118,10 @@ export function AuthModal() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loadingProvider, setLoadingProvider] = useState<'email' | 'google' | 'instagram' | null>(null);
+
+  const { isLoaded: fbSdkLoaded, login: facebookLogin } = useFacebookSDK();
+  const { login: backendLogin } = useAuth();
+  const toast = useToast();
 
   const trimmedEmail = useMemo(() => email.trim(), [email]);
   const showPasswordField = trimmedEmail.length > 0;
@@ -149,14 +159,52 @@ export function AuthModal() {
     });
   };
 
-  const handleInstagramLogin = () => {
+  const handleInstagramLogin = async () => {
+    if (!fbSdkLoaded) {
+      toast.error('Facebook SDK yükleniyor, lütfen bekleyin...');
+      return;
+    }
+
     setLoadingProvider('instagram');
-    completeLogin({
-      id: 'instagram_user',
-      name: 'Instagram Kullanıcısı',
-      email: 'instagram@demo.com',
-      avatar: 'IG',
-    });
+
+    try {
+      // 1. Facebook SDK ile login
+      const fbResult = await facebookLogin();
+
+      if (!fbResult.success || !fbResult.accessToken) {
+        throw new Error(fbResult.error || 'Facebook login başarısız');
+      }
+
+      // 2. Backend'e access token gönder
+      const backendResult = await backendLogin(fbResult.accessToken);
+
+      if (!backendResult.success || !backendResult.user) {
+        throw new Error('Backend authentication başarısız');
+      }
+
+      // 3. Store'a kullanıcıyı kaydet
+      setUser({
+        id: backendResult.user.id,
+        name: backendResult.user.name,
+        email: backendResult.user.email || '',
+        avatar: backendResult.user.picture || backendResult.user.name.charAt(0).toUpperCase(),
+      });
+
+      // 4. Success
+      toast.success(`Hoş geldiniz, ${backendResult.user.name}!`);
+      closeAuthModal();
+
+      // Dashboard'a yönlendir
+      setTimeout(() => {
+        router.push(`/${locale}/dashboard`);
+      }, 500);
+    } catch (error) {
+      console.error('Instagram login error:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Giriş yapılamadı';
+      toast.error(errorMessage);
+    } finally {
+      setLoadingProvider(null);
+    }
   };
 
   const handleBackdropClick = (event: MouseEvent<HTMLDivElement>) => {
@@ -251,7 +299,7 @@ export function AuthModal() {
             />
             <SocialButton
               onClick={handleInstagramLogin}
-              disabled={loadingProvider !== null}
+              disabled={loadingProvider !== null || !fbSdkLoaded}
               loading={loadingProvider === 'instagram'}
               icon={<InstagramIcon />}
               label="Instagram ile devam et"

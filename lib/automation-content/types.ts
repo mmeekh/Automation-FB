@@ -44,4 +44,18 @@ export interface AutomationContent {
     ogTitle: string;
     ogDescription: string;
   };
+  stats?: {
+    value: string;
+    label: string;
+  }[];
+  howItWorks?: {
+    title: string;
+    subtitle: string;
+    steps: {
+      step: string;
+      title: string;
+      description: string;
+      icon: string;
+    }[];
+  };
 }

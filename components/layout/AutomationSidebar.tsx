@@ -14,20 +14,21 @@ import {
 } from '@heroicons/react/24/outline';
 import { SparklesIcon } from '@heroicons/react/24/solid';
 import { useUIStore } from '@/lib/store/uiStore';
+import { useLocale, useTranslations } from 'next-intl';
 
 interface NavItem {
-  name: string;
+  key: 'dashboard' | 'automation' | 'analytics' | 'settings' | 'help';
   href: string;
   icon: React.ComponentType<{ className?: string }>;
   badge?: number;
   onClick?: () => void;
 }
 
-const navItemsBase: NavItem[] = [{ name: 'Home', href: '/dashboard', icon: HomeIcon }];
+const navItemsBase: NavItem[] = [{ key: 'dashboard', href: '/dashboard', icon: HomeIcon }];
 
 const bottomItems: NavItem[] = [
-  { name: 'Settings', href: '/automation-settings', icon: Cog6ToothIcon },
-  { name: 'Help', href: '/help', icon: QuestionMarkCircleIcon },
+  { key: 'settings', href: '/automation-settings', icon: Cog6ToothIcon },
+  { key: 'help', href: '/help', icon: QuestionMarkCircleIcon },
 ];
 
 export function AutomationSidebar() {
@@ -36,6 +37,31 @@ export function AutomationSidebar() {
   const builderView = useUIStore((s) => s.builderView);
   const showBuilderAnalytics = useUIStore((s) => s.showBuilderAnalytics);
   const showBuilderFlow = useUIStore((s) => s.showBuilderFlow);
+  const locale = useLocale();
+  const tNav = useTranslations('nav');
+  const withLocale = useCallback(
+    (path: string) => `/${locale}${path.startsWith('/') ? path : `/${path}`}`,
+    [locale]
+  );
+  const getLabel = useCallback(
+    (key: NavItem['key']) => {
+      switch (key) {
+        case 'dashboard':
+          return tNav('dashboard');
+        case 'automation':
+          return tNav('automations');
+        case 'analytics':
+          return tNav('analytics');
+        case 'settings':
+          return tNav('settings');
+        case 'help':
+          return tNav('help');
+        default:
+          return key;
+      }
+    },
+    [tNav]
+  );
   const [isOpen, setIsOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [childMenuState, setChildMenuState] = useState({
@@ -84,26 +110,26 @@ export function AutomationSidebar() {
   const navItems: NavItem[] = [
     ...navItemsBase,
     {
-      name: 'Automation',
+      key: 'automation',
       href: '/automations',
       icon: SparklesIcon,
       onClick: () => {
         if (isOnBuilderPage) {
           showBuilderFlow();
         } else {
-          router.push('/automations/builder');
+          router.push(withLocale('/automations/builder'));
         }
       },
     },
     {
-      name: 'Analytics',
+      key: 'analytics',
       href: '/automations/builder',
       icon: ChartBarIcon,
       onClick: () => {
         if (isOnBuilderPage) {
           showBuilderAnalytics();
         } else {
-          router.push('/automations/builder?view=analytics');
+          router.push(withLocale('/automations/builder?view=analytics'));
         }
       },
     },
@@ -132,7 +158,7 @@ export function AutomationSidebar() {
     >
       {/* Logo Section */}
       <div className="h-20 flex items-center px-6 border-b border-neutral-100">
-        <Link href="/dashboard" className="flex items-center gap-2">
+        <Link href={withLocale('/dashboard')} className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center flex-shrink-0">
             <span className="text-white font-bold text-sm">L</span>
           </div>
@@ -171,8 +197,10 @@ export function AutomationSidebar() {
       {/* Navigation Items */}
       <nav className="flex-1 px-3 py-6 space-y-2 overflow-y-auto">
         {navItems.map((item) => {
-          const isAnalyticsItem = item.name === 'Analytics';
-          const isAutomationItem = item.name === 'Automation';
+          const isAnalyticsItem = item.key === 'analytics';
+          const isAutomationItem = item.key === 'automation';
+          const targetHref = withLocale(item.href);
+          const label = getLabel(item.key);
           let isActive: boolean;
 
           if (isOnBuilderPage) {
@@ -181,10 +209,10 @@ export function AutomationSidebar() {
             } else if (isAutomationItem) {
               isActive = builderView !== 'analytics';
             } else {
-              isActive = pathname.startsWith(item.href);
+              isActive = pathname.startsWith(targetHref);
             }
           } else {
-            isActive = pathname.startsWith(item.href);
+            isActive = pathname.startsWith(targetHref);
           }
 
           const Icon = item.icon;
@@ -209,7 +237,7 @@ export function AutomationSidebar() {
                   isActive ? 'text-white' : 'text-neutral-700 group-hover:translate-x-1 transition-transform'
                 }`}
               >
-                {item.name}
+                {label}
               </motion.span>
               {isOpen && item.badge && (
                 <motion.span
@@ -225,11 +253,11 @@ export function AutomationSidebar() {
           );
 
           return item.onClick ? (
-            <button key={item.name} onClick={item.onClick} className={commonClass} type="button">
+            <button key={item.key} onClick={item.onClick} className={commonClass} type="button">
               {content}
             </button>
           ) : (
-            <Link key={item.name} href={item.href} className={commonClass}>
+            <Link key={item.key} href={targetHref} className={commonClass}>
               {content}
             </Link>
           );
@@ -240,10 +268,11 @@ export function AutomationSidebar() {
       <div className="border-t border-neutral-100 px-3 py-4 space-y-2">
         {bottomItems.map((item) => {
           const Icon = item.icon;
+          const label = getLabel(item.key);
           return (
             <Link
-              key={item.name}
-              href={item.href}
+              key={item.key}
+              href={withLocale(item.href)}
               className="flex items-center gap-3 px-3 py-3 rounded-xl text-neutral-600 hover:bg-neutral-50 transition-all group"
             >
               <Icon className="w-5 h-5 text-neutral-500 group-hover:text-primary-500 flex-shrink-0" />
@@ -255,7 +284,7 @@ export function AutomationSidebar() {
                 transition={{ duration: 0.15 }}
                 className="font-medium text-neutral-700 whitespace-nowrap group-hover:translate-x-1 transition-transform"
               >
-                {item.name}
+                {label}
               </motion.span>
             </Link>
           );

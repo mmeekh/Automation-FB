@@ -44,10 +44,13 @@ export function CustomizationSidebar({ template, data, onChange }: Customization
     });
   };
 
-  const handleLimitChange = (
-    count: number,
-    period: 'minute' | 'hour' | 'day' | 'week' | 'month'
-  ) => {
+  type PeriodType = 'minute' | 'hour' | 'day' | 'week' | 'month';
+
+  const isPeriodType = (value: string): value is PeriodType => {
+    return ['minute', 'hour', 'day', 'week', 'month'].includes(value);
+  };
+
+  const handleLimitChange = (count: number, period: PeriodType) => {
     onChange({
       settings: {
         ...data.settings,
@@ -207,9 +210,12 @@ export function CustomizationSidebar({ template, data, onChange }: Customization
                     </label>
                     <select
                       value={data.settings.generationLimit.period}
-                      onChange={(e) =>
-                        handleLimitChange(data.settings.generationLimit.count, e.target.value as any)
-                      }
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (isPeriodType(value)) {
+                          handleLimitChange(data.settings.generationLimit.count, value);
+                        }
+                      }}
                       className="w-full px-4 py-2 border-2 border-neutral-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white"
                     >
                       <option value="minute">Per Minute</option>

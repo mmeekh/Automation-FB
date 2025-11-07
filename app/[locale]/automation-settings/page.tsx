@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { AutomationSidebar } from '@/components/layout/AutomationSidebar';
 import {
   BoltIcon,
@@ -9,14 +9,34 @@ import {
   ExclamationTriangleIcon,
   ArrowPathIcon,
   ChartBarIcon,
+  ChevronDownIcon,
 } from '@heroicons/react/24/outline';
+import Image from 'next/image';
+import { useLocale } from 'next-intl';
+import { useAccountStore } from '@/lib/store/accountStore';
+import type { InstagramAccount } from '@/lib/types/account';
+import {
+  UNLIMITED_QUOTA,
+  REQUIRED_POOL_ALLOCATION,
+} from '@/lib/constants';
 
 export default function AutomationSettingsPage() {
   const [activeTab, setActiveTab] = useState('general');
-  const [quotaLimit, setQuotaLimit] = useState(1000);
-  const [resetInterval, setResetInterval] = useState('24h');
   const [errorHandling, setErrorHandling] = useState('retry');
   const [maxRetries, setMaxRetries] = useState(3);
+  const accounts = useAccountStore((state) => state.accounts);
+  const loadAccounts = useAccountStore((state) => state.loadAccounts);
+  const toggleAccountCreditPool = useAccountStore((state) => state.toggleAccountCreditPool);
+  const setAccountAllocation = useAccountStore((state) => state.setAccountAllocation);
+  const setAccountQuotaLimit = useAccountStore((state) => state.setAccountQuotaLimit);
+  const setAccountTotalGenerationLimit = useAccountStore((state) => state.setAccountTotalGenerationLimit);
+  const setAccountQuotaResetInterval = useAccountStore((state) => state.setAccountQuotaResetInterval);
+
+  useEffect(() => {
+    if (accounts.length === 0) {
+      loadAccounts();
+    }
+  }, [accounts.length, loadAccounts]);
 
   const tabs = [
     { id: 'general', name: 'General', icon: BoltIcon },
@@ -69,10 +89,12 @@ export default function AutomationSettingsPage() {
                 {activeTab === 'general' && <GeneralSettings />}
                 {activeTab === 'quota' && (
                   <QuotaSettings
-                    quotaLimit={quotaLimit}
-                    setQuotaLimit={setQuotaLimit}
-                    resetInterval={resetInterval}
-                    setResetInterval={setResetInterval}
+                    accounts={accounts}
+                    onToggleAccountCreditPool={toggleAccountCreditPool}
+                    onAllocationChange={setAccountAllocation}
+                    onQuotaLimitChange={setAccountQuotaLimit}
+                    onTotalGenerationLimitChange={setAccountTotalGenerationLimit}
+                    onResetIntervalChange={setAccountQuotaResetInterval}
                   />
                 )}
                 {activeTab === 'testing' && <TestingSettings />}
@@ -143,79 +165,392 @@ function GeneralSettings() {
   );
 }
 
+type QuotaSettingsProps = {
+  accounts: InstagramAccount[];
+  onToggleAccountCreditPool: (accountId: string) => void;
+  onAllocationChange: (accountId: string, percent: number) => void;
+  onQuotaLimitChange: (accountId: string, limit: number) => void;
+  onTotalGenerationLimitChange: (accountId: string, limit: number) => void;
+  onResetIntervalChange: (accountId: string, interval: string) => void;
+};
+
 function QuotaSettings({
-  quotaLimit,
-  setQuotaLimit,
-  resetInterval,
-  setResetInterval,
-}: {
-  quotaLimit: number;
-  setQuotaLimit: (value: number) => void;
-  resetInterval: string;
-  setResetInterval: (value: string) => void;
-}) {
+  accounts,
+  onToggleAccountCreditPool,
+  onAllocationChange,
+  onQuotaLimitChange,
+  onTotalGenerationLimitChange,
+  onResetIntervalChange,
+}: QuotaSettingsProps) {
+  const locale = useLocale();
+  const translate = (trText: string, enText: string) => (locale === 'tr' ? trText : enText);
+  // Collapse state for accounts - kredi havuzu kapalı olanlar collapsed başlar
+  const [collapsedAccounts, setCollapsedAccounts] = useState<Set<string>>(() => {
+    const initialCollapsed = new Set<string>();
+    accounts.forEach(account => {
+      if (!account.includedInCreditPool) {
+        initialCollapsed.add(account.id);
+      }
+    });
+    return initialCollapsed;
+  });
+
+  const toggleAccountCollapse = (accountId: string) => {
+    setCollapsedAccounts(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(accountId)) {
+        newSet.delete(accountId);
+      } else {
+        newSet.add(accountId);
+      }
+      return newSet;
+    });
+  };
+
+  const connectedAccounts = useMemo(
+    () => accounts.filter((account) => account.isConnected && (account.isActive ?? true)),
+    [accounts]
+  );
+
+  const totalPoolPercent = useMemo(
+    () =>
+      connectedAccounts.reduce((sum, account) => {
+        if (!(account.includedInCreditPool ?? false)) return sum;
+        return sum + (account.creditAllocationPercent ?? 0);
+      }, 0),
+    [connectedAccounts]
+  );
+
+  const handleAllocationChange = (accountId: string, value: number | string) => {
+    const parsed =
+      typeof value === 'number'
+        ? value
+        : Number(value);
+    onAllocationChange(accountId, Number.isFinite(parsed) ? parsed : 0);
+  };
+
+  const formatNumber = (value: number) => value.toLocaleString('tr-TR');
+  const poolIsBalanced = totalPoolPercent === REQUIRED_POOL_ALLOCATION;
+
+  // Mock package quota data (will be replaced with real data later)
+  const packageTotalQuota = 10000;
+  const packageUsedQuota = 2450;
+  const packageUsagePercent = (packageUsedQuota / packageTotalQuota) * 100;
+
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold text-neutral-900">Quota & Limits</h2>
-        <p className="text-neutral-600 mt-1">Manage automation usage limits</p>
+    <div className="space-y-8">
+      <div className="rounded-2xl border border-primary-100 bg-gradient-to-r from-primary-500/10 via-white to-accent-500/10 p-5 shadow-sm">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex-1">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary-600">
+              Paket Quota
+            </p>
+            <div className="mt-2 flex items-baseline gap-2">
+              <p className="text-3xl font-bold text-neutral-900">
+                {formatNumber(packageUsedQuota)}
+              </p>
+              <span className="text-lg font-semibold text-neutral-400">/</span>
+              <p className="text-xl font-semibold text-neutral-600">
+                {formatNumber(packageTotalQuota)} kredi
+              </p>
+            </div>
+            <div className="mt-3 relative h-2 overflow-hidden rounded-full bg-neutral-200">
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-primary-500 to-accent-500 transition-all"
+                style={{ width: `${packageUsagePercent}%` }}
+              />
+            </div>
+            <p className="mt-2 text-xs text-neutral-600">
+              {formatNumber(packageTotalQuota - packageUsedQuota)}{' '}
+              {translate('kredi kaldı', 'credits remaining')}
+            </p>
+          </div>
+          <div className="flex flex-col gap-2">
+            <div className="rounded-xl border border-white/70 bg-white/80 px-4 py-2.5 shadow-inner">
+              <span className="block text-xs font-semibold uppercase tracking-wider text-neutral-500">
+                Aktif hesap
+              </span>
+              <span className="block mt-1 text-2xl font-bold text-neutral-900">
+                {connectedAccounts.length}
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div className="space-y-6">
-        <div>
-          <label className="block text-sm font-medium text-neutral-700 mb-4">
-            Daily Quota Limit
-          </label>
-          <div className="flex items-center gap-4">
-            <input
-              type="range"
-              min={100}
-              max={10000}
-              step={100}
-              value={quotaLimit}
-              onChange={(e) => setQuotaLimit(Number(e.target.value))}
-              className="flex-1 h-2 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-primary-500"
-            />
-            <span className="text-2xl font-bold text-primary-600 w-24 text-right">
-              {quotaLimit}
-            </span>
+      <section className="space-y-4">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h3 className="text-lg font-semibold text-neutral-900">
+              {translate('Instagram hesapları', 'Instagram accounts')}
+            </h3>
+            <p className="text-sm text-neutral-600">
+              {translate(
+                'Kredi havuzuna dahil edeceğiniz hesapları seçin ve paylaşımlarını belirleyin.',
+                'Choose which accounts join the credit pool and set their allocation.'
+              )}
+            </p>
           </div>
-          <div className="flex justify-between text-xs text-neutral-400 mt-2">
-            <span>100</span>
-            <span>10,000</span>
+          <div
+            className={`inline-flex items-center gap-2 rounded-full px-4 py-1 text-sm font-semibold ${
+              poolIsBalanced ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'
+            }`}
+          >
+            Havuz %{totalPoolPercent}
+            {!poolIsBalanced && <span className="text-xs font-medium">Hedef: %100</span>}
           </div>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-neutral-700 mb-3">
-            Reset Interval
-          </label>
-          <div className="grid grid-cols-4 gap-3">
-            {['12h', '24h', '7d', '30d'].map((interval) => (
-              <button
-                key={interval}
-                onClick={() => setResetInterval(interval)}
-                className={`px-4 py-3 rounded-xl font-semibold transition-all ${
-                  resetInterval === interval
-                    ? 'bg-gradient-to-r from-primary-500 to-accent-500 text-white shadow-lg'
-                    : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
-                }`}
+        {connectedAccounts.length === 0 ? (
+          <div className="rounded-2xl border border-dashed border-neutral-200 bg-neutral-50 p-6 text-sm text-neutral-500">
+            {translate(
+              'Henüz bağlanmış Instagram hesabınız yok. Önce bir hesap bağlayın.',
+              'No Instagram accounts are connected yet. Connect an account to get started.'
+            )}
+          </div>
+        ) : (
+          connectedAccounts.map((account) => {
+            const included = account.includedInCreditPool ?? false;
+            const allocation = account.creditAllocationPercent ?? 0;
+            const isCollapsed = collapsedAccounts.has(account.id);
+
+            return (
+              <div
+                key={account.id}
+                className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm transition hover:border-primary-200/60 hover:shadow-md"
               >
-                {interval}
-              </button>
-            ))}
-          </div>
-        </div>
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex items-center gap-4">
+                    <button
+                      onClick={() => toggleAccountCollapse(account.id)}
+                      className="p-1 hover:bg-neutral-100 rounded-lg transition-colors"
+                      aria-label={
+                        isCollapsed
+                          ? translate('Genişlet', 'Expand')
+                          : translate('Daralt', 'Collapse')
+                      }
+                    >
+                      <ChevronDownIcon
+                        className={`w-5 h-5 text-neutral-600 transition-transform ${
+                          isCollapsed ? '-rotate-90' : ''
+                        }`}
+                      />
+                    </button>
+                    <div className="relative h-12 w-12 overflow-hidden rounded-full border border-neutral-200">
+                      <Image
+                        src={account.profilePicture}
+                        alt={account.displayName}
+                        fill
+                        className="object-cover"
+                        sizes="48px"
+                      />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-neutral-900">@{account.username}</p>
+                      <p className="text-xs text-neutral-500">{account.displayName}</p>
+                    </div>
+                  </div>
 
-        <div className="p-4 rounded-xl bg-blue-50 border border-blue-200">
-          <p className="text-sm text-blue-800">
-            <strong>Current Usage:</strong> Quota resets every {resetInterval}. Current limit:{' '}
-            {quotaLimit} automations.
-          </p>
-        </div>
+                    <div className="flex items-center gap-3">
+                      <span
+                        className={`h-2.5 w-2.5 rounded-full ${
+                          included ? 'bg-green-500' : 'bg-neutral-300'
+                        }`}
+                        aria-hidden
+                      />
+                      <span className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
+                        Kredi havuzu
+                      </span>
+                      <label className="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer items-center">
+                        <input
+                          type="checkbox"
+                          checked={included}
+                          onChange={() => onToggleAccountCreditPool(account.id)}
+                          className="peer sr-only"
+                        />
+                        <span className="h-full w-full rounded-full bg-neutral-300 transition-colors peer-checked:bg-primary-500" />
+                        <span className="absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform peer-checked:translate-x-5" />
+                      </label>
+                    </div>
+                </div>
 
-        <button className="px-6 py-3 bg-gradient-to-r from-primary-500 to-accent-500 text-white font-semibold rounded-xl hover:shadow-lg transition-all">
-          Save Quota Settings
+                {!isCollapsed && (
+                <>
+                <div className="mt-5 grid gap-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
+                  <div>
+                    <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wide text-neutral-500">
+                      <span>{translate('Toplam Üretim', 'Total production')}</span>
+                      <span className="text-primary-600">
+                        {account.totalGenerations.toLocaleString('tr-TR')}{' '}
+                        {translate('üretim', 'runs')}
+                      </span>
+                    </div>
+                    <p className="mt-1 text-[10px] text-neutral-400">
+                      {translate('Kişi başı limit', 'Per-user limit')}:{' '}
+                      {account.perUserLimit === UNLIMITED_QUOTA
+                        ? translate('Sınırsız', 'Unlimited')
+                        : `${account.perUserLimit} ${translate('üretim', 'runs')}`}
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-2 rounded-full border border-neutral-200 bg-neutral-50 px-3 py-1.5">
+                    <span className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
+                      {translate('Paylaşım', 'Allocation')}
+                    </span>
+                    <input
+                      type="number"
+                      min={0}
+                      max={100}
+                      step={1}
+                      value={allocation}
+                      onChange={(event) =>
+                        handleAllocationChange(account.id, event.target.value)
+                      }
+                      disabled={!included}
+                      className="w-16 rounded-lg border border-neutral-200 bg-white px-2 py-1 text-sm text-neutral-700 focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100 disabled:cursor-not-allowed disabled:bg-neutral-100"
+                    />
+                    <span className="text-sm font-semibold text-neutral-700">%</span>
+                  </div>
+                </div>
+
+                <div className="mt-4">
+                  <input
+                    type="range"
+                    min={0}
+                    max={100}
+                    step={5}
+                    value={allocation}
+                    onChange={(event) => handleAllocationChange(account.id, event.target.value)}
+                    disabled={!included}
+                    className="h-2 w-full appearance-none rounded-full bg-neutral-200 accent-primary-500 disabled:cursor-not-allowed"
+                  />
+                  {!included && (
+                    <p className="mt-2 text-xs text-neutral-400">
+                      {translate(
+                        'Hesabı havuza ekledikten sonra oran belirleyebilirsiniz.',
+                        'Add the account to the pool before assigning an allocation.'
+                      )}
+                    </p>
+                  )}
+                </div>
+
+                {/* Account-specific quota settings */}
+                <div className="mt-5 border-t border-neutral-200 pt-4">
+                  <h4 className="text-sm font-semibold text-neutral-900 mb-3">
+                    Hesap limitleri
+                  </h4>
+
+                  {/* Total generation limit for account */}
+                  <div className="mb-3">
+                    <label className="flex items-center justify-between text-xs font-medium text-neutral-600 mb-2">
+                      <span>
+                        {translate(
+                          'Toplam üretim limiti (hesap bazlı)',
+                          'Total production limit (per account)'
+                        )}
+                      </span>
+                      <span className="text-primary-600 font-semibold">
+                        {account.totalGenerations.toLocaleString('tr-TR')} /{' '}
+                        {(account.totalGenerationLimit ?? 1000).toLocaleString('tr-TR')}
+                      </span>
+                    </label>
+                    <input
+                      type="number"
+                      min={0}
+                      step={10}
+                      value={account.totalGenerationLimit ?? 1000}
+                      onChange={(e) => onTotalGenerationLimitChange(account.id, Number(e.target.value))}
+                      className="w-full px-3 py-2 text-xs border border-neutral-200 rounded-lg bg-white focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
+                      placeholder={translate('Toplam üretim limiti', 'Total production limit')}
+                    />
+                    <p className="mt-1 text-[10px] text-neutral-400">
+                      {translate(
+                        'Bu hesabın maksimum kaç üretim yapabileceğini belirler',
+                        'Defines the maximum runs allowed for this account'
+                      )}
+                    </p>
+                  </div>
+
+                  {/* Per-user generation limit */}
+                  <div className="mb-3">
+                    <label className="block text-xs font-medium text-neutral-600 mb-2">
+                      {translate(
+                        'Maksimum kişi başı üretim limiti',
+                        'Maximum runs per user'
+                      )}
+                    </label>
+                    <select
+                      value={account.perUserLimit}
+                      onChange={(e) => onQuotaLimitChange(account.id, Number(e.target.value))}
+                      className="w-full px-3 py-2 text-xs border border-neutral-200 rounded-lg bg-white focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
+                    >
+                      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
+                        <option key={num} value={num}>
+                          {num} {translate('üretim', 'runs')}
+                        </option>
+                      ))}
+                      <option value={UNLIMITED_QUOTA}>{translate('Sınırsız', 'Unlimited')}</option>
+                    </select>
+                  </div>
+
+                  {/* Reset Interval */}
+                  <div>
+                    <label className="block text-xs font-medium text-neutral-600 mb-2">
+                      {translate('Sıfırlama aralığı', 'Reset interval')}
+                    </label>
+                    <div className="grid grid-cols-2 gap-2">
+                      <select
+                        value={parseInt((account.perUserResetInterval ?? '24h').match(/\d+/)?.[0] ?? '24')}
+                        onChange={(e) => {
+                          const number = e.target.value;
+                          const unit = (account.perUserResetInterval ?? '24h').replace(/\d+/, '');
+                          onResetIntervalChange(account.id, `${number}${unit}`);
+                        }}
+                        className="px-3 py-2 text-xs border border-neutral-200 rounded-lg bg-white focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
+                      >
+                        {Array.from({ length: 30 }, (_, i) => i + 1).map((num) => (
+                          <option key={num} value={num}>
+                            {num}
+                          </option>
+                        ))}
+                      </select>
+                      <select
+                        value={(account.perUserResetInterval ?? '24h').replace(/\d+/, '')}
+                        onChange={(e) => {
+                          const number = parseInt((account.perUserResetInterval ?? '24h').match(/\d+/)?.[0] ?? '24');
+                          const unit = e.target.value;
+                          onResetIntervalChange(account.id, `${number}${unit}`);
+                        }}
+                        className="px-3 py-2 text-xs border border-neutral-200 rounded-lg bg-white focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
+                      >
+                        <option value="m">{translate('Dakika', 'Minutes')}</option>
+                        <option value="h">{translate('Saat', 'Hours')}</option>
+                        <option value="d">{translate('Gün', 'Days')}</option>
+                        <option value="M">{translate('Ay', 'Months')}</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                </>
+                )}
+              </div>
+            );
+          })
+        )}
+      </section>
+
+      <div className="flex justify-end">
+        <button
+          type="button"
+          disabled={!poolIsBalanced}
+          className={`inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold shadow-sm transition ${
+            poolIsBalanced
+              ? 'bg-gradient-to-r from-primary-500 to-accent-500 text-white hover:shadow-lg'
+              : 'bg-neutral-300 text-neutral-500 cursor-not-allowed'
+          }`}
+          title={!poolIsBalanced ? translate('Havuz %100 olmalıdır', 'Pool allocation must equal 100%') : ''}
+        >
+          {translate('Ayarları kaydet', 'Save settings')}
         </button>
       </div>
     </div>

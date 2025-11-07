@@ -11,7 +11,9 @@
     "automations": "Otomasyonlar",
     "analytics": "Analitik",
     "blog": "Blog",
-    "pricing": "Fiyatlar"
+    "pricing": "Fiyatlar",
+    "settings": "Ayarlar",
+    "help": "Yardım"
   },
   "auth": {
     "login": "Giriş Yap",
@@ -246,6 +248,34 @@
           "body": "Lansmandan once bu sartlari guncelleyebiliriz. Onemli degisiklikleri e-posta veya uygulama ici bildirimle paylasacagiz; guncel sartlardan sonra LookLab kullanmaya devam etmek kabul anlamina gelir."
         }
       }
+    },
+    "dataDeletion": {
+      "title": "Veri Silme",
+      "summary": "Kişisel bilgilerinizin LookLab'dan silinmesini nasıl talep edeceğinizi öğrenin.",
+      "lastUpdated": "15 Ocak 2025",
+      "intro": "Bu Veri Silme Politikası, kişisel verilerinizin sistemlerimizden kaldırılmasını nasıl talep edebileceğinizi açıklar.",
+      "sections": {
+        "overview": {
+          "heading": "1. Silme Hakkınız",
+          "body": "Kişisel verilerinizin silinmesini istediğiniz zaman talep etme hakkınız vardır. Talebinizi GDPR ve benzer veri koruma düzenlemelerine uygun olarak 30 gün içinde işleme alacağız."
+        },
+        "howToRequest": {
+          "heading": "2. Silme Talebi Nasıl Yapılır",
+          "body": "Veri silme talebinde bulunmak için hesap e-posta adresinizle birlikte privacy@looklab.app adresine e-posta gönderin. Kimliğinizi doğrulayıp silme talebinizi işleme alacağız. Ayrıca hesap ayarlarınızdan da silme talebi gönderebilirsiniz."
+        },
+        "whatIsDeleted": {
+          "heading": "3. Hangi Veriler Silinir",
+          "body": "Silme talebi üzerine hesap bilgilerinizi, profil verilerinizi, yüklediğiniz içerikleri, otomasyon yapılandırmalarınızı ve mesaj geçmişinizi sileceğiz. Bazı veriler yasal uyumluluk veya dolandırıcılık önleme amacıyla sınırlı bir süre saklanabilir."
+        },
+        "exceptions": {
+          "heading": "4. Veri Saklama İstisnaları",
+          "body": "Belirli veriler finansal kayıtlar (7 yıla kadar), yasal uyumluluk, anlaşmazlık çözümü ve dolandırıcılık önleme gibi meşru iş amaçları için saklanabilir. Anonimleştirilmiş analitik veriler de saklanabilir."
+        },
+        "contact": {
+          "heading": "5. Bizimle İletişime Geçin",
+          "body": "Veri silme talepleri veya sorularınız için lütfen privacy@looklab.app adresine başvurun. Tüm taleplere 2 iş günü içinde yanıt verecek ve 30 gün içinde silme işlemini tamamlayacağız."
+        }
+      }
     }
   },
   "contactPage": {
@@ -410,6 +440,174 @@
       "creditUsage": "{used}/{total} kredi kullanildi",
       "lastSync": "Son senkron {time}",
       "multiAutomation": "Coklu hesap otomasyonuna hazir"
+    }
+  },
+  "footer": {
+    "brandDescription": "Instagram otomasyonunu kolaylaştırın. DM'lerinizi yapay zeka destekli akışlarla dönüştürün.",
+    "sections": {
+      "about": {
+        "title": "Hakkımızda",
+        "links": {
+          "aboutUs": "Hakkımızda",
+          "blog": "Blog",
+          "pricing": "Fiyatlar"
+        }
+      },
+      "legal": {
+        "title": "Hukuk",
+        "links": {
+          "privacy": "Gizlilik Politikası",
+          "terms": "Hizmet Şartları",
+          "deletion": "Veri Silme"
+        }
+      },
+      "social": {
+        "title": "Sosyal Medya",
+        "links": {
+          "linkedin": "LinkedIn",
+          "instagram": "Instagram"
+        }
+      }
+    },
+    "copyright": "Telif hakkı {year} LookLab. Tüm hakları saklıdır."
+  },
+  "accountSwitcher": {
+    "collapsedAdd": "Instagram Hesabı Ekle",
+    "title": "Instagram Hesapları",
+    "accountActions": "Hesap işlemleri",
+    "addAccount": "Hesap ekle",
+    "menuIconLabel": "Ayarlar",
+    "toggle": {
+      "open": "Hesap işlemleri",
+      "close": "Hesap işlemlerini kapat"
+    },
+    "menu": {
+      "activate": "Aktif et",
+      "deactivate": "Pasifleştir",
+      "sharedPool": "Ortak kredi havuzu",
+      "remove": "Hesabı kaldır"
+    },
+    "poolLabel": "Havuz",
+    "generations": "{count} üretim",
+    "connected": "{count, plural, one {# hesap bağlı} other {# hesap bağlı}}"
+  },
+  "header": {
+    "userMenu": {
+      "profile": "Profil"
+    }
+  },
+  "automationSwitcher": {
+    "collapsedTooltip": "{count, plural, one {# aktif otomasyon} other {# aktif otomasyon}}",
+    "collapsedAdd": "Otomasyon ekle",
+    "sectionTitle": "Aktif Otomasyonlar",
+    "addAutomation": "Otomasyon ekle",
+    "empty": {
+      "title": "Aktif otomasyon yok",
+      "browse": "Şablonlara göz at"
+    },
+    "menu": {
+      "open": "Otomasyon işlemleri",
+      "close": "Otomasyon işlemlerini kapat",
+      "activate": "Aktif et",
+      "deactivate": "Pasifleştir",
+      "followerMode": "Takipçi modu",
+      "remove": "Otomasyonu kaldır"
+    },
+    "allAdded": "Tüm otomasyonlar eklendi. Yeni şablonlar için {link}.",
+    "allAddedLink": "kütüphaneyi inceleyin",
+    "allActive": "Tüm otomasyonlar aktif.",
+    "dropdownHeading": "Yeni otomasyon ekle",
+    "seeAll": "Tüm şablonları gör \u2192"
+  },
+  "legal": {
+    "title": "Hukuk Merkezi",
+    "intro": "Verilerinizi nasıl işlediğimiz ve size verdiğimiz taahhütler hakkında bilmeniz gereken her şey burada.",
+    "updated": "Son güncelleme {date}",
+    "viewDocument": "Belgeyi görüntüle",
+    "back": "Hukuk merkezine geri dön",
+    "privacy": {
+      "title": "Gizlilik Politikası",
+      "summary": "LookLab içinde kişisel bilgileri nasıl topladığımız, kullandığımız ve koruduğumuzu öğrenin.",
+      "lastUpdated": "15 Ocak 2025",
+      "intro": "LookLab'ı Instagram iş akışlarını güvenli, kontrollü ve gizlilik odaklı şekilde otomatikleştirmek için geliştirdik. Bu politika hangi verileri topladığımızı ve bunları nasıl yönettiğimizi açıklar.",
+      "sections": {
+        "introduction": {
+          "heading": "1. Giriş",
+          "body": "LookLab, Instagram işletmeleri için otomasyon araçları sunar. Platformu kullandığınızda, hizmeti işletmek için sınırlı iletişim bilgilerini, sosyal hesap verilerini ve kullanım metriklerini işleriz."
+        },
+        "dataCollection": {
+          "heading": "2. Topladığımız veriler",
+          "body": "Sizin sağladığınız bilgiler (hesap profilleri, kimlik doğrulama jetonları, akış ayarları) ile kullanım sırasında oluşan verileri (kayıtlar, performans metrikleri, otomasyon etkileşimleri) toplarız."
+        },
+        "dataUse": {
+          "heading": "3. Verileri nasıl kullanıyoruz",
+          "body": "Verileri hesapları etkinleştirmek, otomasyon akışlarını çalıştırmak, güvenilirliği artırmak, ürün güncellemelerini iletmek ve yasal gerekliliklere uymak için kullanırız. Verilerinizi üçüncü taraflara satmayız."
+        },
+        "rights": {
+          "heading": "4. Tercihleriniz ve haklarınız",
+          "body": "Kişisel verilerinize erişim, düzeltme veya silme talep edebilir, belirli entegrasyonları devre dışı bırakabilir ve hesap bilgilerinizi dilediğiniz zaman destek ekibimiz üzerinden dışa aktarabilirsiniz."
+        },
+        "contact": {
+          "heading": "5. İletişim",
+          "body": "Gizlilikle ilgili sorularınızı privacy@looklab.ai adresine veya 221B Baker Street, London adresindeki merkezimize iletebilirsiniz."
+        }
+      }
+    },
+    "terms": {
+      "title": "Hizmet Şartları",
+      "summary": "LookLab otomasyon platformunu nasıl kullanabileceğinizi belirleyen kurallar.",
+      "lastUpdated": "15 Ocak 2025",
+      "intro": "Bu Hizmet Şartları LookLab ile müşterilerimiz arasındaki bağlayıcı sözleşmeyi oluşturur. Platforma erişerek aşağıda belirtilen sorumluluklara uymayı kabul edersiniz.",
+      "sections": {
+        "introduction": {
+          "heading": "1. Hizmetin kapsamı",
+          "body": "LookLab, web paneli üzerinden sunulan otomasyon şablonlarına, analitiğe ve hesap yönetimi araçlarına abonelik erişimi sağlar."
+        },
+        "accounts": {
+          "heading": "2. Hesap sorumlulukları",
+          "body": "Kayıt bilgilerinizi doğru biçimde girmeli, kimlik bilgilerinizin gizliliğini korumalı ve ekip üyelerinizin bu şartlara uymasını sağlamalısınız. Workspace içinde yapılan işlemlerden siz sorumlusunuz."
+        },
+        "acceptableUse": {
+          "heading": "3. Kabul edilebilir kullanım",
+          "body": "Otomasyonları spam göndermek, üçüncü taraf haklarını ihlal etmek, Instagram politikalarını çiğnemek veya kota sınırlarını aşmak için kullanamazsınız. Kuralları ihlal eden hesaplar askıya alınabilir."
+        },
+        "liability": {
+          "heading": "4. Garanti ve sorumluluk",
+          "body": "Hizmet 'olduğu gibi' sağlanır ve herhangi bir garanti verilmez. Yasal olarak izin verilen ölçüde sorumluluğumuz, mevcut abonelik döneminde ödediğiniz ücretlerle sınırlıdır."
+        },
+        "changes": {
+          "heading": "5. Değişiklikler",
+          "body": "Bu şartları zaman zaman güncelleyebiliriz. Önemli değişiklikleri size bildiririz; LookLab'i kullanmaya devam etmeniz güncellenmiş şartları kabul ettiğiniz anlamına gelir."
+        }
+      }
+    },
+    "dataDeletion": {
+      "title": "Veri Silme",
+      "summary": "Kişisel bilgilerinizin LookLab'dan silinmesini nasıl talep edeceğinizi öğrenin.",
+      "lastUpdated": "15 Ocak 2025",
+      "intro": "Bu Veri Silme Politikası, kişisel verilerinizin sistemlerimizden kaldırılmasını nasıl talep edebileceğinizi açıklar.",
+      "sections": {
+        "overview": {
+          "heading": "1. Silme Hakkınız",
+          "body": "Kişisel verilerinizin silinmesini istediğiniz zaman talep etme hakkınız vardır. Talebinizi GDPR ve benzer veri koruma düzenlemelerine uygun olarak 30 gün içinde işleme alacağız."
+        },
+        "howToRequest": {
+          "heading": "2. Silme Talebi Nasıl Yapılır",
+          "body": "Veri silme talebinde bulunmak için hesap e-posta adresinizle birlikte privacy@looklab.app adresine e-posta gönderin. Kimliğinizi doğrulayıp silme talebinizi işleme alacağız. Ayrıca hesap ayarlarınızdan da silme talebi gönderebilirsiniz."
+        },
+        "whatIsDeleted": {
+          "heading": "3. Hangi Veriler Silinir",
+          "body": "Silme talebi üzerine hesap bilgilerinizi, profil verilerinizi, yüklediğiniz içerikleri, otomasyon yapılandırmalarınızı ve mesaj geçmişinizi sileceğiz. Bazı veriler yasal uyumluluk veya dolandırıcılık önleme amacıyla sınırlı bir süre saklanabilir."
+        },
+        "exceptions": {
+          "heading": "4. Veri Saklama İstisnaları",
+          "body": "Belirli veriler finansal kayıtlar (7 yıla kadar), yasal uyumluluk, anlaşmazlık çözümü ve dolandırıcılık önleme gibi meşru iş amaçları için saklanabilir. Anonimleştirilmiş analitik veriler de saklanabilir."
+        },
+        "contact": {
+          "heading": "5. Bizimle İletişime Geçin",
+          "body": "Veri silme talepleri veya sorularınız için lütfen privacy@looklab.app adresine başvurun. Tüm taleplere 2 iş günü içinde yanıt verecek ve 30 gün içinde silme işlemini tamamlayacağız."
+        }
+      }
     }
   }
 }

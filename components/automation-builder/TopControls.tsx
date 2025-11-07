@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useLocale } from 'next-intl';
 import { useFlowStore } from '@/lib/store/flowStore';
 import { useAccountStore } from '@/lib/store/accountStore';
 import { useUIStore } from '@/lib/store/uiStore';
@@ -29,19 +30,23 @@ const getQuotaStyle = (percentage: number) => {
 
 export function TopControls() {
   const router = useRouter();
+  const locale = useLocale();
   const { currentFlow, isEditMode, hasUnsavedChanges, undo, redo, canUndo, canRedo, saveFlow, enterEditMode, exitEditMode } = useFlowStore();
-  const { getCurrentAccount } = useAccountStore();
+  const { getCurrentAccount, accounts } = useAccountStore();
   const { isSavingFlow, setIsSavingFlow, showNotification, builderView } = useUIStore();
 
   const currentAccount = getCurrentAccount();
   const [flowStatus, setFlowStatus] = useState<FlowStatus>(currentFlow?.status || 'inactive');
+  const [showTooltip, setShowTooltip] = useState(false);
 
   if (!currentFlow || !currentAccount) return null;
 
-  const quotaPercentage = currentAccount.totalQuota > 0
-    ? (currentAccount.usedQuota / currentAccount.totalQuota) * 100
-    : 0;
-  const { bar: totalQuotaBarClass, text: totalQuotaTextClass } = getQuotaStyle(quotaPercentage);
+  // Calculate global total generations across all accounts
+  const globalTotalGenerations = accounts.reduce((sum, acc) => sum + (acc.totalGenerations || 0), 0);
+  const globalTotalLimit = accounts.reduce((sum, acc) => sum + (acc.totalGenerationLimit || 0), 0);
+
+  // Filter only connected accounts for tooltip
+  const connectedAccounts = accounts.filter(acc => acc.isConnected);
 
   const handleSave = async () => {
     setIsSavingFlow(true);
@@ -62,7 +67,7 @@ export function TopControls() {
       const confirmed = confirm('You have unsaved changes. Are you sure you want to leave?');
       if (!confirmed) return;
     }
-    router.push('/automations');
+    router.push(`/${locale}/automations`);
   };
 
   return (
@@ -113,21 +118,52 @@ export function TopControls() {
 
         {/* Bottom Row - Progress & Controls */}
         <div className="flex items-center justify-between">
-          {/* Progress Bar */}
+          {/* Generation Stats with Progress Bar */}
           <div className="flex-1 max-w-md">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-semibold text-neutral-600">Total Quota</span>
-              <span className={`text-xs font-semibold ${totalQuotaTextClass}`}>
-                {currentAccount.totalQuota}
+            <div className="flex items-center justify-between mb-1.5">
+              <span className="text-xs font-semibold text-neutral-700">Toplam Üretim</span>
+              <span className="text-xs font-bold text-primary-600">
+                {globalTotalGenerations.toLocaleString('tr-TR')} / {globalTotalLimit.toLocaleString('tr-TR')}
               </span>
             </div>
-
-            <div className="h-2.5 bg-neutral-200 rounded-full overflow-hidden">
+            <div className="relative">
               <div
-                className={`h-full transition-all duration-300 ${totalQuotaBarClass}`}
-                style={{ width: `${Math.min(quotaPercentage, 100)}%` }}
-              />
+                className="relative h-2.5 bg-neutral-200 rounded-full overflow-hidden cursor-help"
+                onMouseEnter={() => setShowTooltip(true)}
+                onMouseLeave={() => setShowTooltip(false)}
+              >
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-primary-500 to-accent-500 transition-all duration-300"
+                  style={{
+                    width: `${Math.min((globalTotalGenerations / globalTotalLimit) * 100, 100)}%`
+                  }}
+                />
+              </div>
+
+              {/* Tooltip */}
+              {showTooltip && connectedAccounts.length > 0 && (
+                <div className="absolute bottom-full left-0 mb-2 bg-neutral-900 text-white text-xs rounded-lg p-3 shadow-xl z-50 min-w-[280px]">
+                  <div className="space-y-2">
+                    <div className="text-neutral-400 font-semibold mb-2 pb-2 border-b border-neutral-700">
+                      Hesap Bazlı Üretimler
+                    </div>
+                    {connectedAccounts.map(acc => (
+                      <div key={acc.id} className="flex justify-between items-center">
+                        <span className="text-neutral-300">@{acc.username}</span>
+                        <span className="font-semibold text-white">
+                          {(acc.totalGenerations || 0).toLocaleString('tr-TR')} / {(acc.totalGenerationLimit || 0).toLocaleString('tr-TR')}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                  {/* Tooltip arrow */}
+                  <div className="absolute top-full left-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-neutral-900"></div>
+                </div>
+              )}
             </div>
+            <p className="mt-1.5 text-[10px] text-neutral-500">
+              Kalan: {(globalTotalLimit - globalTotalGenerations).toLocaleString('tr-TR')} üretim
+            </p>
           </div>
 
           {/* Status Switcher & Edit Button */}

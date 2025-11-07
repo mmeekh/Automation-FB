@@ -23,13 +23,17 @@ interface AccountStore {
   removeAccount: (accountId: string) => void;
   updateAccount: (accountId: string, updates: Partial<InstagramAccount>) => void;
 
-  // Quota management
-  updateQuota: (accountId: string, usedQuota: number) => void;
-  resetQuota: (accountId: string) => void;
+  // Generation tracking
+  incrementGenerations: (accountId: string, count?: number) => void;
+  resetGenerations: (accountId: string) => void;
 
   // Account actions
   toggleAccountActive: (accountId: string) => void;
   toggleAccountCreditPool: (accountId: string) => void;
+  setAccountAllocation: (accountId: string, percent: number) => void;
+  setAccountQuotaLimit: (accountId: string, limit: number) => void;
+  setAccountTotalGenerationLimit: (accountId: string, limit: number) => void;
+  setAccountQuotaResetInterval: (accountId: string, interval: string) => void;
   reorderAccounts: (sourceAccountId: string, targetAccountId: string) => void;
 }
 
@@ -47,6 +51,7 @@ export const useAccountStore = create<AccountStore>()(
           ...account,
           isActive: account.isActive ?? true,
           includedInCreditPool: account.includedInCreditPool ?? false,
+          creditAllocationPercent: account.creditAllocationPercent ?? 0,
         }));
 
         set({
@@ -89,6 +94,7 @@ export const useAccountStore = create<AccountStore>()(
               ...account,
               isActive: account.isActive ?? true,
               includedInCreditPool: account.includedInCreditPool ?? false,
+              creditAllocationPercent: account.creditAllocationPercent ?? 0,
             },
           ],
         }));
@@ -128,27 +134,29 @@ export const useAccountStore = create<AccountStore>()(
       },
 
       /**
-       * Update quota usage
+       * Increment generation count
        */
-      updateQuota: (accountId, usedQuota) => {
+      incrementGenerations: (accountId, count = 1) => {
         set((state) => ({
           accounts: state.accounts.map((acc) =>
-            acc.id === accountId ? { ...acc, usedQuota } : acc
+            acc.id === accountId
+              ? { ...acc, totalGenerations: acc.totalGenerations + count }
+              : acc
           ),
         }));
       },
 
       /**
-       * Reset quota (called daily)
+       * Reset generation count (if needed for testing)
        */
-      resetQuota: (accountId) => {
+      resetGenerations: (accountId) => {
         set((state) => ({
           accounts: state.accounts.map((acc) =>
             acc.id === accountId
               ? {
                   ...acc,
-                  usedQuota: 0,
-                  quotaResetAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+                  totalGenerations: 0,
+                  lastResetAt: new Date().toISOString(),
                 }
               : acc
           ),
@@ -175,6 +183,58 @@ export const useAccountStore = create<AccountStore>()(
               ? {
                   ...acc,
                   includedInCreditPool: !(acc.includedInCreditPool ?? false),
+                }
+              : acc
+          ),
+        }));
+      },
+
+      setAccountAllocation: (accountId, percent) => {
+        set((state) => ({
+          accounts: state.accounts.map((acc) =>
+            acc.id === accountId
+              ? {
+                  ...acc,
+                  creditAllocationPercent: Math.max(0, Math.min(100, Math.round(percent))),
+                }
+              : acc
+          ),
+        }));
+      },
+
+      setAccountQuotaLimit: (accountId, limit) => {
+        set((state) => ({
+          accounts: state.accounts.map((acc) =>
+            acc.id === accountId
+              ? {
+                  ...acc,
+                  perUserLimit: Math.max(0, limit),
+                }
+              : acc
+          ),
+        }));
+      },
+
+      setAccountTotalGenerationLimit: (accountId, limit) => {
+        set((state) => ({
+          accounts: state.accounts.map((acc) =>
+            acc.id === accountId
+              ? {
+                  ...acc,
+                  totalGenerationLimit: Math.max(0, limit),
+                }
+              : acc
+          ),
+        }));
+      },
+
+      setAccountQuotaResetInterval: (accountId, interval) => {
+        set((state) => ({
+          accounts: state.accounts.map((acc) =>
+            acc.id === accountId
+              ? {
+                  ...acc,
+                  perUserResetInterval: interval,
                 }
               : acc
           ),

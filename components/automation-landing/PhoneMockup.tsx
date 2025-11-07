@@ -9,7 +9,7 @@ interface PhoneMockupProps {
   chatPreview: AutomationContent["chatPreview"];
 }
 
-const AUTO_PLAY_INTERVAL = 2000;
+const AUTO_PLAY_INTERVAL = 1700; // %15 daha hızlı (2000ms * 0.85)
 
 export function PhoneMockup({ chatPreview }: PhoneMockupProps) {
   const [currentIndex, setCurrentIndex] = useState(0);

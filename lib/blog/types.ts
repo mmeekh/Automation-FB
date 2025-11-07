@@ -24,13 +24,19 @@ export interface BlogPost {
   publishedAt: string;
   author: BlogAuthor;
   keywords: string[];
+  lsiKeywords?: string[];
   metaDescription: string;
   sections: BlogSection[];
 }
 
+export type BlogCategoryColor = 'emerald' | 'blue' | 'rose' | 'purple' | 'slate' | 'amber' | 'teal' | 'indigo';
+
 export interface BlogCategory {
+  id: string;
   slug: string;
   title: string;
   description: string;
+  icon: string;
+  color: BlogCategoryColor;
   posts: BlogPost[];
 }

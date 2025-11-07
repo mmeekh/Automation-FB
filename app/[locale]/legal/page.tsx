@@ -11,6 +11,10 @@ const legalDocs = [
     key: 'terms',
     href: 'terms',
   },
+  {
+    key: 'dataDeletion',
+    href: 'data-deletion',
+  },
 ] as const;
 
 export default async function LegalIndexPage({

@@ -6,12 +6,19 @@ import { HeroSection } from '@/components/automation-landing/HeroSection';
 import { FeatureGrid } from '@/components/automation-landing/FeatureGrid';
 import { UseCaseSection } from '@/components/automation-landing/UseCaseSection';
 import { FAQSection } from '@/components/automation-landing/FAQSection';
-import { jewelryContent } from '@/lib/automation-content/jewelry';
-import { Button } from '@/components/ui/Button';
+import { getJewelryContent } from '@/lib/automation-content';
 import { useAutomationLauncher } from '@/lib/hooks/useAutomationLauncher';
+import type { Locale } from '@/i18n/config';
 
-export default function JewelryPage() {
+type JewelryPageProps = {
+  params: { locale: Locale };
+};
+
+export default function JewelryPage({ params }: JewelryPageProps) {
   const launchAutomation = useAutomationLauncher();
+  const content = getJewelryContent(params.locale);
+  const stats = content.stats ?? [];
+  const howItWorks = content.howItWorks;
 
   const handleLaunch = () => {
     launchAutomation('jewelry');
@@ -26,32 +33,24 @@ export default function JewelryPage() {
           <div className="grid lg:grid-cols-2 gap-12 items-start">
             {/* Left: Sticky Phone Mockup */}
             <div className="lg:order-1">
-              <PhoneMockup chatPreview={jewelryContent.chatPreview} />
+              <PhoneMockup chatPreview={content.chatPreview} />
             </div>
 
             {/* Right: Content */}
             <div className="space-y-16 lg:order-2">
-              <HeroSection
-                hero={jewelryContent.hero}
-                title={jewelryContent.title}
-                onLaunch={handleLaunch}
-              />
+              <HeroSection hero={content.hero} title={content.title} onLaunch={handleLaunch} />
 
               {/* Stats Bar */}
-              <div className="grid grid-cols-3 gap-6 py-8 border-y border-neutral-200">
-                <div className="text-center">
-                  <p className="text-3xl font-bold text-primary-600">5 sn</p>
-                  <p className="text-sm text-neutral-600 mt-1">Takı deneme</p>
+              {stats.length > 0 && (
+                <div className="grid grid-cols-3 gap-6 py-8 border-y border-neutral-200">
+                  {stats.map((item) => (
+                    <div className="text-center" key={item.label}>
+                      <p className="text-3xl font-bold text-primary-600">{item.value}</p>
+                      <p className="text-sm text-neutral-600 mt-1">{item.label}</p>
+                    </div>
+                  ))}
                 </div>
-                <div className="text-center">
-                  <p className="text-3xl font-bold text-accent-600">%93</p>
-                  <p className="text-sm text-neutral-600 mt-1">Gerçekçilik oranı</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-3xl font-bold text-primary-600">24/7</p>
-                  <p className="text-sm text-neutral-600 mt-1">Kesintisiz aktif</p>
-                </div>
-              </div>
+              )}
             </div>
           </div>
         </div>
@@ -59,69 +58,50 @@ export default function JewelryPage() {
         {/* Features Section */}
         <div className="bg-white py-24">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <FeatureGrid features={jewelryContent.features} />
+            <FeatureGrid features={content.features} />
           </div>
         </div>
 
         {/* Use Cases Section */}
         <div className="py-24">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <UseCaseSection useCases={jewelryContent.useCases} />
+            <UseCaseSection useCases={content.useCases} />
           </div>
         </div>
 
         {/* How It Works */}
-        <div className="bg-gradient-to-br from-primary-50 via-white to-accent-50 py-24">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center space-y-4 mb-16">
-              <h2 className="text-3xl font-bold text-neutral-900 sm:text-4xl">Nasıl Çalışır?</h2>
-              <p className="text-lg text-neutral-600 max-w-2xl mx-auto">
-                3 basit adımda müşterilerinize AI deneyimi sunun
-              </p>
-            </div>
+        {howItWorks && (
+          <div className="bg-gradient-to-br from-primary-50 via-white to-accent-50 py-24">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="text-center space-y-4 mb-16">
+                <h2 className="text-3xl font-bold text-neutral-900 sm:text-4xl">{howItWorks.title}</h2>
+                <p className="text-lg text-neutral-600 max-w-2xl mx-auto">{howItWorks.subtitle}</p>
+              </div>
 
-            <div className="grid md:grid-cols-3 gap-8">
-              {[
-                {
-                  step: '1',
-                  title: 'Instagram Hesabını Bağla',
-                  description: 'Hesabınızı güvenli şekilde bağlayın. Tek tık ile kurulum tamamlanır.',
-                  icon: '📱',
-                },
-                {
-                  step: '2',
-                  title: 'Otomasyonu Özelleştir',
-                  description: 'Tetikleyici kelimeleri, mesajları ve takı katalogunu yükleyin.',
-                  icon: '⚙️',
-                },
-                {
-                  step: '3',
-                  title: 'Yayına Al',
-                  description: 'Otomasyonu aktif edin. Artık müşterileriniz 7/24 takı deneyebilir.',
-                  icon: '🚀',
-                },
-              ].map((item) => (
-                <div key={item.step} className="relative">
-                  <div className="bg-white rounded-3xl p-8 shadow-lg border-2 border-neutral-100 hover:border-primary-200 transition-all h-full">
-                    <div className="flex items-center gap-4 mb-4">
-                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center text-white font-bold text-xl">
-                        {item.step}
+              <div className="grid md:grid-cols-3 gap-8">
+                {howItWorks.steps.map((item) => (
+                  <div key={item.step} className="relative">
+                    <div className="bg-white rounded-3xl p-8 shadow-lg border-2 border-neutral-100 hover:border-primary-200 transition-all h-full">
+                      <div className="flex items-center gap-4 mb-4">
+                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center text-white font-bold text-xl">
+                          {item.step}
+                        </div>
+                        <span className="text-4xl">{item.icon}</span>
                       </div>
-                      <span className="text-4xl">{item.icon}</span>
+                      <h3 className="text-xl font-bold text-neutral-900 mb-3">{item.title}</h3>
+                      <p className="text-neutral-600 leading-relaxed">{item.description}</p>
                     </div>
-                    <h3 className="text-xl font-bold text-neutral-900 mb-3">{item.title}</h3>
-                    <p className="text-neutral-600 leading-relaxed">{item.description}</p>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* FAQ Section */}
         <div className="py-24">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <FAQSection faq={jewelryContent.faq} />
+            <FAQSection faq={content.faq} />
           </div>
         </div>
       </main>

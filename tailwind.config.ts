@@ -93,6 +93,9 @@ const config: Config = {
         'float': 'float 6s ease-in-out infinite',
         'glow': 'glow-pulse 4s ease-in-out infinite',
         'blob': 'blob 7s infinite',
+        'shimmer': 'shimmer 2s infinite',
+        'slide-in-right': 'slide-in-right 0.3s ease-out',
+        'slide-out-right': 'slide-out-right 0.2s ease-in',
         first: "moveVertical 15s ease infinite", // 30s -> 15s (2x hızlı)
         second: "moveInCircle 10s reverse infinite", // 20s -> 10s (2x hızlı)
         third: "moveInCircle 20s linear infinite", // 40s -> 20s (2x hızlı)
@@ -151,6 +154,18 @@ const config: Config = {
           "100%": {
             transform: "translateY(-50%)",
           },
+        },
+        shimmer: {
+          '0%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(100%)' },
+        },
+        'slide-in-right': {
+          '0%': { transform: 'translateX(100%)', opacity: '0' },
+          '100%': { transform: 'translateX(0)', opacity: '1' },
+        },
+        'slide-out-right': {
+          '0%': { transform: 'translateX(0)', opacity: '1' },
+          '100%': { transform: 'translateX(100%)', opacity: '0' },
         },
       },
     },

@@ -20,14 +20,17 @@ export interface InstagramAccount {
   activeFlowsCount: number; // how many flows are active
   totalInteractions: number; // all-time
 
-  // Quota management
-  totalQuota: number; // daily limit
-  usedQuota: number; // how much used today
-  quotaResetAt: string; // when quota resets
+  // Generation tracking
+  totalGenerations: number; // all-time generation count for this account
+  totalGenerationLimit?: number; // total generation limit for this account (max generations it can do)
+  perUserLimit: number; // per-user generation limit (1-10 or 999999 for unlimited)
+  perUserResetInterval?: string; // how often per-user quota resets (e.g., "1m", "24h", "7d", "1M")
+  lastResetAt?: string; // when quota was last reset
 
   // Account preferences
   isActive?: boolean;
   includedInCreditPool?: boolean;
+  creditAllocationPercent?: number;
 
   // Settings
   settings: {
@@ -51,10 +54,10 @@ export interface AccountConnectionRequest {
 }
 
 /**
- * Account quota update
+ * Account generation tracking
  */
-export interface QuotaUpdate {
+export interface GenerationRecord {
   accountId: string;
-  usedQuota: number;
+  totalGenerations: number;
   timestamp: string;
 }

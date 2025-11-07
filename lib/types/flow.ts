@@ -69,6 +69,9 @@ export interface MessageNodeData extends BaseNodeData {
   messageText: string;
   imageUrl: string | null;
   buttons: Button[];
+  secondaryText?: string;
+  maxRetries?: number;
+  statusText?: string;
 }
 
 /**

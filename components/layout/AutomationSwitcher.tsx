@@ -8,6 +8,7 @@ import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 
 import { AutomationRegistry } from '@/lib/automations';
 import type { AutomationTemplate } from '@/lib/automations/types';
+import { useLocale, useTranslations } from 'next-intl';
 
 import { useAccountStore } from '@/lib/store/accountStore';
 import {
@@ -17,6 +18,8 @@ import {
 import { useFlowStore } from '@/lib/store/flowStore';
 import { useUIStore } from '@/lib/store/uiStore';
 import { getMockFlowByTemplateId } from '@/lib/mock-data/flows';
+import { useRouter } from 'next/navigation';
+import { AUTOMATION_EMOJIS } from '@/lib/constants';
 
 interface AutomationSwitcherProps {
   collapsed: boolean;
@@ -24,19 +27,15 @@ interface AutomationSwitcherProps {
   onRequestCollapse?: () => void;
 }
 
-const emojiMap: Record<string, string> = {
-  'instagram-bald-to-haired': '💇',
-  'instagram-aesthetic-bald': '✨',
-  'instagram-car-color-changer': '🚗',
-  'car-wheels': '⚙️',
-  'pet-products': '🐾',
-  'wall-paint': '🎨',
-  'furniture-placement': '🛋️',
-  'clothes-tryon': '👗',
-  jewelry: '💍',
-};
-
 export function AutomationSwitcher({ collapsed, onMenuStateChange, onRequestCollapse }: AutomationSwitcherProps) {
+  const router = useRouter();
+  const locale = useLocale();
+  const t = useTranslations('automationSwitcher');
+  const withLocale = useCallback(
+    (path: string) => `/${locale}${path.startsWith('/') ? path : `/${path}`}`,
+    [locale]
+  );
+
   // Accounts & active automations
   const { accounts, currentAccountId, loadAccounts } = useAccountStore();
   const accountId = currentAccountId ?? accounts[0]?.id ?? FALLBACK_ACCOUNT_ID;
@@ -52,10 +51,12 @@ export function AutomationSwitcher({ collapsed, onMenuStateChange, onRequestColl
   const setCurrentAutomation = useActiveAutomationStore((s) => s.setCurrentAutomation);
   const removeAutomation = useActiveAutomationStore((s) => s.removeAutomation);
   const toggleAutomationActive = useActiveAutomationStore((s) => s.toggleAutomationActive);
+  const toggleAutomationFollowerMode = useActiveAutomationStore((s) => s.toggleAutomationFollowerMode);
   const reorderAutomations = useActiveAutomationStore((s) => s.reorderAutomations);
 
   // Builder / flow
   const loadFlow = useFlowStore((s) => s.loadFlow);
+  const applyFollowerMode = useFlowStore((s) => s.applyFollowerMode);
   const showBuilderFlow = useUIStore((s) => s.showBuilderFlow);
 
   // Local UI state
@@ -205,19 +206,8 @@ export function AutomationSwitcher({ collapsed, onMenuStateChange, onRequestColl
 
   // Actions
   const handleAutomationSelect = (templateId: string) => {
-    const existing = sanitizedAutomations.find((a) => a.templateId === templateId);
-
-    if (!existing) {
-      addAutomation(accountId, templateId);
-      setCurrentAutomation(accountId, templateId);
-      const flow = getMockFlowByTemplateId(templateId);
-      if (flow) loadFlow(flow.id);
-    } else {
-      setCurrentAutomation(accountId, templateId);
-      loadFlow(existing.flowId);
-    }
-
-    showBuilderFlow();
+    // Builder sayfasına templateId ile yönlendir
+    router.push(withLocale(`/automations/builder/${templateId}`));
     setIsDropdownOpen(false);
   };
 
@@ -246,7 +236,7 @@ export function AutomationSwitcher({ collapsed, onMenuStateChange, onRequestColl
         {sanitizedAutomations.length > 0 && (
           <div
             className="relative group"
-            title={`${sanitizedAutomations.length} Active Automations`}
+            title={t('collapsedTooltip', { count: sanitizedAutomations.length })}
           >
             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center shadow-md">
               <SparklesIcon className="w-5 h-5 text-white" />
@@ -264,12 +254,19 @@ export function AutomationSwitcher({ collapsed, onMenuStateChange, onRequestColl
             type="button"
             onClick={handleOpenDropdown}
             className="w-10 h-10 rounded-full border-2 border-dashed border-neutral-300 hover:border-primary-400 flex items-center justify-center transition-all hover:bg-primary-50 group"
-            title="Add Automation"
+            title={t('collapsedAdd')}
           >
             <PlusIcon className="w-5 h-5 text-neutral-400 group-hover:text-primary-500" />
           </button>
           {isDropdownOpen && (
-            <Dropdown templates={availableTemplates} onSelect={handleAutomationSelect} />
+            <Dropdown
+              templates={availableTemplates}
+              onSelect={handleAutomationSelect}
+              heading={t('dropdownHeading')}
+              emptyLabel={t('allActive')}
+              seeAllLabel={t('seeAll')}
+              seeAllHref={withLocale('/automations')}
+            />
           )}
         </div>
       </div>
@@ -281,7 +278,7 @@ export function AutomationSwitcher({ collapsed, onMenuStateChange, onRequestColl
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <span className="text-xs font-semibold text-neutral-500 uppercase tracking-wider">
-          Active Automations
+          {t('sectionTitle')}
         </span>
 
         <div className="relative z-50" ref={addDropdownRef}>
@@ -289,12 +286,19 @@ export function AutomationSwitcher({ collapsed, onMenuStateChange, onRequestColl
             type="button"
             onClick={handleOpenDropdown}
             className="w-6 h-6 rounded-full border-2 border-dashed border-neutral-300 hover:border-primary-400 flex items-center justify-center transition-all hover:bg-primary-50 group"
-            title="Add Automation"
+            title={t('addAutomation')}
           >
             <PlusIcon className="w-3 h-3 text-neutral-400 group-hover:text-primary-500" />
           </button>
           {isDropdownOpen && (
-            <Dropdown templates={availableTemplates} onSelect={handleAutomationSelect} />
+            <Dropdown
+              templates={availableTemplates}
+              onSelect={handleAutomationSelect}
+              heading={t('dropdownHeading')}
+              emptyLabel={t('allActive')}
+              seeAllLabel={t('seeAll')}
+              seeAllHref={withLocale('/automations')}
+            />
           )}
         </div>
       </div>
@@ -302,12 +306,12 @@ export function AutomationSwitcher({ collapsed, onMenuStateChange, onRequestColl
       <div className="space-y-2">
         {sanitizedAutomations.length === 0 ? (
           <div className="text-center py-4">
-            <p className="text-xs text-neutral-500">No active automations</p>
+            <p className="text-xs text-neutral-500">{t('empty.title')}</p>
             <Link
-              href="/automations"
+              href={withLocale('/automations')}
               className="text-xs text-primary-600 hover:text-primary-700 font-medium mt-2 inline-block"
             >
-              Browse Templates
+              {t('empty.browse')}
             </Link>
           </div>
         ) : (
@@ -318,12 +322,13 @@ export function AutomationSwitcher({ collapsed, onMenuStateChange, onRequestColl
             const label = flow?.name ?? template?.name ?? automation.templateId;
             const description = flow?.description ?? template?.description ?? '';
             const emoji =
-              emojiMap[automation.templateId] ??
-              emojiMap[automation.templateId.replace('instagram-', '')] ??
+              AUTOMATION_EMOJIS[automation.templateId] ??
+              AUTOMATION_EMOJIS[automation.templateId.replace('instagram-', '')] ??
               '⚡';
 
             const isCurrent = currentTemplateId === automation.templateId;
             const isActive = automation.isActive;
+            const followerModeEnabled = automation.followerModeEnabled ?? false;
             const isDragging = draggingId === automation.templateId;
             const isDragOver =
               dragOverId === automation.templateId && draggingId !== automation.templateId;
@@ -338,6 +343,15 @@ export function AutomationSwitcher({ collapsed, onMenuStateChange, onRequestColl
               event.stopPropagation();
               toggleAutomationActive(accountId, automation.templateId);
               // Menü açık kalsın
+            };
+
+            const handleFollowerModeToggle = (event: ReactMouseEvent<HTMLButtonElement>) => {
+              event.stopPropagation();
+              const nextValue = !followerModeEnabled;
+              toggleAutomationFollowerMode(accountId, automation.templateId);
+              if (isCurrent) {
+                applyFollowerMode(nextValue);
+              }
             };
 
             const handleRemoveAutomation = (event: ReactMouseEvent<HTMLButtonElement>) => {
@@ -409,7 +423,7 @@ export function AutomationSwitcher({ collapsed, onMenuStateChange, onRequestColl
                       type="button"
                       onClick={menuToggle}
                       className="relative flex h-9 w-9 items-center justify-center rounded-lg text-neutral-400 transition hover:bg-neutral-100 hover:text-neutral-700 focus:outline-none focus:ring-2 focus:ring-primary-200"
-                      aria-label={isMenuOpen ? 'Close automation actions' : 'Automation actions'}
+                      aria-label={isMenuOpen ? t('menu.close') : t('menu.open')}
                     >
                       {isMenuOpen ? (
                         <XMarkIcon className="h-5 w-5" />
@@ -432,7 +446,7 @@ export function AutomationSwitcher({ collapsed, onMenuStateChange, onRequestColl
                       onClick={handleDeactivateClick}
                       className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-semibold text-neutral-700 transition hover:bg-neutral-100"
                     >
-                      {isActive ? 'Pasifleştir' : 'Aktif et'}
+                      {isActive ? t('menu.deactivate') : t('menu.activate')}
                       <div
                         className={`flex items-center justify-center w-5 h-5 rounded-full border-2 ${
                           isActive ? 'border-red-500' : 'border-green-500'
@@ -447,10 +461,31 @@ export function AutomationSwitcher({ collapsed, onMenuStateChange, onRequestColl
                     </button>
                     <button
                       type="button"
+                      onClick={handleFollowerModeToggle}
+                      className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-semibold text-neutral-700 transition hover:bg-neutral-100"
+                    >
+                      <span>{t('menu.followerMode')}</span>
+                      <span className="flex items-center gap-2">
+                        <span
+                          className={`flex h-5 w-5 items-center justify-center rounded-full border-2 ${
+                            followerModeEnabled ? 'border-green-500' : 'border-neutral-300'
+                          }`}
+                          aria-hidden
+                        >
+                          <span
+                            className={`h-2.5 w-2.5 rounded-full ${
+                              followerModeEnabled ? 'bg-green-500' : 'bg-neutral-300'
+                            }`}
+                          />
+                        </span>
+                      </span>
+                    </button>
+                    <button
+                      type="button"
                       onClick={handleRemoveAutomation}
                       className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm text-red-600 transition hover:bg-red-50"
                     >
-                      Otomasyonu kaldır
+                      {t('menu.remove')}
                     </button>
                   </div>
                 )}
@@ -462,14 +497,16 @@ export function AutomationSwitcher({ collapsed, onMenuStateChange, onRequestColl
 
       {availableTemplates.length === 0 && (
         <div className="rounded-xl border border-dashed border-neutral-200 bg-neutral-50 px-3 py-2 text-xs text-neutral-500">
-          Tüm otomasyonlar eklendi. Yeni şablonlar için{' '}
-          <Link
-            href="/automations"
-            className="text-primary-600 hover:text-primary-700 font-medium"
-          >
-            kütüphaneyi inceleyin
-          </Link>
-          .
+          {t.rich('allAdded', {
+            link: (chunk) => (
+              <Link
+                href={withLocale('/automations')}
+                className="text-primary-600 hover:text-primary-700 font-medium"
+              >
+                {chunk}
+              </Link>
+            ),
+          })}
         </div>
       )}
     </div>
@@ -479,13 +516,17 @@ export function AutomationSwitcher({ collapsed, onMenuStateChange, onRequestColl
 type DropdownProps = {
   templates: AutomationTemplate[];
   onSelect: (templateId: string) => void;
+  heading: string;
+  emptyLabel: string;
+  seeAllLabel: string;
+  seeAllHref: string;
 };
 
-function Dropdown({ templates, onSelect }: DropdownProps) {
+function Dropdown({ templates, onSelect, heading, emptyLabel, seeAllLabel, seeAllHref }: DropdownProps) {
   if (templates.length === 0) {
     return (
       <div className="absolute right-0 mt-2 w-60 rounded-xl border border-neutral-200 bg-white p-4 text-sm text-neutral-500 shadow-lg z-50">
-        Tüm otomasyonlar aktif.
+        {emptyLabel}
       </div>
     );
   }
@@ -493,7 +534,7 @@ function Dropdown({ templates, onSelect }: DropdownProps) {
   return (
     <div className="absolute right-0 mt-2 w-64 rounded-xl border border-neutral-200 bg-white py-2 shadow-xl z-50 pointer-events-auto">
       <p className="px-3 pb-2 text-xs font-semibold uppercase tracking-wider text-neutral-400">
-        Yeni otomasyon ekle
+        {heading}
       </p>
       <div className="max-h-72 overflow-auto">
         {templates.map((template) => (
@@ -514,10 +555,10 @@ function Dropdown({ templates, onSelect }: DropdownProps) {
       </div>
       <div className="border-t border-neutral-100 px-3 pt-2">
         <Link
-          href="/automations"
+          href={seeAllHref}
           className="text-xs font-medium text-primary-600 hover:text-primary-700"
         >
-          Tüm şablonları gör →
+          {seeAllLabel}
         </Link>
       </div>
     </div>

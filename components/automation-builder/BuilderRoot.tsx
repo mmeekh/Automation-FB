@@ -24,11 +24,12 @@ export function BuilderRoot({ initialTemplateId, initialView }: BuilderRootProps
   const user = useStore((state) => state.user);
   const openAuthModal = useStore((state) => state.openAuthModal);
 
-  const { currentFlow, loadFlow, clearFlow, isEditMode } = useFlowStore((state) => ({
+  const { currentFlow, loadFlow, clearFlow, isEditMode, applyFollowerMode } = useFlowStore((state) => ({
     currentFlow: state.currentFlow,
     loadFlow: state.loadFlow,
     clearFlow: state.clearFlow,
     isEditMode: state.isEditMode,
+    applyFollowerMode: state.applyFollowerMode,
   }));
 
   const {
@@ -140,7 +141,10 @@ export function BuilderRoot({ initialTemplateId, initialView }: BuilderRootProps
     }
 
     if (currentAutomation) {
-      loadFlow(currentAutomation.flowId);
+      // Only load if it's a different flow or no flow is loaded
+      if (!currentFlow || currentFlow.id !== currentAutomation.flowId) {
+        loadFlow(currentAutomation.flowId);
+      }
       if (builderView !== 'analytics') {
         showBuilderFlow();
       }
@@ -150,11 +154,20 @@ export function BuilderRoot({ initialTemplateId, initialView }: BuilderRootProps
   }, [
     user,
     currentAutomation,
+    currentFlow,
     loadFlow,
     clearFlow,
     builderView,
     showBuilderFlow,
   ]);
+
+  useEffect(() => {
+    if (!currentAutomation || !currentFlow) {
+      return;
+    }
+
+    applyFollowerMode(currentAutomation.followerModeEnabled ?? false);
+  }, [applyFollowerMode, currentAutomation, currentFlow]);
 
   if (!user) {
     return null;

@@ -51,7 +51,20 @@
       "Bash(done)",
       "Bash(docker cp:*)",
       "Bash(for file in car-color-change.ts car-wheels.ts clothes-tryon.ts furniture-placement.ts jewelry.ts pet-products.ts wall-paint.ts)",
-      "Bash(do echo \"=== $file ===\")"
+      "Bash(do echo \"=== $file ===\")",
+      "Bash(timeout 10 bash:*)",
+      "Bash(for file in aesthetic-ai.ts hair-style-change.ts car-color-change.ts car-wheels.ts furniture-placement.ts jewelry.ts pet-products.ts wall-paint.ts)",
+      "Bash(if [ ! -f .env.local ])",
+      "Bash(then echo \"Creating .env.local...\")",
+      "Bash(else echo \".env.local already exists\")",
+      "Bash(fi)",
+      "Bash(docker ps:*)",
+      "Bash(docker restart:*)",
+      "Bash(nul)",
+      "Bash(git checkout:*)",
+      "Bash(python:*)",
+      "Bash(node cleanup-readme.js:*)",
+      "Bash(node cleanup-readme2.js:*)"
     ],
     "deny": [],
     "ask": []

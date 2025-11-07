@@ -23,8 +23,9 @@ export function getAutomationSlug(templateId: string): string {
 /**
  * Get landing page URL from template ID
  */
-export function getAutomationLandingUrl(templateId: string): string {
+export function getAutomationLandingUrl(templateId: string, locale?: string): string {
   const slug = getAutomationSlug(templateId);
-  return `/automations/${slug}`;
+  const basePath = `/automations/${slug}`;
+  return locale ? `/${locale}${basePath}` : basePath;
 }
 

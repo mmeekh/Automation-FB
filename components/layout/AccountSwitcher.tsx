@@ -9,6 +9,7 @@ import {
 } from 'react';
 import type { DragEvent as ReactDragEvent } from 'react';
 import Image from 'next/image';
+import { useLocale, useTranslations } from 'next-intl';
 import { useAccountStore } from '@/lib/store/accountStore';
 import { useUIStore } from '@/lib/store/uiStore';
 import { PlusIcon } from '@heroicons/react/24/solid';
@@ -48,6 +49,9 @@ export function AccountSwitcher({ collapsed, onMenuStateChange, onRequestCollaps
   } = useAccountStore();
   const reorderAccounts = useAccountStore((s) => s.reorderAccounts);
   const { openAddAccountModal } = useUIStore();
+  const t = useTranslations('accountSwitcher');
+  const locale = useLocale();
+  const numberFormatter = useMemo(() => new Intl.NumberFormat(locale), [locale]);
 
   const connectedAccounts = accounts.filter((acc) => acc.isConnected);
   const currentAccount = accounts.find((acc) => acc.id === currentAccountId);
@@ -219,7 +223,7 @@ export function AccountSwitcher({ collapsed, onMenuStateChange, onRequestCollaps
         <button
           onClick={openAddAccountModal}
           className="w-10 h-10 rounded-full border-2 border-dashed border-neutral-300 hover:border-primary-400 flex items-center justify-center transition-all hover:bg-primary-50 group"
-          title="Add Instagram Account"
+          title={t('collapsedAdd')}
         >
           <PlusIcon className="w-5 h-5 text-neutral-400 group-hover:text-primary-500" />
         </button>
@@ -233,7 +237,7 @@ export function AccountSwitcher({ collapsed, onMenuStateChange, onRequestCollaps
       {/* Header */}
       <div className="flex items-center justify-between">
         <span className="text-xs font-semibold text-neutral-500 uppercase tracking-wider">
-          Instagram Accounts
+          {t('title')}
         </span>
         <div className="flex items-center gap-2">
           <button
@@ -243,18 +247,18 @@ export function AccountSwitcher({ collapsed, onMenuStateChange, onRequestCollaps
                 ? 'bg-primary-50 border-primary-200 text-primary-600'
                 : 'text-neutral-500 hover:bg-neutral-100'
             }`}
-            title="Account actions"
+            title={t('accountActions')}
             type="button"
             aria-pressed={showAccountActions}
           >
-            <span role="img" aria-label="Settings">
+            <span role="img" aria-label={t('menuIconLabel')}>
               ⚙️
             </span>
           </button>
           <button
             onClick={openAddAccountModal}
             className="w-6 h-6 rounded-full border-2 border-dashed border-neutral-300 hover:border-primary-400 flex items-center justify-center transition-all hover:bg-primary-50 group"
-            title="Add Account"
+            title={t('addAccount')}
             type="button"
           >
             <PlusIcon className="w-3 h-3 text-neutral-400 group-hover:text-primary-500" />
@@ -270,13 +274,8 @@ export function AccountSwitcher({ collapsed, onMenuStateChange, onRequestCollaps
           const isDragging = draggingId === account.id;
           const isDragOver = dragOverId === account.id && draggingId !== account.id;
           const poolEnabled = account.poolEnabled ?? account.includedInCreditPool ?? false;
-          const { bar: quotaBarClass } = getQuotaClasses(
-            account.usedQuota,
-            account.totalQuota
-          );
-          const quotaPercentage = account.totalQuota > 0
-            ? Math.min((account.usedQuota / account.totalQuota) * 100, 100)
-            : 0;
+          const totalGenerations = account.totalGenerations || 0;
+          const formattedGenerations = numberFormatter.format(totalGenerations);
 
           return (
             <div
@@ -364,7 +363,7 @@ export function AccountSwitcher({ collapsed, onMenuStateChange, onRequestCollaps
                         setOpenMenuId((prev) => (prev === account.id ? null : account.id));
                       }}
                       className="relative flex h-9 w-9 items-center justify-center rounded-lg text-neutral-400 transition hover:bg-neutral-100 hover:text-neutral-700 focus:outline-none focus:ring-2 focus:ring-primary-200"
-                      aria-label={isMenuOpen ? 'Close account actions' : 'Account actions'}
+                      aria-label={isMenuOpen ? t('toggle.close') : t('toggle.open')}
                     >
                       {isMenuOpen ? (
                         <XMarkIcon className="h-5 w-5" />
@@ -387,7 +386,7 @@ export function AccountSwitcher({ collapsed, onMenuStateChange, onRequestCollaps
                           }}
                           className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-semibold text-neutral-700 transition hover:bg-neutral-100"
                         >
-                          {account.isActive ? 'Pasifleştir' : 'Aktif et'}
+                          {account.isActive ? t('menu.deactivate') : t('menu.activate')}
                           <div
                             className={`flex items-center justify-center w-5 h-5 rounded-full border-2 ${
                               account.isActive ? 'border-red-500' : 'border-green-500'
@@ -408,7 +407,7 @@ export function AccountSwitcher({ collapsed, onMenuStateChange, onRequestCollaps
                           }}
                           className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm text-neutral-700 transition hover:bg-neutral-100"
                         >
-                          <span>Ortak kredi havuzu</span>
+                          <span>{t('menu.sharedPool')}</span>
                           <div
                             className={`flex items-center justify-center w-5 h-5 rounded-full border-2 ${
                               poolEnabled ? 'border-green-500' : 'border-red-500'
@@ -430,42 +429,23 @@ export function AccountSwitcher({ collapsed, onMenuStateChange, onRequestCollaps
                           }}
                           className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm text-red-600 transition hover:bg-red-50"
                         >
-                          Hesabı kaldır
+                          {t('menu.remove')}
                         </button>
                       </div>
                     )}
                   </div>
                 ) : (
                   <div className={`text-right ${poolEnabled ? 'transform -translate-y-[1px]' : ''}`}>
-                    <p
-                      className={`text-xs font-semibold text-neutral-900 ${poolEnabled ? 'mt-[-2px]' : ''}`}
-                    >
-                      {account.usedQuota}/{account.totalQuota}
+                    <p className="text-xs font-semibold text-primary-600">
+                      {t('generations', { count: formattedGenerations })}
                     </p>
-                    {poolEnabled ? (
+                    {poolEnabled && (
                       <div className="mt-1 flex justify-end">
                         <div className="flex flex-col items-center">
-                          <div className="w-12 h-1.5 bg-neutral-200 rounded-full overflow-hidden">
-                            <div
-                              className={`h-full transition-all ${quotaBarClass}`}
-                              style={{
-                                width: `${quotaPercentage}%`,
-                              }}
-                            />
-                          </div>
-                          <span className="mt-[2px] text-[11px] font-semibold leading-none text-[#16a34a]">
-                            Pool
+                          <span className="text-[11px] font-semibold leading-none text-[#16a34a]">
+                            {t('poolLabel')}
                           </span>
                         </div>
-                      </div>
-                    ) : (
-                      <div className="w-12 h-1.5 bg-neutral-200 rounded-full overflow-hidden mt-1 ml-auto">
-                        <div
-                          className={`h-full transition-all ${quotaBarClass}`}
-                          style={{
-                            width: `${quotaPercentage}%`,
-                          }}
-                        />
                       </div>
                     )}
                   </div>
@@ -480,7 +460,7 @@ export function AccountSwitcher({ collapsed, onMenuStateChange, onRequestCollaps
       {connectedAccounts.length > 3 && (
         <div className="pt-4 border-t border-neutral-100">
           <p className="text-xs text-center text-neutral-500">
-            {connectedAccounts.length} accounts connected
+            {t('connected', { count: connectedAccounts.length })}
           </p>
         </div>
       )}

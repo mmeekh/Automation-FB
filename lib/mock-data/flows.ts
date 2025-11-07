@@ -103,13 +103,13 @@ export const hairRestorationFlow: AutomationFlow = {
       data: {
         label: 'Stil Sorusu',
         icon: 'ART',
-        messageText: 'Harika! Hangi sac stilini denemek istersiniz?',
+        messageText: 'Begendigin sac stilinin fotografini gonder',
         imageUrl: '/media/hairchange2.webp',
-        buttons: [
-          { id: 'btn-blonde', text: 'Sari', type: 'whatsapp' },
-          { id: 'btn-red', text: 'Kizil', type: 'whatsapp' },
-          { id: 'btn-dark', text: 'Koyu Renk', type: 'whatsapp' },
-        ],
+        secondaryText:
+          'Internetten hosuna giden bir gorsel olabilir ya da katalogdan sececegin ornekleri gonderebilirsin.',
+        statusText: 'Waiting for image from contact...',
+        maxRetries: 3,
+        buttons: [],
         statistics: {
           sent: 28,
           delivered: 28,
@@ -460,13 +460,13 @@ export const aestheticAIFlow: AutomationFlow = {
       data: {
         label: 'Stil Secimi',
         icon: 'ART',
-        messageText: 'Hangi estetik tarzini denemek istersiniz? Dogal glam, soft-contour veya dramatic.',
+        messageText: 'Denemek istedigin makyaj stilinin ornek fotografini yukle',
         imageUrl: '/media/kel2.webp',
-        buttons: [
-          { id: 'btn-aesthetic-natural', text: 'Dogal Glam', type: 'whatsapp' },
-          { id: 'btn-aesthetic-soft', text: 'Soft Contour', type: 'whatsapp' },
-          { id: 'btn-aesthetic-drama', text: 'Dramatic', type: 'whatsapp' },
-        ],
+        secondaryText:
+          'Dogal glam, soft contour ya da dramatik ilhamini ekleyebilirsin. Yoksa katalogdan secim yapabilirsin.',
+        statusText: 'Waiting for image from contact...',
+        maxRetries: 3,
+        buttons: [],
         statistics: {
           sent: 50,
           delivered: 50,
@@ -614,13 +614,13 @@ export const petProductsFlow: AutomationFlow = {
       data: {
         label: 'Stil Secimi',
         icon: 'ART',
-        messageText: 'Harika! Tasma, kiyafet veya aksesuar seciniz. Her stil icin ozellestirilmis bedenler mevcuttur.',
+        messageText: 'Evcil hayvanin icin begendigin aksesuarin fotografini gonder',
         imageUrl: '/media/pet2.webp',
-        buttons: [
-          { id: 'btn-pet-leash', text: 'Tasma', type: 'whatsapp' },
-          { id: 'btn-pet-outfit', text: 'Kiyafet', type: 'whatsapp' },
-          { id: 'btn-pet-accessory', text: 'Aksesuar', type: 'whatsapp' },
-        ],
+        secondaryText:
+          'Tasma, kiyafet veya aksesuar ornekleri olabilir. Ilham icin kendi paylasimlarimizi da gonderebiliriz.',
+        statusText: 'Waiting for image from contact...',
+        maxRetries: 3,
+        buttons: [],
         statistics: { sent: 40, delivered: 40, deliveredRate: 100, opened: 39, openedRate: 97 },
       } as MessageNodeData,
     },
@@ -1015,13 +1015,13 @@ export const furniturePlacementFlow: AutomationFlow = {
       data: {
         label: 'Stil Seçimi',
         icon: 'ART',
-        messageText: 'Hangi yerlesim stilini denemek istersiniz? Minimal, modern veya sıcak nordic?',
+        messageText: 'Odan icin begendigin mobilya stilinin referans fotografini yukle',
         imageUrl: '/media/furniture2.webp',
-        buttons: [
-          { id: 'btn-furniture-minimal', text: 'Minimal', type: 'whatsapp' },
-          { id: 'btn-furniture-modern', text: 'Modern', type: 'whatsapp' },
-          { id: 'btn-furniture-nordic', text: 'Nordic', type: 'whatsapp' },
-        ],
+        secondaryText:
+          'Minimal, modern veya nordic ilhamini paylasabilirsin. Ilham icin showroom gorsellerimizden de destek alabilirsin.',
+        statusText: 'Waiting for image from contact...',
+        maxRetries: 3,
+        buttons: [],
         statistics: { sent: 45, delivered: 45, deliveredRate: 100, opened: 44, openedRate: 98 },
       } as MessageNodeData,
     },
@@ -1146,13 +1146,13 @@ export const clothesTryOnFlow: AutomationFlow = {
       data: {
         label: 'Stil Secimi',
         icon: 'ART',
-        messageText: 'Harika! Hangi kategoriyi denemek istersiniz? Gece elbisesi, günlük veya ofis.',
+        messageText: 'Denemek istedigin elbisenin ilham fotografini gonder',
         imageUrl: '/media/dress2.webp',
-        buttons: [
-          { id: 'btn-clothes-evening', text: 'Gece', type: 'whatsapp' },
-          { id: 'btn-clothes-casual', text: 'Günlük', type: 'whatsapp' },
-          { id: 'btn-clothes-office', text: 'Ofis', type: 'whatsapp' },
-        ],
+        secondaryText:
+          'Gece, gunluk veya ofis stili olabilir. Ilhamini paylasirsan AI ona gore kombin hazirlar.',
+        statusText: 'Waiting for image from contact...',
+        maxRetries: 3,
+        buttons: [],
         statistics: { sent: 32, delivered: 32, deliveredRate: 100, opened: 31, openedRate: 97 },
       } as MessageNodeData,
     },
@@ -1277,13 +1277,13 @@ export const jewelryFlow: AutomationFlow = {
       data: {
         label: 'Takı Kategorisi',
         icon: 'ART',
-        messageText: 'Harika! Kolye, küpe veya yüzükten birini secin. Her biri icin cesitli stiller var.',
+        messageText: 'Denemek istedigin takinin ilham fotografini gonder',
         imageUrl: '/media/jewel2.webp',
-        buttons: [
-          { id: 'btn-jewelry-necklace', text: 'Kolye', type: 'whatsapp' },
-          { id: 'btn-jewelry-earrings', text: 'Küpe', type: 'whatsapp' },
-          { id: 'btn-jewelry-ring', text: 'Yüzük', type: 'whatsapp' },
-        ],
+        secondaryText:
+          'Kolye, kupe veya yuzuk ornekleri yukleyebilirsin. Ilham icin vitrin gorsellerimizi de paylasiriz.',
+        statusText: 'Waiting for image from contact...',
+        maxRetries: 3,
+        buttons: [],
         statistics: { sent: 23, delivered: 23, deliveredRate: 100, opened: 22, openedRate: 96 },
       } as MessageNodeData,
     },

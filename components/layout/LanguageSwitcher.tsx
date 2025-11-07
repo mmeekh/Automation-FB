@@ -2,7 +2,7 @@
 
 import { useLocale } from 'next-intl';
 import { createSharedPathnamesNavigation } from 'next-intl/navigation';
-import { locales, type Locale } from '@/i18n/request';
+import { locales, type Locale } from '@/i18n/config';
 
 const { useRouter, usePathname } = createSharedPathnamesNavigation({ locales });
 

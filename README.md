@@ -4,38 +4,12 @@
 
 ---
 
-
-## 🐳 **ÖNEMLİ: Docker ile Çalıştırma**
-
-Bu proje **Docker ile çalıştırılmak üzere tasarlanmıştır**. NPM ile ayrı ayrı çalıştırılmamaktadır.
-
-### Docker Komutları:
-
-```bash
-# Container'ı başlat
-docker-compose up -d
-
-# Logları izle
-docker logs automation-fb-frontend -f
-
-# Durdur
-docker-compose down
-
-# Cache temizleyip yeniden başlat (404 hatası vs. için)
-docker-compose down && rm -rf .next node_modules/.cache && docker-compose up -d
-```
-
-**Erişim**: http://localhost:3003
-
----
-
 ## İçindekiler
 
 - [Proje Hakkında](#proje-hakk1nda)
 - [Temel Özellikler](#temel-Özellikler)
 - [AI Otomasyon ^ablonlar1](#ai-otomasyon-şablonları)
 - [Mimari ve Teknolojiler](#mimari-ve-teknolojiler)
-- [Kurulum](#kurulum)
 - [Proje Yapısı](#proje-yapısı)
 - [Detaylı Bileşen Açıklamaları](#detayl1-bile_en-a�1klamalar1)
 - [State Management (Zustand)](#state-management-zustand)
@@ -43,7 +17,6 @@ docker-compose down && rm -rf .next node_modules/.cache && docker-compose up -d
 - [Response Tracking Sistemi](#response-tracking-sistemi)
 - [Çoklu Dil Destei](#Çoklu-dil-destei)
 - [API Endpoints](#api-endpoints)
-- [Docker Yapılandırması](#docker-yap1land1rmas1)
 - [Geliştirme Rehberi](#geliçtirme-rehberi)
 - [AI Geliştirme G�nl��](#ai-geliçtirme-g�nl��)
 
@@ -103,7 +76,8 @@ docker-compose down && rm -rf .next node_modules/.cache && docker-compose up -d
 - **Hesap Bazl1 İstatistikler**: Her hesap için ayr1 metrikler
 - **Takip�i Filtresi**: Sadece takip�ilere �zel otomasyon se�enei
 
-### < Internationalization
+### <
+ Internationalization
 - **Çoklu Dil Destei**: TR (T�rk�e) ve EN (0ngilizce)
 - **next-intl**: SEO-friendly URL yapısı (�rn: `/tr/dashboard`, `/en/dashboard`)
 - **Dinamik Dil Deiçtirme**: Runtime'da dil deiçtirme
@@ -223,379 +197,6 @@ Platform, 9 farklı sekt�r için hazır AI otomasyon şablonları i�erir:
 - **Docker**: Container teknolojisi
 - **Docker Compose**: Multi-container orchestration
 - **Node.js 20 Alpine**: Lightweight base image
-
----
-
-## Kurulum
-
-### Gereksinimler
-
-```json
-{
-  "node": ">=18.0.0",
-  "npm": ">=9.0.0"
-}
-```
-
-### 1. Yerel Geliştirme Kurulumu
-
-```bash
-# Projeyi klonlay1n
-git clone <repository-url>
-cd Automation-FB
-
-# Ba1ml1l1klar1 y�kleyin
-npm install
-
-# Geliştirme sunucusunu ba_lat1n
-npm run dev
-
-# Taray1c1n1zda a�1n
-# http://localhost:3003
-```
-
-### 2. Docker ile Kurulum
-
-```bash
-# Container'1 build edin ve ba_lat1n
-docker-compose up
-
-# Arka planda �al1_t1rma
-docker-compose up -d
-
-# Loglar1 takip etme
-docker logs automation-fb-frontend -f
-
-# Durdurma
-docker-compose down
-
-# Temizleme (volume'ler dahil)
-docker-compose down -v
-```
-
-### 3. Production Build
-
-```bash
-# Production build olu_tur
-npm run build
-
-# Production sunucusu ba_lat
-npm start
-```
-
-### Available Scripts
-
-```bash
-# Geliştirme sunucusu (port 3003)
-npm run dev
-
-# Production build
-npm run build
-
-# Production sunucusu ba_lat
-npm start
-
-# ESLint kontrol�
-npm run lint
-
-# TypeScript tip kontrol�
-npm run type-check
-```
-
----
-
-## Proje Yapısı
-
-```
-Automation-FB/
-
-   📊 app/                          # Next.js App Router
-      📊 [locale]/                # Locale-based routes (TR/EN)
-         📊 dashboard/           # Dashboard ana sayfas1
-            page.tsx            # Dashboard view
-      
-         📊 analytics/           # Analitik sayfas1
-            page.tsx            # Analitik dashboard
-      
-         📊 automations/         # Otomasyon y�netimi
-            page.tsx            # Otomasyon listesi
-            📊 builder/         # Otomasyon ak1_ edit�r�
-               📊 [id]/
-                   page.tsx    # Flow builder sayfas1
-         
-            📊 [id]/            # Tekil otomasyon sayfalar1
-               📊 customize/   # özelleştirme wizard
-                  page.tsx
-               📊 responses/   # Yan1t takip sayfas1
-                   page.tsx
-         
-            📊 [specific]/      # �zel otomasyon sayfalar1
-                hair-style-change/
-                car-color-change/
-                pet-products/
-                car-wheels/
-                wall-paint/
-                furniture-placement/
-                clothes-tryon/
-                jewelry/
-                aesthetic-ai/
-                    layout.tsx   # Layout wrapper
-                    page.tsx     # Landing page
-      
-         📊 settings/            # Ayarlar sayfas1
-         📊 automation-settings/ # Otomasyon ayarlar1
-         📊 help/                # Yard1m sayfas1
-         📊 pricing/             # Fiyatland1rma
-         📊 blog/                # Blog sistemi
-            page.tsx            # Blog listesi
-            📊 [slug]/
-                page.tsx        # Blog detay
-      
-         📊 legal/               # Yasal sayfalar
-            layout.tsx
-            page.tsx            # Legal hub
-            📊 privacy/
-            📊 terms/
-            📊 data-deletion/
-      
-         layout.tsx              # Locale layout
-         page.tsx                # Home (redirect to dashboard)
-         not-found.tsx           # 404 page
-   
-      📊 (legal)/                 # Route group (no locale)
-         layout.tsx              # Legal layout
-         📊 privacy/
-         📊 terms/
-         📊 data-deletion/
-   
-      📊 api/                     # API Routes
-         📊 automations/
-            route.ts            # CRUD operations
-         📊 templates/
-            route.ts            # Template listing
-         📊 settings/
-            route.ts            # Settings API
-         📊 analytics/
-             route.ts            # Analytics data
-   
-      📊 favicon.ico/
-         route.ts                # Dynamic favicon
-   
-      layout.tsx                  # Root layout
-      page.tsx                    # Root page (redirect)
-      not-found.tsx               # Global 404
-      globals.css                 # Global styles
-
-   📊 components/                  # React Components
-   
-      📊 automation-builder/      # Flow Builder Bileşenleri
-         FlowCanvas.tsx          # ReactFlow canvas
-         TopControls.tsx         # Save, test, deploy controls
-      
-         📊 nodes/               # Custom ReactFlow Nodes
-            index.ts
-            BaseNode.tsx        # Shared node logic
-            TriggerNode.tsx     # Trigger ba_lang1� node
-            MessageNode.tsx     # Message g�nderme node
-            ImageRequestNode.tsx # Image talep node
-            ResultNode.tsx      # Result g�sterme node
-      
-         📊 editors/             # Node Edit Panels
-             index.ts
-             NodeEditorPanel.tsx # Ana editor panel
-             TriggerEditor.tsx   # Trigger node ayarlar1
-             MessageEditor.tsx   # Message node editor
-             ImageRequestEditor.tsx
-             ResultEditor.tsx
-             ButtonBuilder.tsx   # Buton olu_turucu
-             ImageUploader.tsx   # Görsel y�kleme
-             EmojiPicker.tsx     # Emoji se�ici
-   
-      📊 customization/           # özelleştirme Wizard
-         CustomizationModal.tsx  # Modal wrapper
-         CustomizationSidebar.tsx # Adım navigasyonu
-         ProgressBar.tsx         # 0lerleme �ubuu
-         AutomationFlowVisualizer.tsx # Flow Önizleme
-         FlowStepEditor.tsx      # Step d�zenleyici
-         useCustomizationWizard.ts # Wizard hook
-         index.ts
-      
-         📊 steps/               # Wizard Steps
-             WelcomeStep.tsx     # 1. Ho_geldin
-             SettingsStep.tsx    # 2. Temel ayarlar
-             MessagesStep.tsx    # 3. Mesaj d�zenleme
-             ImagesStep.tsx      # 4. Görsel ayarlar1
-             PreviewStep.tsx     # 5. Önizleme
-             ReviewStep.tsx      # 6. Kay1t
-   
-      📊 automations/             # Otomasyon Bileşenleri
-         index.ts
-         AutomationCard.tsx      # Kart görünümü
-         CollapsedView.tsx       # K���k kart
-         DetailView.tsx          # Detay g�r�n�m
-         ChatMessage.tsx         # Mesaj bubble
-         ImageMessage.tsx        # Görsel mesaj
-         ResultMessage.tsx       # Sonu� mesaj1
-   
-      📊 automation-landing/      # Otomasyon Landing Page
-         HeroSection.tsx         # Hero b�l�m�
-         FeatureGrid.tsx         # Özellikler grid
-         UseCaseSection.tsx      # Kullanım senaryolar1
-         FAQSection.tsx          # SSS
-         PhoneMockup.tsx         # Telefon mockup
-   
-      📊 responses/               # Response Tracking
-         index.ts
-         ResponsesTable.tsx      # Ana tablo
-         ResponseRow.tsx         # Tablo sat1r1
-         ResponseFilters.tsx     # Filtreleme paneli
-         Pagination.tsx          # Sayfalama
-         ConversationModal.tsx   # Konuşma detay
-         ImagePreviewModal.tsx   # Görsel Önizleme
-   
-      📊 dashboard/               # Dashboard Components
-         index.ts
-         MetricCard.tsx          # Metrik kartlar1
-         QuickAction.tsx         # H1zl1 aksiyon kartlar1
-         FloatingFeatureCard.tsx # Animasyonlu kartlar
-         ChartCard.tsx           # Grafik kartlar1
-         ProgressBar.tsx         # 0lerleme �ubuu
-         AITemplateCard.tsx      # Template kartlar1
-   
-      📊 analytics/               # Analytics Components
-         index.ts
-         AnalyticsMetricCard.tsx # Metrik kartlar1
-         RevenueInsights.tsx     # Gelir analizleri
-         UserBehaviorChart.tsx   # Kullanıcı davran1_ grafikleri
-         SocialImpactSection.tsx # Sosyal medya etki
-         RealtimeHighlights.tsx  # Gerçek zamanl1 önemli olaylar
-   
-      📊 templates/               # Template Components
-         TemplateThumbnails.tsx  # Thumbnail görseller
-   
-      📊 layout/                  # Layout Components
-         index.ts
-         Header.tsx              # Ana header
-         LanguageSwitcher.tsx    # Dil deiçtirici
-         AccountSwitcher.tsx     # Hesap deiçtirici
-         AutomationSidebar.tsx   # Yan men�
-         AutomationSwitcher.tsx  # Otomasyon deiçtirici
-   
-      📊 auth/                    # Authentication
-         AuthModal.tsx           # Giriç/Kay1t modal
-   
-      📊 ui/                      # Generic UI Components
-         Button.tsx              # Button component
-         Card.tsx                # Card components
-         Input.tsx               # Input component
-         FlipWords.tsx           # Animasyonlu kelime deiçtirme
-         TextHoverEffect.tsx     # Hover efektleri
-         CardSpotlight.tsx       # Spotlight efekti
-         AnimatedAvatarTooltip.tsx # Avatar tooltip
-         BackgroundGradientAnimation.tsx
-   
-      Footer.tsx                  # Footer component
-      TwoFactorInput.tsx          # 2FA input
-      index.ts                    # Component exports
-
-   📊 lib/                         # Core Logic & Utilities
-   
-      📊 automations/             # Automation Logic
-         index.ts
-         types.ts                # Automation types
-         registry.ts             # Automation registry
-      
-         📊 templates/           # Template Definitions
-            index.ts
-            hair-restoration.ts
-            aesthetic-ai.ts
-            car-color-changer.ts
-            pet-products.ts
-            car-wheels.ts
-            wall-paint.ts
-            furniture-placement.ts
-            clothes-tryon.ts
-            jewelry.ts
-      
-         📊 flows/               # Flow Setup Scripts
-             📊 hair-restoration/
-                 setup.ts
-   
-      📊 automation-content/      # Automation Content Data
-         index.ts
-         types.ts                # Content types
-         hair-style-change.ts
-         aesthetic-ai.ts
-         car-color-change.ts
-         car-wheels.ts
-         clothes-tryon.ts
-         furniture-placement.ts
-         jewelry.ts
-         pet-products.ts
-         wall-paint.ts
-   
-      📊 store/                   # Zustand State Management
-         automationStore.ts      # Automation state
-         accountStore.ts         # Account management
-         flowStore.ts            # Flow builder state
-         uiStore.ts              # UI state (modals, etc.)
-   
-      📊 types/                   # TypeScript Type Definitions
-         index.ts                # Main exports
-         flow.ts                 # Flow & Node types
-         response.ts             # Response tracking types
-         customization.ts        # Customization wizard types
-         analytics.ts            # Analytics types
-         account.ts              # Account types
-   
-      📊 mock-data/               # Development Mock Data
-         index.ts
-         accounts.ts             # Mock accounts
-         responses.ts            # Mock responses
-         flows.ts                # Mock flows
-   
-      📊 utils/                   # Utility Functions
-         date.ts                 # Date utilities
-         automation-slugs.ts     # URL slug helpers
-   
-      api.ts                      # API client functions
-      auth.ts                     # Authentication logic
-      store.ts                    # Main store export
-      types.ts                    # Common types
-      utils.ts                    # Common utilities
-
-   📊 messages/                    # i18n Translation Files
-      en.json                     # English translations
-      tr.json                     # Turkish translations
-
-   📊 i18n/                        # i18n Configuration
-      request.ts                  # Locale configuration
-
-   📊 public/                      # Static Assets
-      images/                     # Image assets
-      icons/                      # Icon files
-      fonts/                      # Custom fonts
-
-   📊 styles/                      # (If separate style files)
-
-   middleware.ts                   # Next.js Middleware (i18n)
-   next.config.js                  # Next.js configuration
-   tailwind.config.ts              # Tailwind CSS config
-   postcss.config.js               # PostCSS config
-   tsconfig.json                   # TypeScript config
-   .eslintrc.json                  # ESLint config
-
-   docker-compose.yml              # Docker Compose config
-   Dockerfile                      # Docker image definition
-   .dockerignore                   # Docker ignore file
-
-   package.json                    # Dependencies
-   package-lock.json               # Lock file
-   .gitignore                      # Git ignore
-   .editorconfig                   # Editor config
-   .prettierrc                     # Prettier config (if exists)
-   README.md                       # Bu dosya
-```
 
 ---
 
@@ -1148,75 +749,6 @@ DELETE /api/accounts/:id             # Disconnect account
 
 ---
 
-## Docker Yapılandırması
-
-### docker-compose.yml
-
-```yaml
-services:
-  frontend:
-    image: node:20-alpine
-    container_name: automation-fb-frontend
-    working_dir: /app
-    command: sh -c "npm install && npm run dev -- --hostname 0.0.0.0 --port 3003"
-    ports:
-      - "3003:3003"
-    environment:
-      - NODE_ENV=development
-      - NEXT_PUBLIC_API_URL=http://localhost:3004
-      - WATCHPACK_POLLING=true
-      - CHOKIDAR_USEPOLLING=true
-    volumes:
-      - .:/app
-      - /app/node_modules
-    restart: unless-stopped
-    networks:
-      - automation-network
-
-networks:
-  automation-network:
-    driver: bridge
-```
-
-### Environment Variables
-
-```env
-NODE_ENV=development
-NEXT_PUBLIC_API_URL=http://localhost:3004
-WATCHPACK_POLLING=true
-CHOKIDAR_USEPOLLING=true
-```
-
-### Docker Commands
-
-```bash
-# Container ba_lat
-docker-compose up
-
-# Arka planda �al1_t1r
-docker-compose up -d
-
-# Loglar1 izle
-docker logs automation-fb-frontend -f
-
-# Container'a shell ile balan
-docker exec -it automation-fb-frontend sh
-
-# Durdur
-docker-compose down
-
-# Volume'lerle birlikte temizle
-docker-compose down -v
-
-# Yeniden build
-docker-compose up --build
-
-# Sadece frontend servisini ba_lat
-docker-compose up frontend
-```
-
----
-
 ## Geliştirme Rehberi
 
 ### Naming Conventions
@@ -1279,51 +811,11 @@ className="bg-blue-500 hover:bg-blue-600"
 
 ### Component Development Workflow
 
-```bash
-# 1. Yeni component olu_tur
-# components/my-feature/MyComponent.tsx
 
-# 2. Type tan1mlar1 yap
-# lib/types/my-feature.ts
-
-# 3. Store gerekiyorsa olu_tur
-# lib/store/myFeatureStore.ts
-
-# 4. Mock data ekle (development için)
-# lib/mock-data/my-feature.ts
-
-# 5. API endpoint ekle
-# app/api/my-feature/route.ts
-
-# 6. i18n ekle
-# messages/en.json + messages/tr.json
-
-# 7. Test et
-npm run dev
-
-# 8. Type check
-npm run type-check
-
-# 9. Lint
-npm run lint
-```
 
 ### Git Workflow
 
-```bash
-# Feature branch olu_tur
-git checkout -b feature/my-feature
 
-# Deiçiklikleri commit et
-git add .
-git commit -m "feat: add my feature"
-
-# Push et
-git push origin feature/my-feature
-
-# Pull request a�
-# GitHub üzerinden PR olu_tur
-```
 
 ### Commit Message Format
 
@@ -1371,136 +863,7 @@ const HeavyComponent = lazy(() => import('./HeavyComponent'));
 
 ### Bundle Size
 
-```bash
-# Bundle analizi
-npm run build
 
-# Output:
-# - /dashboard: 150 kB
-# - /automations: 200 kB (ReactFlow a1r)
-# - /analytics: 180 kB (Chart library)
-```
-
----
-
-## Troubleshooting
-
-### Port �ak1_mas1
-
-```bash
-# Port 3003 me_gul ise
-npm run dev -- -p 3005
-# veya docker-compose.yml'de port'u deiçtir
-```
-
-### Node Modules Hatas1
-
-```bash
-# node_modules'� sil ve yeniden y�kle
-rm -rf node_modules package-lock.json
-npm install
-```
-
-### Docker Sorunlar1
-
-```bash
-# Container'lar1 durdur ve temizle
-docker-compose down -v
-docker system prune -a
-
-# Yeniden ba_lat
-docker-compose up --build
-```
-
-### TypeScript Hatas1
-
-```bash
-# Cache temizle
-rm -rf .next
-npm run type-check
-npm run dev
-```
-
----
-
-## Deployment
-
-### Vercel Deployment (�nerilen)
-
-```bash
-# Vercel CLI y�kle
-npm i -g vercel
-
-# Deploy et
-vercel
-
-# Production deploy
-vercel --prod
-```
-
-**Environment Variables** (Vercel Dashboard):
-```
-NEXT_PUBLIC_API_URL=https://api.yourdomain.com
-NODE_ENV=production
-```
-
-### Docker Production
-
-```dockerfile
-# Production Dockerfile
-FROM node:20-alpine AS builder
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci --only=production
-COPY . .
-RUN npm run build
-
-FROM node:20-alpine AS runner
-WORKDIR /app
-ENV NODE_ENV=production
-COPY --from=builder /app/next.config.js ./
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
-
-EXPOSE 3003
-CMD ["npm", "start"]
-```
-
----
-
-## Katk1da Bulunma
-
-1. Fork yap1n
-2. Feature branch olu_turun (`git checkout -b feature/amazing-feature`)
-3. Commit yap1n (`git commit -m 'feat: add amazing feature'`)
-4. Push edin (`git push origin feature/amazing-feature`)
-5. Pull Request a�1n
-
-### Code Review Checklist
-
-- [ ] TypeScript hatalar1 yok
-- [ ] ESLint uyar1lar1 temiz
-- [ ] Responsive tasar1m test edildi
-- [ ] Çoklu dil destei eklendi (TR/EN)
-- [ ] Comments eklendi (karma_1k logikler için)
-- [ ] Performance etkileri deerlendirildi
-- [ ] Git commit mesajlar1 d�zg�n formatlanm1_
-
----
-
-## Lisans
-
-Private Project - All Rights Reserved
-
----
-
-## 0letiçim
-
-- **Proje Sahibi**: [Ad1n1z]
-- **Email**: [email@example.com]
-- **GitHub**: [github-username]
 
 ---
 

@@ -2,9 +2,16 @@
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { AutomationFlow, FlowNode, FlowEdge, FlowNodeData } from '../types/flow';
+import {
+  AutomationFlow,
+  FlowNode,
+  FlowEdge,
+  FlowNodeData,
+  MessageNodeData,
+} from '../types/flow';
 import { getMockFlowById } from '../mock-data/flows';
 import {  applyNodeChanges, applyEdgeChanges, NodeChange, EdgeChange } from 'reactflow';
+import { NODE_HORIZONTAL_GAP, DEFAULT_MAX_RETRIES } from '../constants';
 
 function cloneNode(node: FlowNode): FlowNode {
   return {
@@ -46,6 +53,9 @@ interface FlowStore {
   // Current flow being edited
   currentFlow: AutomationFlow | null;
 
+  // Flow cache to persist changes per flow
+  flowCache: Record<string, AutomationFlow>;
+
   // Undo/redo history
   history: HistoryState[];
   historyIndex: number;
@@ -77,6 +87,7 @@ interface FlowStore {
   redo: () => void;
   canUndo: () => boolean;
   canRedo: () => boolean;
+  applyFollowerMode: (enabled: boolean) => void;
 
   // Save changes
   saveFlow: () => Promise<void>;
@@ -94,6 +105,7 @@ export const useFlowStore = create<FlowStore>()(
   persist(
     (set, get) => ({
       currentFlow: null,
+      flowCache: {},
       history: [],
       historyIndex: -1,
       maxHistorySize: 50,
@@ -102,8 +114,25 @@ export const useFlowStore = create<FlowStore>()(
 
       /**
        * Load a flow by ID
+       * First checks cache, then loads from mock data
        */
       loadFlow: (flowId) => {
+        const { flowCache } = get();
+
+        // Check if we have a cached version with edits
+        if (flowCache[flowId]) {
+          const cachedFlow = cloneFlow(flowCache[flowId]);
+          set({
+            currentFlow: cachedFlow,
+            history: [{ nodes: cloneNodes(cachedFlow.nodes), edges: cloneEdges(cachedFlow.edges) }],
+            historyIndex: 0,
+            isEditMode: false,
+            hasUnsavedChanges: false,
+          });
+          return;
+        }
+
+        // Load from mock data
         const sourceFlow = getMockFlowById(flowId);
         if (!sourceFlow) return;
 
@@ -137,15 +166,20 @@ export const useFlowStore = create<FlowStore>()(
        * Handle React Flow node changes
        */
       onNodesChange: (changes) => {
-        const { currentFlow } = get();
+        const { currentFlow, flowCache } = get();
         if (!currentFlow) return;
 
         const newNodes = applyNodeChanges(changes, currentFlow.nodes) as FlowNode[];
+        const updatedFlow = {
+          ...currentFlow,
+          nodes: newNodes,
+        };
 
         set({
-          currentFlow: {
-            ...currentFlow,
-            nodes: newNodes,
+          currentFlow: updatedFlow,
+          flowCache: {
+            ...flowCache,
+            [currentFlow.id]: updatedFlow,
           },
           hasUnsavedChanges: true,
         });
@@ -160,15 +194,20 @@ export const useFlowStore = create<FlowStore>()(
        * Handle React Flow edge changes
        */
       onEdgesChange: (changes) => {
-        const { currentFlow } = get();
+        const { currentFlow, flowCache } = get();
         if (!currentFlow) return;
 
         const newEdges = applyEdgeChanges(changes, currentFlow.edges) as FlowEdge[];
+        const updatedFlow = {
+          ...currentFlow,
+          edges: newEdges,
+        };
 
         set({
-          currentFlow: {
-            ...currentFlow,
-            edges: newEdges,
+          currentFlow: updatedFlow,
+          flowCache: {
+            ...flowCache,
+            [currentFlow.id]: updatedFlow,
           },
           hasUnsavedChanges: true,
         });
@@ -180,7 +219,7 @@ export const useFlowStore = create<FlowStore>()(
        * Update node data
        */
       updateNodeData: (nodeId, data) => {
-        const { currentFlow } = get();
+        const { currentFlow, flowCache } = get();
         if (!currentFlow) return;
 
         const newNodes = currentFlow.nodes.map((node) =>
@@ -195,10 +234,16 @@ export const useFlowStore = create<FlowStore>()(
             : node
         );
 
+        const updatedFlow = {
+          ...currentFlow,
+          nodes: newNodes,
+        };
+
         set({
-          currentFlow: {
-            ...currentFlow,
-            nodes: newNodes,
+          currentFlow: updatedFlow,
+          flowCache: {
+            ...flowCache,
+            [currentFlow.id]: updatedFlow,
           },
           hasUnsavedChanges: true,
         });
@@ -278,6 +323,206 @@ export const useFlowStore = create<FlowStore>()(
           currentFlow: {
             ...currentFlow,
             edges: currentFlow.edges.filter((e) => e.id !== edgeId),
+          },
+          hasUnsavedChanges: true,
+        });
+
+        get().addToHistory();
+      },
+
+      applyFollowerMode: (enabled) => {
+        const { currentFlow } = get();
+        if (!currentFlow) return;
+
+        const imageNode = currentFlow.nodes.find((node) => node.type === 'image_request');
+        if (!imageNode) {
+          if ((currentFlow.settings?.followerOnly ?? false) === enabled) {
+            return;
+          }
+
+          set({
+            currentFlow: {
+              ...currentFlow,
+              settings: {
+                ...currentFlow.settings,
+                followerOnly: enabled,
+              },
+            },
+            hasUnsavedChanges: true,
+          });
+          get().addToHistory();
+          return;
+        }
+
+        const followerNodeId = `follower-gate-${imageNode.id}`;
+        const existingFollowerNode = currentFlow.nodes.find((node) => node.id === followerNodeId);
+        const incomingEdgesToImage = currentFlow.edges.filter(
+          (edge) => edge.target === imageNode.id && edge.source !== followerNodeId
+        );
+        const primarySourceNode = incomingEdgesToImage
+          .map((edge) => currentFlow.nodes.find((node) => node.id === edge.source))
+          .find((node): node is FlowNode => Boolean(node));
+
+        let nextNodes = [...currentFlow.nodes];
+        let nextEdges = [...currentFlow.edges];
+        let mutated = false;
+
+        const sourceNode = primarySourceNode ?? null;
+
+        if (enabled) {
+          // Follower node'unun x pozisyonu: kaynak node ile image node arasında
+          const followerX = sourceNode
+            ? sourceNode.position.x + NODE_HORIZONTAL_GAP
+            : imageNode.position.x - NODE_HORIZONTAL_GAP;
+
+          // Follower node'dan sonraki tüm node'ları sağa kaydır
+          if (!existingFollowerNode) {
+            // Image node ve sonrasındaki tüm node'ları sağa kaydır
+            nextNodes = nextNodes.map((node) => {
+              if (node.position.x >= imageNode.position.x) {
+                mutated = true;
+                return {
+                  ...node,
+                  position: {
+                    ...node.position,
+                    x: node.position.x + NODE_HORIZONTAL_GAP,
+                  },
+                };
+              }
+              return node;
+            });
+
+            // Follower node'u oluştur
+            const followerNodeData: MessageNodeData = {
+              label: 'Takipçi modu kontrolü',
+              icon: '👥',
+              messageText:
+                'Harika! Otomasyon başlamadan önce hesabımızı takip ettiğinden emin olalım. Takip butonuna dokunduğunda sistem otomatik kontrol eder.',
+              secondaryText:
+                'Takip tamamlandıysa aşağıdaki düğmeye basın; doğrulanmazsa akış devam etmez.',
+              statusText: 'Takip doğrulanıyor...',
+              imageUrl: null,
+              buttons: [
+                {
+                  id: 'btn-follow-confirm',
+                  text: 'Takip ettim ✅',
+                  type: 'whatsapp',
+                },
+              ],
+              statistics: {
+                sent: 0,
+                delivered: 0,
+                deliveredRate: 0,
+                opened: 0,
+                openedRate: 0,
+              },
+              maxRetries: DEFAULT_MAX_RETRIES,
+            };
+
+            const followerNode: FlowNode = {
+              id: followerNodeId,
+              type: 'message',
+              position: {
+                x: followerX,
+                y: imageNode.position.y, // Aynı y seviyesinde
+              },
+              data: followerNodeData,
+            };
+
+            nextNodes.push(followerNode);
+            mutated = true;
+          }
+
+          // Edge'leri güncelle
+          const updatedEdges = nextEdges.map((edge) => {
+            if (edge.target === imageNode.id && edge.source !== followerNodeId) {
+              mutated = true;
+              return {
+                ...edge,
+                target: followerNodeId,
+              };
+            }
+            return edge;
+          });
+
+          nextEdges = updatedEdges;
+
+          // Follower'dan image node'a edge ekle
+          if (
+            !nextEdges.some(
+              (edge) => edge.source === followerNodeId && edge.target === imageNode.id
+            )
+          ) {
+            nextEdges.push({
+              id: `e-${followerNodeId}-${imageNode.id}`,
+              source: followerNodeId,
+              target: imageNode.id,
+              type: 'default',
+            });
+            mutated = true;
+          }
+        } else {
+          // Takipçi modunu kapat
+          if (existingFollowerNode) {
+            // Follower node'u kaldır
+            nextNodes = nextNodes.filter((node) => node.id !== followerNodeId);
+
+            // Follower node'dan sonraki tüm node'ları sola kaydır
+            nextNodes = nextNodes.map((node) => {
+              if (node.position.x > existingFollowerNode.position.x) {
+                mutated = true;
+                return {
+                  ...node,
+                  position: {
+                    ...node.position,
+                    x: node.position.x - NODE_HORIZONTAL_GAP,
+                  },
+                };
+              }
+              return node;
+            });
+
+            mutated = true;
+          }
+
+          // Edge'leri güncelle
+          nextEdges = nextEdges
+            .filter((edge) => {
+              if (edge.source === followerNodeId && edge.target === imageNode.id) {
+                mutated = true;
+                return false;
+              }
+              return true;
+            })
+            .map((edge) => {
+              if (edge.target === followerNodeId) {
+                mutated = true;
+                return {
+                  ...edge,
+                  target: imageNode.id,
+                };
+              }
+              return edge;
+            });
+        }
+
+        if ((currentFlow.settings?.followerOnly ?? false) !== enabled) {
+          mutated = true;
+        }
+
+        if (!mutated) {
+          return;
+        }
+
+        set({
+          currentFlow: {
+            ...currentFlow,
+            nodes: nextNodes,
+            edges: nextEdges,
+            settings: {
+              ...currentFlow.settings,
+              followerOnly: enabled,
+            },
           },
           hasUnsavedChanges: true,
         });
@@ -428,8 +673,13 @@ export const useFlowStore = create<FlowStore>()(
     }),
     {
       name: 'flow-storage',
-      // Don't persist history (too large)
-      partialize: () => ({}),
+      // Persist currentFlow and flowCache but not history (too large)
+      partialize: (state) => ({
+        currentFlow: state.currentFlow,
+        flowCache: state.flowCache,
+        isEditMode: state.isEditMode,
+        hasUnsavedChanges: state.hasUnsavedChanges,
+      }),
     }
   )
 );

@@ -11,7 +11,9 @@
     "automations": "Automations",
     "analytics": "Analytics",
     "blog": "Blog",
-    "pricing": "Pricing"
+    "pricing": "Pricing",
+    "settings": "Settings",
+    "help": "Help"
   },
   "auth": {
     "login": "Sign In",
@@ -246,6 +248,34 @@
           "body": "We may update these Terms before launch. Material updates will be communicated via email or in-app notification, and continued use of LookLab after changes go live signifies acceptance."
         }
       }
+    },
+    "dataDeletion": {
+      "title": "Data Deletion",
+      "summary": "Learn how to request deletion of your personal information from LookLab.",
+      "lastUpdated": "15 January 2025",
+      "intro": "This Data Deletion Policy explains how you can request the removal of your personal data from our systems.",
+      "sections": {
+        "overview": {
+          "heading": "1. Your Right to Delete",
+          "body": "You have the right to request deletion of your personal data at any time. We will process your request within 30 days in compliance with GDPR and similar data protection regulations."
+        },
+        "howToRequest": {
+          "heading": "2. How to Request Deletion",
+          "body": "To request data deletion, please email privacy@looklab.app with your account email address. We will verify your identity and process your deletion request. You can also submit a deletion request through your account settings."
+        },
+        "whatIsDeleted": {
+          "heading": "3. What Data We Delete",
+          "body": "Upon deletion request, we will remove your account information, profile data, uploaded content, automation configurations, and message history. Some data may be retained for legal compliance or fraud prevention for a limited period."
+        },
+        "exceptions": {
+          "heading": "4. Data Retention Exceptions",
+          "body": "Certain data may be retained for legitimate business purposes such as financial records (up to 7 years), legal compliance, dispute resolution, and fraud prevention. Anonymized analytics data may also be retained."
+        },
+        "contact": {
+          "heading": "5. Contact Us",
+          "body": "For data deletion requests or questions, please contact privacy@looklab.app. We will respond to all requests within 2 business days and complete deletion within 30 days."
+        }
+      }
     }
   },
   "contactPage": {
@@ -410,6 +440,174 @@
       "creditUsage": "{used}/{total} credits used",
       "lastSync": "Last sync {time}",
       "multiAutomation": "Enabled for multi-account automations"
+    }
+  },
+  "footer": {
+    "brandDescription": "Instagram automation made simple. Transform your DMs with AI-powered workflows.",
+    "sections": {
+      "about": {
+        "title": "About",
+        "links": {
+          "aboutUs": "About Us",
+          "blog": "Blog",
+          "pricing": "Pricing"
+        }
+      },
+      "legal": {
+        "title": "Legal",
+        "links": {
+          "privacy": "Privacy Policy",
+          "terms": "Terms of Service",
+          "deletion": "Data Deletion"
+        }
+      },
+      "social": {
+        "title": "Social Media",
+        "links": {
+          "linkedin": "LinkedIn",
+          "instagram": "Instagram"
+        }
+      }
+    },
+    "copyright": "Copyright {year} LookLab. All rights reserved."
+  },
+  "accountSwitcher": {
+    "collapsedAdd": "Add Instagram Account",
+    "title": "Instagram Accounts",
+    "accountActions": "Account actions",
+    "addAccount": "Add Account",
+    "menuIconLabel": "Settings",
+    "toggle": {
+      "open": "Account actions",
+      "close": "Close account actions"
+    },
+    "menu": {
+      "activate": "Activate",
+      "deactivate": "Deactivate",
+      "sharedPool": "Shared credit pool",
+      "remove": "Remove account"
+    },
+    "poolLabel": "Pool",
+    "generations": "{count} runs",
+    "connected": "{count, plural, one {# account connected} other {# accounts connected}}"
+  },
+  "header": {
+    "userMenu": {
+      "profile": "Profile"
+    }
+  },
+  "automationSwitcher": {
+    "collapsedTooltip": "{count, plural, one {# active automation} other {# active automations}}",
+    "collapsedAdd": "Add automation",
+    "sectionTitle": "Active Automations",
+    "addAutomation": "Add Automation",
+    "empty": {
+      "title": "No active automations",
+      "browse": "Browse Templates"
+    },
+    "menu": {
+      "open": "Automation actions",
+      "close": "Close automation actions",
+      "activate": "Activate",
+      "deactivate": "Deactivate",
+      "followerMode": "Follower mode",
+      "remove": "Remove automation"
+    },
+    "allAdded": "All automations added. {link} for new templates.",
+    "allAddedLink": "Explore the library",
+    "allActive": "All automations are active.",
+    "dropdownHeading": "Add new automation",
+    "seeAll": "See all templates \u2192"
+  },
+  "legal": {
+    "title": "Legal Center",
+    "intro": "Everything you need to know about how we process data and the commitments we make to our customers.",
+    "updated": "Last updated {date}",
+    "viewDocument": "View document",
+    "back": "Back to legal center",
+    "privacy": {
+      "title": "Privacy Policy",
+      "summary": "Learn how we collect, use and protect personal information within LookLab.",
+      "lastUpdated": "15 January 2025",
+      "intro": "We built LookLab to automate Instagram workflows in a way that keeps customer data private, secure and under your control. This policy explains the data we collect and how we handle it.",
+      "sections": {
+        "introduction": {
+          "heading": "1. Introduction",
+          "body": "LookLab offers automation tools for Instagram businesses. When you use the platform we process limited contact details, social account metadata and usage metrics to operate the service."
+        },
+        "dataCollection": {
+          "heading": "2. Data we collect",
+          "body": "We collect information that you provide (account profiles, authentication tokens, workflow settings) and data generated through usage (logs, performance metrics, interactions with automations)."
+        },
+        "dataUse": {
+          "heading": "3. How we use data",
+          "body": "Data is used to provision accounts, execute automation flows, improve reliability, communicate product updates and comply with legal requirements. We do not sell your data to third parties."
+        },
+        "rights": {
+          "heading": "4. Your choices and rights",
+          "body": "You can request access, correction or deletion of personal data, disable specific integrations and export account information at any time by contacting support."
+        },
+        "contact": {
+          "heading": "5. Contact",
+          "body": "Questions about privacy can be sent to privacy@looklab.ai or to our registered office at 221B Baker Street, London."
+        }
+      }
+    },
+    "terms": {
+      "title": "Terms of Service",
+      "summary": "The rules that govern how you use LookLab's automation platform.",
+      "lastUpdated": "15 January 2025",
+      "intro": "These Terms of Service form a binding agreement between LookLab and each customer. By accessing the platform you agree to follow the responsibilities outlined below.",
+      "sections": {
+        "introduction": {
+          "heading": "1. Service overview",
+          "body": "LookLab provides subscription access to automation templates, analytics and account management tools delivered via the web dashboard."
+        },
+        "accounts": {
+          "heading": "2. Account responsibilities",
+          "body": "You must provide accurate registration details, maintain confidentiality of credentials and ensure your team members follow these terms. You are responsible for actions taken through your workspace."
+        },
+        "acceptableUse": {
+          "heading": "3. Acceptable use",
+          "body": "You may not misuse automations to send spam, infringe third-party rights, violate Instagram policies or bypass rate limits. We may suspend accounts that break these rules."
+        },
+        "liability": {
+          "heading": "4. Warranties & liability",
+          "body": "The service is provided on an \"as is\" basis without warranties. Our liability is limited to the fees paid for the current subscription term, to the extent permitted by law."
+        },
+        "changes": {
+          "heading": "5. Changes",
+          "body": "We occasionally update these terms. We will notify you of material changes and your continued use of LookLab after the effective date means you accept the revised terms."
+        }
+      }
+    },
+    "dataDeletion": {
+      "title": "Data Deletion",
+      "summary": "Learn how to request deletion of your personal information from LookLab.",
+      "lastUpdated": "15 January 2025",
+      "intro": "This Data Deletion Policy explains how you can request the removal of your personal data from our systems.",
+      "sections": {
+        "overview": {
+          "heading": "1. Your Right to Delete",
+          "body": "You have the right to request deletion of your personal data at any time. We will process your request within 30 days in compliance with GDPR and similar data protection regulations."
+        },
+        "howToRequest": {
+          "heading": "2. How to Request Deletion",
+          "body": "To request data deletion, please email privacy@looklab.app with your account email address. We will verify your identity and process your deletion request. You can also submit a deletion request through your account settings."
+        },
+        "whatIsDeleted": {
+          "heading": "3. What Data We Delete",
+          "body": "Upon deletion request, we will remove your account information, profile data, uploaded content, automation configurations, and message history. Some data may be retained for legal compliance or fraud prevention for a limited period."
+        },
+        "exceptions": {
+          "heading": "4. Data Retention Exceptions",
+          "body": "Certain data may be retained for legitimate business purposes such as financial records (up to 7 years), legal compliance, dispute resolution, and fraud prevention. Anonymized analytics data may also be retained."
+        },
+        "contact": {
+          "heading": "5. Contact Us",
+          "body": "For data deletion requests or questions, please contact privacy@looklab.app. We will respond to all requests within 2 business days and complete deletion within 30 days."
+        }
+      }
     }
   }
 }

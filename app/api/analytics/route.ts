@@ -62,10 +62,14 @@ export async function GET() {
   }
 }
 
+interface AnalyticsRequestBody {
+  timeRange?: string;
+}
+
 export async function POST(request: Request) {
   try {
-    const body = await request.json().catch(() => ({} as any));
-    const { timeRange = '7d' } = body || ({} as any);
+    const body = await request.json().catch((): AnalyticsRequestBody => ({}));
+    const { timeRange = '7d' } = body || {};
     const data = generateMockAnalytics();
     return NextResponse.json({ revenue: data.revenue, timeRange, lastUpdated: new Date().toISOString() }, { status: 200 });
   } catch (error) {
