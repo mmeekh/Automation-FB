@@ -1,8 +1,7 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useLocale } from 'next-intl';
+import { useEffect, useMemo } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
 
 const COPY = {
   en: {
@@ -17,7 +16,13 @@ const COPY = {
 
 export default function NotFound() {
   const router = useRouter();
-  const locale = useLocale();
+  const pathname = usePathname();
+
+  const locale = useMemo(() => {
+    const [maybeLocale] = pathname?.split('/').filter(Boolean) ?? [];
+    return maybeLocale === 'tr' ? 'tr' : 'en';
+  }, [pathname]);
+
   const copy = COPY[locale as 'en' | 'tr'] ?? COPY.en;
 
   useEffect(() => {

@@ -15,6 +15,24 @@
     "settings": "Ayarlar",
     "help": "Yardım"
   },
+  "blogCategories": {
+    "Growth Playbooks": "Büyüme Playbook'ları",
+    "AI Customer Experience": "Yapay Zeka Müşteri Deneyimi",
+    "Salon Success Stories": "Salon Başarı Hikayeleri",
+    "Instagram Content Strategy": "Instagram İçerik Stratejisi",
+    "Business & Analytics Mastery": "İş & Analitik Ustalığı"
+  },
+  "automationNames": {
+    "Saç Stili Değiştirme AI": "Saç Stili Değiştirme AI",
+    "Saç Restorasyon AI": "Saç Restorasyon AI",
+    "Araba Renk Değiştirme AI": "Araba Renk Değiştirme AI",
+    "Araba Jant/Lastik AI": "Araba Jant/Lastik AI",
+    "Evcil Hayvan Ürünleri AI": "Evcil Hayvan Ürünleri AI",
+    "Taki Deneme AI": "Taki Deneme AI",
+    "Elbise/Kiyafet Deneme AI": "Elbise/Kiyafet Deneme AI",
+    "Duvar Rengi/Duvar Kağıdı AI": "Duvar Rengi/Duvar Kağıdı AI",
+    "Mobilya Yerlestirme AI": "Mobilya Yerlestirme AI"
+  },
   "auth": {
     "login": "Giriş Yap",
     "logout": "Çıkış Yap",

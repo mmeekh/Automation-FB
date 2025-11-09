@@ -39,6 +39,8 @@ export function Header() {
   const t = useTranslations('nav');
   const authT = useTranslations('auth');
   const userMenuT = useTranslations('header.userMenu');
+  const blogT = useTranslations('blogCategories');
+  const automationT = useTranslations('automationNames');
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
@@ -145,11 +147,7 @@ export function Header() {
                     </Link>
                     {hasDropdown && hoveredMenu === key && (
                       <div
-                        className={`absolute left-0 top-full z-50 mt-2 rounded-3xl border border-neutral-200 bg-white shadow-[0_18px_46px_-16px_rgba(15,23,42,0.25)] transition-all duration-200 ${
-                          key === 'blog'
-                            ? 'w-72'
-                            : 'w-80'
-                        }`}
+                        className="absolute left-0 top-full z-50 mt-2 w-72 rounded-3xl border border-neutral-200 bg-white shadow-[0_18px_46px_-16px_rgba(15,23,42,0.25)] transition-all duration-200"
                         onMouseEnter={() => {
                           if (menuTimer.current) clearTimeout(menuTimer.current);
                           setHoveredMenu(key);
@@ -160,7 +158,7 @@ export function Header() {
                         }}
                       >
                         {key === 'blog' ? (
-                          <div className="flex flex-col gap-1.5 p-4">
+                          <div className="flex flex-col gap-0.5 p-2">
                             {BLOG_CATEGORIES.map((category) => {
                               const iconPath = BLOG_CATEGORY_ICONS[category.slug];
 
@@ -168,19 +166,19 @@ export function Header() {
                                 <Link
                                   key={category.slug}
                                   href={`/${locale}/blog/category/${category.slug}`}
-                                  className="flex items-center gap-2 rounded-xl px-3 py-1.5 transition hover:bg-neutral-50"
+                                  className="flex items-center gap-3 rounded-xl px-3 py-1.5 transition-all duration-200 hover:bg-neutral-100 hover:shadow-sm"
                                 >
                                   {iconPath && (
                                     <Image
                                       src={iconPath}
                                       alt={category.title}
-                                      width={64}
-                                      height={64}
-                                      className="h-12 w-12 flex-shrink-0 object-contain"
+                                      width={56}
+                                      height={56}
+                                      className="h-10 w-10 flex-shrink-0 object-contain"
                                     />
                                   )}
                                   <h3 className="text-sm font-semibold text-neutral-900 leading-tight">
-                                    {category.title}
+                                    {blogT(category.title) || category.title}
                                   </h3>
                                 </Link>
                               );
@@ -188,18 +186,18 @@ export function Header() {
                           </div>
                         ) : (
                           <div className="flex flex-col">
-                            <div className="max-h-80 overflow-y-auto p-2">
+                            <div className="max-h-80 overflow-y-auto p-2 scrollbar-hidden">
                               {automationTemplates.map((template) => (
                                 <Link
                                   key={template.id}
                                   href={getAutomationLandingUrl(template.id, locale)}
-                                  className="flex items-center gap-3 rounded-2xl px-2 py-3 transition hover:bg-primary-50"
+                                  className="flex items-center gap-3 rounded-2xl px-2 py-3 transition-all duration-200 hover:bg-primary-100 hover:shadow-sm"
                                 >
                                   <span className="text-2xl leading-none" aria-hidden="true">
                                     {template.icon ?? '🤖'}
                                   </span>
                                   <div>
-                                    <p className="text-sm font-semibold text-neutral-900">{template.name}</p>
+                                    <p className="text-sm font-semibold text-neutral-900">{automationT(template.name) || template.name}</p>
                                   </div>
                                 </Link>
                               ))}

@@ -153,9 +153,9 @@ const DASHBOARD_COPY: Record<SupportedLocale, DashboardCopy> = {
   },
   tr: {
     hero: {
-      topLine: 'Sosyal medyanızı otomatikleştirin,',
+      topLine: 'Sosyal medyanızı otomatikleştirin',
       animatedWords: ['iş akışlarınızı', 'etkileşiminizi', 'büyümenizi', 'süreçlerinizi'],
-      suffix: 'zahmetsizce yönetin.',
+      suffix: 'yönetin.',
       description:
         'Hazır akışları seçin, hesabınızı bağlayın ve dakikalar içinde otomasyonları başlatın.',
       primaryCta: 'Başlayın',
@@ -257,16 +257,18 @@ export default function DashboardPage() {
 
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 lg:py-20">
         <div className="text-center max-w-4xl mx-auto mb-16 lg:mb-20">
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 sm:mb-8 leading-tight">
-            <span className="block text-neutral-900">{copy.hero.topLine}</span>
-            <span className="block text-neutral-900">
-              <span className="inline-flex items-baseline justify-center gap-2 flex-wrap sm:flex-nowrap">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 sm:mb-8 leading-tight text-balance text-center">
+            <span className="block text-neutral-900 whitespace-normal sm:whitespace-nowrap">
+              {copy.hero.topLine}
+            </span>
+            <span className="block text-neutral-900 whitespace-normal sm:whitespace-nowrap">
+              <span className="inline-flex w-full flex-wrap sm:flex-nowrap items-baseline justify-center gap-2 min-w-0">
                 <FlipWords
                   words={copy.hero.animatedWords}
-                  className="font-bold bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent"
+                  className="font-bold bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent flex-shrink whitespace-nowrap"
                   duration={2000}
                 />
-                <span className="descender-safe">{copy.hero.suffix}</span>
+                <span className="descender-safe flex-shrink-0">{copy.hero.suffix}</span>
               </span>
             </span>
           </h1>

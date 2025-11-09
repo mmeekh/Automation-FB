@@ -2,7 +2,7 @@ import { AutomationTemplate } from '../types';
 
 export const aestheticAITemplate: AutomationTemplate = {
   id: 'instagram-aesthetic-bald',
-  name: 'Instagram Bald-to-Haired Transformation',
+  name: 'Saç Restorasyon AI',
   description: 'Advanced hair restoration preview for high-end aesthetic clinics. Same powerful AI transformation with premium positioning.',
   category: 'Aesthetic AI',
   gradient: 'bg-gradient-to-br from-teal-400 via-cyan-500 to-teal-500',

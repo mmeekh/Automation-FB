@@ -15,6 +15,24 @@
     "settings": "Settings",
     "help": "Help"
   },
+  "blogCategories": {
+    "Growth Playbooks": "Growth Playbooks",
+    "AI Customer Experience": "AI Customer Experience",
+    "Salon Success Stories": "Salon Success Stories",
+    "Instagram Content Strategy": "Instagram Content Strategy",
+    "Business & Analytics Mastery": "Business & Analytics Mastery"
+  },
+  "automationNames": {
+    "Saç Stili Değiştirme AI": "Hair Style Change AI",
+    "Saç Restorasyon AI": "Hair Restoration AI",
+    "Araba Renk Değiştirme AI": "Car Color Change AI",
+    "Araba Jant/Lastik AI": "Car Wheels AI",
+    "Evcil Hayvan Ürünleri AI": "Pet Products AI",
+    "Taki Deneme AI": "Jewelry Try-On AI",
+    "Elbise/Kiyafet Deneme AI": "Clothes Try-On AI",
+    "Duvar Rengi/Duvar Kağıdı AI": "Wall Paint AI",
+    "Mobilya Yerlestirme AI": "Furniture Placement AI"
+  },
   "auth": {
     "login": "Sign In",
     "logout": "Sign Out",

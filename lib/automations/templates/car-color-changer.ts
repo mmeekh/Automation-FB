@@ -2,7 +2,7 @@ import { AutomationTemplate } from '../types';
 
 export const carColorChangerTemplate: AutomationTemplate = {
   id: 'instagram-car-color-changer',
-  name: 'Instagram Car Color Transformation Automation',
+  name: 'Araba Renk Değiştirme AI',
   description: 'Transform car colors instantly with AI. Perfect for auto dealerships, detailing shops, and car customization services to showcase color options.',
   category: 'Car Color Changer',
   gradient: 'bg-gradient-to-br from-blue-400 via-indigo-500 to-purple-500',

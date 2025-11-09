@@ -27,6 +27,15 @@ interface AutomationSwitcherProps {
   onRequestCollapse?: () => void;
 }
 
+const getAutomationEmoji = (templateId: string): string => {
+  if (!templateId) return '⚡';
+  return (
+    AUTOMATION_EMOJIS[templateId] ??
+    AUTOMATION_EMOJIS[templateId.replace('instagram-', '')] ??
+    '⚡'
+  );
+};
+
 export function AutomationSwitcher({ collapsed, onMenuStateChange, onRequestCollapse }: AutomationSwitcherProps) {
   const router = useRouter();
   const locale = useLocale();
@@ -68,6 +77,9 @@ export function AutomationSwitcher({ collapsed, onMenuStateChange, onRequestColl
 
   const containerRef = useRef<HTMLDivElement | null>(null);
   const addDropdownRef = useRef<HTMLDivElement | null>(null);
+  const setAddDropdownRef = useCallback((node: HTMLDivElement | null) => {
+    addDropdownRef.current = node;
+  }, []);
   const menuRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   const setMenuRef = useCallback(
@@ -249,7 +261,7 @@ export function AutomationSwitcher({ collapsed, onMenuStateChange, onRequestColl
           </div>
         )}
 
-        <div className="relative z-50" ref={addDropdownRef}>
+        <div className="relative z-50" ref={setAddDropdownRef}>
           <button
             type="button"
             onClick={handleOpenDropdown}
@@ -276,12 +288,12 @@ export function AutomationSwitcher({ collapsed, onMenuStateChange, onRequestColl
   // Expanded view
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="relative flex items-center justify-between" ref={setAddDropdownRef}>
         <span className="text-xs font-semibold text-neutral-500 uppercase tracking-wider">
           {t('sectionTitle')}
         </span>
 
-        <div className="relative z-50" ref={addDropdownRef}>
+        <div className="z-50">
           <button
             type="button"
             onClick={handleOpenDropdown}
@@ -321,10 +333,7 @@ export function AutomationSwitcher({ collapsed, onMenuStateChange, onRequestColl
 
             const label = flow?.name ?? template?.name ?? automation.templateId;
             const description = flow?.description ?? template?.description ?? '';
-            const emoji =
-              AUTOMATION_EMOJIS[automation.templateId] ??
-              AUTOMATION_EMOJIS[automation.templateId.replace('instagram-', '')] ??
-              '⚡';
+            const emoji = getAutomationEmoji(automation.templateId);
 
             const isCurrent = currentTemplateId === automation.templateId;
             const isActive = automation.isActive;
@@ -525,33 +534,36 @@ type DropdownProps = {
 function Dropdown({ templates, onSelect, heading, emptyLabel, seeAllLabel, seeAllHref }: DropdownProps) {
   if (templates.length === 0) {
     return (
-      <div className="absolute right-0 mt-2 w-60 rounded-xl border border-neutral-200 bg-white p-4 text-sm text-neutral-500 shadow-lg z-50">
+      <div className="absolute left-1/2 top-full mt-2 w-72 -translate-x-1/2 rounded-2xl border border-neutral-200 bg-white p-4 text-sm text-neutral-500 shadow-lg z-50">
         {emptyLabel}
       </div>
     );
   }
 
   return (
-    <div className="absolute right-0 mt-2 w-64 rounded-xl border border-neutral-200 bg-white py-2 shadow-xl z-50 pointer-events-auto">
+    <div className="absolute left-1/2 top-full mt-2 w-72 -translate-x-1/2 rounded-2xl border border-neutral-200 bg-white py-2 shadow-xl z-50 pointer-events-auto">
       <p className="px-3 pb-2 text-xs font-semibold uppercase tracking-wider text-neutral-400">
         {heading}
       </p>
       <div className="max-h-72 overflow-auto">
-        {templates.map((template) => (
-          <button
-            type="button"
-            key={template.id}
-            onClick={() => onSelect(template.id)}
-            className="flex w-full flex-col items-start gap-1 px-3 py-2 text-left hover:bg-neutral-50"
-          >
-            <span className="text-sm font-semibold text-neutral-800">
-              {template.name}
-            </span>
-            <span className="text-xs text-neutral-500 line-clamp-2">
-              {template.description}
-            </span>
-          </button>
-        ))}
+        {templates.map((template) => {
+          const emoji = getAutomationEmoji(template.id);
+          return (
+            <button
+              type="button"
+              key={template.id}
+              onClick={() => onSelect(template.id)}
+              className="flex w-full items-center gap-3 px-3 py-2 text-left hover:bg-neutral-50 transition-colors"
+            >
+              <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-primary-100 to-accent-100 text-xl">
+                {emoji}
+              </span>
+              <span className="flex-1 min-w-0 text-sm font-semibold text-neutral-900 truncate">
+                {template.name}
+              </span>
+            </button>
+          );
+        })}
       </div>
       <div className="border-t border-neutral-100 px-3 pt-2">
         <Link
