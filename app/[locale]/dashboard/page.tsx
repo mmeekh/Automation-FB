@@ -153,9 +153,9 @@ const DASHBOARD_COPY: Record<SupportedLocale, DashboardCopy> = {
   },
   tr: {
     hero: {
-      topLine: 'Sosyal medyanızı otomatikleştirin',
-      animatedWords: ['iş akışlarını', 'etkileşimi', 'büyümeyi', 'otomasyonu'],
-      suffix: ' zahmetsizce yönetin.',
+      topLine: 'Sosyal medyanızı otomatikleştirin,',
+      animatedWords: ['iş akışlarınızı', 'etkileşiminizi', 'büyümenizi', 'süreçlerinizi'],
+      suffix: 'zahmetsizce yönetin.',
       description:
         'Hazır akışları seçin, hesabınızı bağlayın ve dakikalar içinde otomasyonları başlatın.',
       primaryCta: 'Başlayın',

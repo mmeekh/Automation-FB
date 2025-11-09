@@ -8,6 +8,7 @@ export const carWheelsTemplate: AutomationTemplate = {
   gradient: 'bg-gradient-to-br from-slate-400 via-gray-500 to-zinc-600',
   accentColor: 'text-slate-600',
   installs: 1243,
+  icon: '🛞',
   flow: {
     steps: [
       { id: 's1', type: 'message', content: 'Arabanizin fotografini gonderin 🚗', delay: 0 },

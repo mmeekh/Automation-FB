@@ -8,6 +8,7 @@ export const wallPaintTemplate: AutomationTemplate = {
   gradient: 'bg-gradient-to-br from-rose-400 via-pink-500 to-fuchsia-500',
   accentColor: 'text-rose-600',
   installs: 2156,
+  icon: '🎨',
   flow: {
     steps: [
       { id: 's1', type: 'message', content: 'Odanizin fotografini gonderin 🏠', delay: 0 },

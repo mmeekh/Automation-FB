@@ -8,6 +8,7 @@ export const petProductsTemplate: AutomationTemplate = {
   gradient: 'bg-gradient-to-br from-amber-400 via-orange-500 to-red-500',
   accentColor: 'text-amber-600',
   installs: 892,
+  icon: '🐾',
   flow: {
     steps: [
       { id: 's1', type: 'message', content: 'Evcil hayvaninizin fotografini gonderin 🐾', delay: 0 },

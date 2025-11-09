@@ -8,6 +8,7 @@ export const hairRestorationTemplate: AutomationTemplate = {
   gradient: 'bg-gradient-to-br from-amber-400 via-orange-500 to-amber-500',
   accentColor: 'text-amber-600',
   installs: 5293,
+  icon: '👧',
 
   flow: {
     steps: [

@@ -5,7 +5,7 @@ import type { BlogCategory } from '../types';
 const author = () => ({
   name: 'LookLab Team',
   role: 'Automation Specialists',
-  avatar: '/media/avatars/looklab-team.png'
+  avatar: ''
 });
 
 export const instagramContentStrategyCategory: BlogCategory = {
@@ -22,7 +22,7 @@ export const instagramContentStrategyCategory: BlogCategory = {
       title: '30-Day Salon Reels Calendar: Never Run Out of Content Ideas',
       excerpt:
         'Build a 30-day salon Reels calendar with four content pillars, batching workflows, and LookLab automations so bookings climb without creative burnout.',
-      cover: '/blog/ICSblog1.jpg',
+      cover: '/blog/30day.jpg',
       coverWidth: 2400,
       coverHeight: 1350,
       category: 'Instagram Content Strategy',

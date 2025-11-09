@@ -8,6 +8,7 @@ export const furniturePlacementTemplate: AutomationTemplate = {
   gradient: 'bg-gradient-to-br from-teal-400 via-cyan-500 to-blue-500',
   accentColor: 'text-teal-600',
   installs: 1876,
+  icon: '🛋️',
   flow: {
     steps: [
       { id: 's1', type: 'message', content: 'Odanizin fotografini gonderin 🛋️', delay: 0 },

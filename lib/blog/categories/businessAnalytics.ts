@@ -5,7 +5,7 @@ import type { BlogCategory } from '../types';
 const author = () => ({
   name: 'LookLab Team',
   role: 'Automation Specialists',
-  avatar: '/media/avatars/looklab-team.png'
+  avatar: ''
 });
 
 // CATEGORY 5: Business & Analytics Mastery (NEW)

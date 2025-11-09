@@ -8,6 +8,7 @@ export const carColorChangerTemplate: AutomationTemplate = {
   gradient: 'bg-gradient-to-br from-blue-400 via-indigo-500 to-purple-500',
   accentColor: 'text-blue-600',
   installs: 3847,
+  icon: '🚗',
 
   flow: {
     steps: [

@@ -149,8 +149,8 @@ export const STORAGE_KEYS = {
 
 /** Emoji mapping for automation templates */
 export const AUTOMATION_EMOJIS: Record<string, string> = {
-  'instagram-bald-to-haired': '💇',
-  'instagram-aesthetic-bald': '✨',
+  'instagram-bald-to-haired': '👧',
+  'instagram-aesthetic-bald': '👨‍🦲',
   'instagram-car-color-changer': '🚗',
   'car-wheels': '⚙️',
   'pet-products': '🐾',

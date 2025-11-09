@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useMemo } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter, usePathname } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { BellIcon, UserCircleIcon, Cog6ToothIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
@@ -25,9 +26,17 @@ const NAV_ITEMS: ReadonlyArray<{ key: NavKey; href: string }> = [
   { key: 'pricing', href: 'pricing' },
 ] as const;
 
+// Blog category icon mapping
+const BLOG_CATEGORY_ICONS: Record<string, string> = {
+  'growth-playbooks': '/icons/growthicon.png',
+  'ai-customer-experience': '/icons/aicustomerexicon.png',
+  'salon-success-stories': '/icons/successicon.png',
+  'instagram-content-strategy': '/icons/contentstrategyicon.png',
+  'business-analytics': '/icons/businessanalyticsicon.png',
+};
+
 export function Header() {
   const t = useTranslations('nav');
-  const automationsT = useTranslations('automationsPage');
   const authT = useTranslations('auth');
   const userMenuT = useTranslations('header.userMenu');
   const locale = useLocale();
@@ -138,7 +147,7 @@ export function Header() {
                       <div
                         className={`absolute left-0 top-full z-50 mt-2 rounded-3xl border border-neutral-200 bg-white shadow-[0_18px_46px_-16px_rgba(15,23,42,0.25)] transition-all duration-200 ${
                           key === 'blog'
-                            ? 'w-full sm:w-[36rem] xl:w-[44rem] 2xl:w-[52rem] max-w-[calc(100vw-2rem)]'
+                            ? 'w-72'
                             : 'w-80'
                         }`}
                         onMouseEnter={() => {
@@ -151,57 +160,49 @@ export function Header() {
                         }}
                       >
                         {key === 'blog' ? (
-                          <div className="grid grid-cols-1 gap-3 p-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                          <div className="flex flex-col gap-1.5 p-4">
                             {BLOG_CATEGORIES.map((category) => {
-                              const theme = getBlogCategoryTheme(category.color);
+                              const iconPath = BLOG_CATEGORY_ICONS[category.slug];
 
                               return (
                                 <Link
                                   key={category.slug}
                                   href={`/${locale}/blog/category/${category.slug}`}
-                                  className="block h-full rounded-2xl px-4 py-3 transition hover:bg-neutral-100"
+                                  className="flex items-center gap-2 rounded-xl px-3 py-1.5 transition hover:bg-neutral-50"
                                 >
-                                  <div className="flex h-full items-start gap-3">
-                                    {category.icon && (
-                                      <div className={`mt-0.5 flex h-10 w-10 items-center justify-center rounded-lg ${theme.iconBg}`}>
-                                        <span className={`text-lg ${theme.iconText}`}>{category.icon}</span>
-                                      </div>
-                                    )}
-                                    <div className="flex-1">
-                                      <p className="text-sm font-semibold text-neutral-900">{category.title}</p>
-                                      <p className="mt-1 text-xs text-neutral-500 line-clamp-2">{category.description}</p>
-                                    </div>
-                                  </div>
+                                  {iconPath && (
+                                    <Image
+                                      src={iconPath}
+                                      alt={category.title}
+                                      width={64}
+                                      height={64}
+                                      className="h-12 w-12 flex-shrink-0 object-contain"
+                                    />
+                                  )}
+                                  <h3 className="text-sm font-semibold text-neutral-900 leading-tight">
+                                    {category.title}
+                                  </h3>
                                 </Link>
                               );
                             })}
                           </div>
                         ) : (
                           <div className="flex flex-col">
-                            <div className="max-h-80 overflow-y-auto p-4">
+                            <div className="max-h-80 overflow-y-auto p-2">
                               {automationTemplates.map((template) => (
                                 <Link
                                   key={template.id}
                                   href={getAutomationLandingUrl(template.id, locale)}
-                                  className="block rounded-2xl px-4 py-3 transition hover:bg-primary-50"
+                                  className="flex items-center gap-3 rounded-2xl px-2 py-3 transition hover:bg-primary-50"
                                 >
-                                  <p className="text-sm font-semibold text-neutral-900">{template.name}</p>
-                                  {template.description && (
-                                    <p className="mt-1 text-xs text-neutral-500 line-clamp-2">
-                                      {template.description}
-                                    </p>
-                                  )}
+                                  <span className="text-2xl leading-none" aria-hidden="true">
+                                    {template.icon ?? '🤖'}
+                                  </span>
+                                  <div>
+                                    <p className="text-sm font-semibold text-neutral-900">{template.name}</p>
+                                  </div>
                                 </Link>
                               ))}
-                            </div>
-                            <div className="border-t border-neutral-200 bg-neutral-50 px-4 py-3 rounded-b-3xl">
-                              <Link
-                                href={`/${locale}/automations`}
-                                className="inline-flex items-center gap-2 text-xs font-semibold text-primary-600 hover:text-primary-700"
-                              >
-                                {automationsT('browse')}
-                                <span aria-hidden>→</span>
-                              </Link>
                             </div>
                           </div>
                         )}

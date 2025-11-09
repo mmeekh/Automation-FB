@@ -8,6 +8,7 @@ export const clothesTryOnTemplate: AutomationTemplate = {
   gradient: 'bg-gradient-to-br from-purple-400 via-pink-500 to-rose-500',
   accentColor: 'text-purple-600',
   installs: 4521,
+  icon: '👗',
   flow: {
     steps: [
       { id: 's1', type: 'message', content: 'Fotografinizi gonderin 👗', delay: 0 },

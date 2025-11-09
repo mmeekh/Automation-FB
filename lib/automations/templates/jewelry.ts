@@ -8,6 +8,7 @@ export const jewelryTemplate: AutomationTemplate = {
   gradient: 'bg-gradient-to-br from-yellow-400 via-amber-500 to-orange-500',
   accentColor: 'text-yellow-600',
   installs: 3245,
+  icon: '💎',
   flow: {
     steps: [
       { id: 's1', type: 'message', content: 'Fotografinizi gonderin 💍', delay: 0 },

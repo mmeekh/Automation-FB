@@ -1,5 +1,14 @@
 import type { Metadata } from "next";
+import { Inter, Rubik_Moonrocks } from 'next/font/google';
 import "./globals.css";
+
+const inter = Inter({ subsets: ['latin'] });
+const rubikMoonrocks = Rubik_Moonrocks({
+  weight: '400',
+  subsets: ['latin'],
+  variable: '--font-rubik-moonrocks',
+  display: 'swap'
+});
 
 export const metadata: Metadata = {
   title: "LookLab - Instagram Transformation Automation",
@@ -8,14 +17,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="tr">
+    <html lang="tr" className={rubikMoonrocks.variable}>
       <head>
         <link
           rel="stylesheet"
           href="https://unpkg.com/@tremor/react@3.18.7/dist/tremor.css"
         />
       </head>
-      <body>{children}</body>
+      <body className={inter.className}>{children}</body>
     </html>
   );
 }

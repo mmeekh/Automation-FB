@@ -36,14 +36,16 @@ export default function BlogIndexPage() {
                 {/* Left: Image */}
                 <Link
                   href={`/blog/${featuredPost.slug}`}
-                  className="group relative overflow-hidden rounded-2xl"
+                  className="group relative overflow-hidden rounded-2xl aspect-video"
                 >
                   <Image
                     src={featuredPost.cover}
                     alt={featuredPost.title}
                     width={featuredPost.coverWidth}
                     height={featuredPost.coverHeight}
+                    priority
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    style={{ width: '100%', height: '100%' }}
                   />
                 </Link>
 
@@ -74,13 +76,15 @@ export default function BlogIndexPage() {
                   </p>
 
                   <div className="flex items-center gap-4 pt-4">
-                    <Image
-                      src={featuredPost.author.avatar}
-                      alt={featuredPost.author.name}
-                      width={48}
-                      height={48}
-                      className="h-12 w-12 rounded-full"
-                    />
+                    {featuredPost.author.avatar && (
+                      <Image
+                        src={featuredPost.author.avatar}
+                        alt={featuredPost.author.name}
+                        width={48}
+                        height={48}
+                        className="h-12 w-12 rounded-full"
+                      />
+                    )}
                     <div>
                       <div className="font-semibold text-neutral-900">
                         {featuredPost.author.name}
@@ -117,13 +121,14 @@ export default function BlogIndexPage() {
                 return (
                   <article key={post.slug} className="group">
                     <Link href={`/blog/${post.slug}`} className="block">
-                      <div className="mb-4 overflow-hidden rounded-xl">
+                      <div className="mb-4 overflow-hidden rounded-xl aspect-video">
                         <Image
                           src={post.cover}
                           alt={post.title}
                           width={400}
                           height={225}
-                          className="h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                          style={{ width: '100%', height: '100%' }}
                         />
                       </div>
 
@@ -141,13 +146,15 @@ export default function BlogIndexPage() {
                         </p>
 
                         <div className="flex items-center gap-2">
-                          <Image
-                            src={post.author.avatar}
-                            alt={post.author.name}
-                            width={24}
-                            height={24}
-                            className="h-6 w-6 rounded-full"
-                          />
+                          {post.author.avatar && (
+                            <Image
+                              src={post.author.avatar}
+                              alt={post.author.name}
+                              width={24}
+                              height={24}
+                              className="h-6 w-6 rounded-full"
+                            />
+                          )}
                           <span className="text-xs text-neutral-500">
                             {post.author.name}
                           </span>
@@ -189,13 +196,14 @@ export default function BlogIndexPage() {
                 return (
                   <article key={post.slug} className="group">
                     <Link href={`/blog/${post.slug}`}>
-                      <div className="mb-4 overflow-hidden rounded-xl">
+                      <div className="mb-4 overflow-hidden rounded-xl aspect-video">
                         <Image
                           src={post.cover}
                           alt={post.title}
                           width={400}
                           height={225}
-                          className="h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                          style={{ width: '100%', height: '100%' }}
                         />
                       </div>
 
@@ -209,13 +217,15 @@ export default function BlogIndexPage() {
                         </p>
 
                         <div className="flex items-center gap-2">
-                          <Image
-                            src={post.author.avatar}
-                            alt={post.author.name}
-                            width={24}
-                            height={24}
-                            className="h-6 w-6 rounded-full"
-                          />
+                          {post.author.avatar && (
+                            <Image
+                              src={post.author.avatar}
+                              alt={post.author.name}
+                              width={24}
+                              height={24}
+                              className="h-6 w-6 rounded-full"
+                            />
+                          )}
                           <span className="text-xs text-neutral-500">
                             {post.author.name}
                           </span>
@@ -257,13 +267,14 @@ export default function BlogIndexPage() {
                 return (
                   <article key={post.slug} className="group">
                     <Link href={`/blog/${post.slug}`}>
-                      <div className="mb-4 overflow-hidden rounded-xl">
+                      <div className="mb-4 overflow-hidden rounded-xl aspect-video">
                         <Image
                           src={post.cover}
                           alt={post.title}
                           width={400}
                           height={225}
-                          className="h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                          style={{ width: '100%', height: '100%' }}
                         />
                       </div>
 
@@ -277,13 +288,15 @@ export default function BlogIndexPage() {
                         </p>
 
                         <div className="flex items-center gap-2">
-                          <Image
-                            src={post.author.avatar}
-                            alt={post.author.name}
-                            width={24}
-                            height={24}
-                            className="h-6 w-6 rounded-full"
-                          />
+                          {post.author.avatar && (
+                            <Image
+                              src={post.author.avatar}
+                              alt={post.author.name}
+                              width={24}
+                              height={24}
+                              className="h-6 w-6 rounded-full"
+                            />
+                          )}
                           <span className="text-xs text-neutral-500">
                             {post.author.name}
                           </span>
@@ -325,13 +338,14 @@ export default function BlogIndexPage() {
                 return (
                   <article key={post.slug} className="group">
                     <Link href={`/blog/${post.slug}`}>
-                      <div className="mb-4 overflow-hidden rounded-xl">
+                      <div className="mb-4 overflow-hidden rounded-xl aspect-video">
                         <Image
                           src={post.cover}
                           alt={post.title}
                           width={400}
                           height={225}
-                          className="h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                          style={{ width: '100%', height: '100%' }}
                         />
                       </div>
 
@@ -345,13 +359,15 @@ export default function BlogIndexPage() {
                         </p>
 
                         <div className="flex items-center gap-2">
-                          <Image
-                            src={post.author.avatar}
-                            alt={post.author.name}
-                            width={24}
-                            height={24}
-                            className="h-6 w-6 rounded-full"
-                          />
+                          {post.author.avatar && (
+                            <Image
+                              src={post.author.avatar}
+                              alt={post.author.name}
+                              width={24}
+                              height={24}
+                              className="h-6 w-6 rounded-full"
+                            />
+                          )}
                           <span className="text-xs text-neutral-500">
                             {post.author.name}
                           </span>
@@ -393,13 +409,14 @@ export default function BlogIndexPage() {
                 return (
                   <article key={post.slug} className="group">
                     <Link href={`/blog/${post.slug}`}>
-                      <div className="mb-4 overflow-hidden rounded-xl">
+                      <div className="mb-4 overflow-hidden rounded-xl aspect-video">
                         <Image
                           src={post.cover}
                           alt={post.title}
                           width={400}
                           height={225}
-                          className="h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                          style={{ width: '100%', height: '100%' }}
                         />
                       </div>
 
@@ -417,13 +434,15 @@ export default function BlogIndexPage() {
                         </p>
 
                         <div className="flex items-center gap-2">
-                          <Image
-                            src={post.author.avatar}
-                            alt={post.author.name}
-                            width={24}
-                            height={24}
-                            className="h-6 w-6 rounded-full"
-                          />
+                          {post.author.avatar && (
+                            <Image
+                              src={post.author.avatar}
+                              alt={post.author.name}
+                              width={24}
+                              height={24}
+                              className="h-6 w-6 rounded-full"
+                            />
+                          )}
                           <span className="text-xs text-neutral-500">
                             {post.author.name}
                           </span>
