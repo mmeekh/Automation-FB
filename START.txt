@@ -1,0 +1,2875 @@
+================================================================================
+AUTOMATION-FB: PRODUCTION-READY IMPLEMENTATION PLAN
+================================================================================
+
+Project: Instagram Automation Platform (ManyChat Alternative)
+Technology Stack: Next.js 14 + Python FastAPI + PostgreSQL + Google Gemini AI
+Version: Production Ready
+Date: 2025-11-10
+
+================================================================================
+TABLE OF CONTENTS
+================================================================================
+
+1. ARCHITECTURAL DECISION & RATIONALE
+2. URL ROUTING STRATEGY (ManyChat-Inspired)
+3. COMPLETE DATABASE SCHEMA
+4. API ENDPOINTS SPECIFICATION
+5. INSTAGRAM WEBHOOK INTEGRATION
+6. GOOGLE GEMINI AI INTEGRATION
+7. FACEBOOK APP REVIEW REQUIREMENTS
+8. IMPLEMENTATION ROADMAP (17 Days)
+9. ENVIRONMENT VARIABLES
+10. DEPLOYMENT ARCHITECTURE
+11. CODE TEMPLATES & EXAMPLES
+12. SECURITY & COMPLIANCE
+
+================================================================================
+1. ARCHITECTURAL DECISION & RATIONALE
+================================================================================
+
+SELECTED ARCHITECTURE: Hybrid (Next.js + Python FastAPI Microservice)
+---------------------------------------------------------------------
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ FRONTEND: Next.js 14 App Router (MEVCUT - KORUNUYOR)                   │
+│ - TypeScript strict mode                                               │
+│ - TailwindCSS + shadcn/ui                                              │
+│ - Zustand state management                                             │
+│ - next-intl i18n (en, tr)                                              │
+└─────────────────────────────────────────────────────────────────────────┘
+                                  │
+                                  ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│ NEXT.JS API ROUTES (Backend API Layer)                                 │
+│ - /api/auth/* - Facebook/Instagram OAuth                               │
+│ - /api/flows/* - Automation flow CRUD                                  │
+│ - /api/instagram/webhook - Instagram DM webhook                        │
+│ - /api/user/delete - Data deletion (Facebook required)                 │
+│ - /api/analytics/* - Analytics endpoints                               │
+└─────────────────────────────────────────────────────────────────────────┘
+                                  │
+                                  ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│ PYTHON FASTAPI MICROSERVICE (AI Processing)                            │
+│ - POST /ai/analyze - Image/content analysis                            │
+│ - POST /ai/transform - Image transformation                            │
+│ - POST /ai/process-flow - Execute automation flow                      │
+│ - Celery workers for async processing                                  │
+│ - Google Gemini AI integration                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+                                  │
+                                  ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│ DATA LAYER                                                              │
+│ - PostgreSQL 17 (primary database)                                     │
+│ - Redis 7 (cache + Celery broker)                                      │
+│ - Cloudflare R2/S3 (image storage)                                     │
+└─────────────────────────────────────────────────────────────────────────┘
+                                  │
+                                  ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│ EXTERNAL SERVICES                                                       │
+│ - Facebook Graph API v18.0 (Instagram webhook)                         │
+│ - Google Gemini 2.5 Flash Image Preview                                │
+└─────────────────────────────────────────────────────────────────────────┘
+
+WHY THIS ARCHITECTURE?
+----------------------
+
+✅ SPEED (Hız)
+   - Mevcut Next.js frontend korunur (sıfırdan yazılmaz)
+   - Python AI microservice paralel geliştirilebilir
+   - TypeScript + Python = Her ikisinin de güçlü yanları
+
+✅ RELIABILITY (Güvenilirlik)
+   - AUTOMATAA projesinde kanıtlanmış stack
+   - FastAPI + Celery = Production-proven async processing
+   - PostgreSQL = Enterprise-grade reliability
+
+✅ SCALABILITY (Ölçeklenebilirlik)
+   - Next.js ve AI service bağımsız scale edilir
+   - Celery workers horizontally scalable
+   - Redis queue sistem yoğunluğu yönetir
+
+✅ GOOGLE GEMINI INTEGRATION
+   - Python SDK daha mature ve feature-rich
+   - AUTOMATAA'nın test edilmiş Gemini client'ı adapt edilebilir
+   - Image processing için optimize edilmiş
+
+✅ FACEBOOK APP REVIEW
+   - Tüm gereksinimler karşılanabilir
+   - Webhook verification
+   - Data deletion endpoint
+   - Logging ve compliance
+
+ALTERNATIVE CONSIDERED (Red Edilen):
+------------------------------------
+
+Full Next.js Stack (Node.js + Google Gemini Node SDK)
+  ❌ Python AI kütüphaneleri kullanılamaz
+  ❌ Background processing için BullMQ gerekir (Celery kadar mature değil)
+  ❌ Image processing performansı düşük olabilir
+  ✅ Ancak tek deployment avantajı var
+
+================================================================================
+2. URL ROUTING STRATEGY (ManyChat-Inspired)
+================================================================================
+
+ManyChat URL Analysis:
+----------------------
+https://app.manychat.com/fb3715331/cms/files/31751654--31751655--content20250903095028_123189/edit
+
+Breakdown:
+  /fb3715331          → Facebook page ID (workspace identifier)
+  /cms                → Content Management System section
+  /files              → Resource type (files/media)
+  /31751654--...      → Unique resource ID with metadata
+  /edit               → Action mode
+
+OUR URL STRUCTURE:
+------------------
+
+Base URL: https://app.yourdomain.com
+
+### 1. MULTI-TENANT ROUTING (Instagram Account Scoped)
+
+Pattern: /{instagram_account_id}/{section}/{resource_id?}/{action?}
+
+Examples:
+  /ig_12345678/flows                      → List all flows for this IG account
+  /ig_12345678/flows/new                  → Create new flow
+  /ig_12345678/flows/fl_abc123/edit      → Edit flow
+  /ig_12345678/flows/fl_abc123/preview   → Preview flow
+  /ig_12345678/flows/fl_abc123/analytics → Flow analytics
+  /ig_12345678/analytics                  → Account analytics dashboard
+  /ig_12345678/templates                  → Template library
+  /ig_12345678/templates/tmp_xyz/apply   → Apply template to new flow
+  /ig_12345678/settings                   → Account settings
+
+### 2. FLOW BUILDER URL (Detailed)
+
+Pattern: /ig_{account_id}/flows/{flow_id}--{template_type}--{created_timestamp}/edit
+
+Example:
+  /ig_12345678/flows/fl_abc123--hair-style--20251110140530/edit
+
+Breakdown:
+  ig_12345678        → Instagram account ID (prefixed for clarity)
+  flows              → Section (automation flows)
+  fl_abc123          → Flow unique ID
+  hair-style         → Template type (hair-style, car-color, furniture, etc.)
+  20251110140530     → Created timestamp (YYYYMMDDHHMMSS)
+  edit               → Action mode
+
+### 3. RESOURCE ID CONVENTION
+
+Format: {prefix}_{random_id}
+
+Prefixes:
+  ig_    → Instagram account (e.g., ig_12345678)
+  usr_   → User (e.g., usr_abc123)
+  fl_    → Flow (e.g., fl_xyz789)
+  tmp_   → Template (e.g., tmp_hair001)
+  sess_  → DM Session (e.g., sess_user123_456)
+  img_   → Image (e.g., img_uuid4)
+
+### 4. API ROUTES (Backend)
+
+Pattern: /api/{version?}/{resource}/{action?}
+
+Examples:
+  POST   /api/auth/facebook
+  GET    /api/auth/me
+  GET    /api/flows
+  POST   /api/flows
+  GET    /api/flows/:id
+  PUT    /api/flows/:id
+  DELETE /api/flows/:id
+  POST   /api/flows/:id/publish
+  GET    /api/instagram/webhook         (Facebook verification)
+  POST   /api/instagram/webhook         (Event handler)
+  POST   /api/user/delete               (Facebook required)
+  GET    /api/user/deletion-status/:code
+
+### 5. ROUTE GUARDS & ACCESS CONTROL
+
+Middleware: app/middleware.ts
+
+Logic:
+  1. Check authentication (JWT cookie)
+  2. Extract instagram_account_id from URL
+  3. Verify user owns this IG account
+  4. Allow/deny access
+
+Code:
+  if (path.startsWith('/ig_')) {
+    const accountId = path.split('/')[1];
+    const user = await getUserFromCookies(request);
+
+    if (!user.instagramAccounts.includes(accountId)) {
+      return redirect('/dashboard'); // or 403
+    }
+  }
+
+### 6. BREADCRUMB NAVIGATION
+
+URL: /ig_12345678/flows/fl_abc123/edit
+
+Breadcrumbs:
+  Home > @username > Flows > Hair Style Flow > Edit
+
+Implementation:
+  - Parse URL segments
+  - Fetch Instagram account username from DB
+  - Fetch flow name from DB
+  - Render breadcrumb component
+
+================================================================================
+3. COMPLETE DATABASE SCHEMA
+================================================================================
+
+DATABASE: PostgreSQL 17
+ORM: Prisma
+MIGRATION TOOL: Prisma Migrate
+
+PRISMA SCHEMA (prisma/schema.prisma):
+--------------------------------------
+
+// ============================================================================
+// USER & AUTHENTICATION
+// ============================================================================
+
+model User {
+  id                String              @id @default(cuid())
+  facebookId        String              @unique @map("facebook_id")
+  email             String?
+  name              String?
+  picture           String?
+  geminiApiKey      String?             @map("gemini_api_key") // Per-user API key
+  subscriptionTier  String              @default("free") @map("subscription_tier")
+
+  // Relations
+  instagramAccounts InstagramAccount[]
+  deletionRequests  DeletionRequest[]
+  events            Event[]
+
+  createdAt         DateTime            @default(now()) @map("created_at")
+  updatedAt         DateTime            @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+// ============================================================================
+// INSTAGRAM ACCOUNTS
+// ============================================================================
+
+model InstagramAccount {
+  id               String            @id @default(cuid())
+  userId           String            @map("user_id")
+  instagramId      String            @unique @map("instagram_id")
+  username         String
+  name             String?
+  profilePictureUrl String?          @map("profile_picture_url")
+  followersCount   Int?              @map("followers_count")
+  accessToken      String            @map("access_token") // Long-lived token (60 days)
+  tokenExpiresAt   DateTime?         @map("token_expires_at")
+  isActive         Boolean           @default(true) @map("is_active")
+
+  // Relations
+  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  flows            AutomationFlow[]
+  dmSessions       DmSession[]
+
+  createdAt        DateTime          @default(now()) @map("created_at")
+  updatedAt        DateTime          @updatedAt @map("updated_at")
+
+  @@index([userId])
+  @@map("instagram_accounts")
+}
+
+// ============================================================================
+// AUTOMATION FLOWS
+// ============================================================================
+
+model AutomationFlow {
+  id                  String           @id @default(cuid())
+  userId              String           @map("user_id")
+  instagramAccountId  String           @map("instagram_account_id")
+  templateId          String           @map("template_id")
+
+  name                String
+  description         String?
+  status              FlowStatus       @default(INACTIVE)
+
+  // Trigger configuration
+  triggerKeywords     String[]         @map("trigger_keywords")
+  triggerExactMatch   Boolean          @default(false) @map("trigger_exact_match")
+
+  // Test mode
+  testUsers           String[]         @map("test_users") // Instagram user IDs for testing
+
+  // Flow definition (React Flow format)
+  nodes               Json             // Array of flow nodes
+  edges               Json             // Array of flow edges
+
+  // Settings
+  followerOnly        Boolean          @default(false) @map("follower_only")
+  dailyQuota          Int              @default(100) @map("daily_quota")
+  usedQuota           Int              @default(0) @map("used_quota")
+  quotaResetAt        DateTime?        @map("quota_reset_at")
+
+  // Relations
+  instagramAccount    InstagramAccount @relation(fields: [instagramAccountId], references: [id], onDelete: Cascade)
+  template            AiPromptTemplate @relation(fields: [templateId], references: [id])
+  dmSessions          DmSession[]
+
+  createdAt           DateTime         @default(now()) @map("created_at")
+  updatedAt           DateTime         @updatedAt @map("updated_at")
+
+  @@index([instagramAccountId, status])
+  @@index([userId])
+  @@map("automation_flows")
+}
+
+enum FlowStatus {
+  INACTIVE
+  TEST
+  ACTIVE
+}
+
+// ============================================================================
+// DM SESSIONS (Instagram Message Conversations)
+// ============================================================================
+
+model DmSession {
+  id                  String           @id @default(cuid())
+  automationFlowId    String           @map("automation_flow_id")
+  instagramAccountId  String           @map("instagram_account_id")
+  instagramUserId     String           @map("instagram_user_id") // Sender's IG ID
+  instagramUsername   String?          @map("instagram_username")
+
+  // Session state
+  currentNodeId       String?          @map("current_node_id")
+  sessionState        Json             @default("{}") @map("session_state") // Flow variables
+
+  // Images
+  userImages          String[]         @map("user_images") // URLs of user-uploaded images
+  generatedImages     String[]         @map("generated_images") // AI-generated image URLs
+
+  // Metadata
+  lastMessageAt       DateTime         @default(now()) @map("last_message_at")
+  isCompleted         Boolean          @default(false) @map("is_completed")
+
+  // Relations
+  flow                AutomationFlow   @relation(fields: [automationFlowId], references: [id], onDelete: Cascade)
+  instagramAccount    InstagramAccount @relation(fields: [instagramAccountId], references: [id], onDelete: Cascade)
+
+  createdAt           DateTime         @default(now()) @map("created_at")
+  updatedAt           DateTime         @updatedAt @map("updated_at")
+
+  @@unique([instagramAccountId, instagramUserId, automationFlowId])
+  @@index([automationFlowId])
+  @@index([instagramUserId])
+  @@map("dm_sessions")
+}
+
+// ============================================================================
+// AI PROMPT TEMPLATES
+// ============================================================================
+
+model AiPromptTemplate {
+  id                   String           @id @default(cuid())
+  templateType         String           @map("template_type") // hair-style, car-color, furniture, etc.
+  name                 String
+  description          String?
+
+  // Model configuration
+  analysisModelNormal  String           @default("gemini-2.0-flash-lite") @map("analysis_model_normal")
+  analysisModelHigh    String           @default("gemini-2.0-flash-lite") @map("analysis_model_high")
+  editModelNormal      String           @default("gemini-2.0-flash-image-preview") @map("edit_model_normal")
+  editModelHigh        String           @default("gemini-2.5-flash-image-preview") @map("edit_model_high")
+
+  // Prompts
+  analysisPrompt       String           @map("analysis_prompt") @db.Text
+  editTemplate         String           @map("edit_template") @db.Text // Must include {{PROMPT}} placeholder
+
+  // Relations
+  flows                AutomationFlow[]
+
+  createdAt            DateTime         @default(now()) @map("created_at")
+  updatedAt            DateTime         @updatedAt @map("updated_at")
+
+  @@unique([templateType])
+  @@map("ai_prompt_templates")
+}
+
+// ============================================================================
+// EVENTS (Logging & Analytics)
+// ============================================================================
+
+model Event {
+  id          String    @id @default(cuid())
+  userId      String?   @map("user_id")
+  eventType   String    @map("event_type")
+  sessionId   String?   @map("session_id")
+  details     Json?
+
+  // Relations
+  user        User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  @@index([userId, createdAt])
+  @@index([eventType, createdAt])
+  @@map("events")
+}
+
+// ============================================================================
+// DATA DELETION REQUESTS (Facebook Required)
+// ============================================================================
+
+model DeletionRequest {
+  id                String            @id @default(cuid())
+  userId            String            @map("user_id")
+  confirmationCode  String            @unique @map("confirmation_code")
+  status            DeletionStatus    @default(PENDING)
+  requestedAt       DateTime          @default(now()) @map("requested_at")
+  completedAt       DateTime?         @map("completed_at")
+
+  // Relations
+  user              User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([confirmationCode])
+  @@map("deletion_requests")
+}
+
+enum DeletionStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+// ============================================================================
+// NOTES (Admin Team Communication - Optional)
+// ============================================================================
+
+model Note {
+  id          String    @id @default(cuid())
+  content     String    @db.Text
+  createdBy   String    @map("created_by")
+
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@map("notes")
+}
+
+INDEXES SUMMARY:
+----------------
+
+High-traffic queries:
+  - users.facebook_id (unique, auth lookup)
+  - instagram_accounts.instagram_id (unique, webhook lookup)
+  - automation_flows.instagram_account_id + status (active flows)
+  - dm_sessions.instagram_user_id (session lookup)
+  - events.user_id + created_at (analytics)
+
+================================================================================
+4. API ENDPOINTS SPECIFICATION
+================================================================================
+
+BASE URL: https://app.yourdomain.com
+
+### AUTHENTICATION ENDPOINTS (MEVCUT - GÜNCELLENECEK)
+
+POST /api/auth/facebook
+  Description: Login with Facebook OAuth
+  Request:
+    {
+      "accessToken": "FB_ACCESS_TOKEN"
+    }
+  Response:
+    {
+      "user": {
+        "id": "usr_abc123",
+        "facebookId": "123456789",
+        "name": "John Doe",
+        "email": "john@example.com",
+        "picture": "https://..."
+      }
+    }
+  Side Effects:
+    - Validates FB token with Graph API
+    - Exchanges for long-lived token (60 days)
+    - Creates or updates user in DB
+    - Creates JWT and sets HTTP-only cookie
+
+GET /api/auth/me
+  Description: Get current authenticated user
+  Response:
+    {
+      "user": {...},
+      "instagramAccounts": [...]
+    }
+
+POST /api/auth/logout
+  Description: Logout user
+  Response:
+    { "ok": true }
+  Side Effects:
+    - Clears auth_token cookie
+
+GET /api/auth/instagram/accounts
+  Description: Fetch Instagram Business accounts
+  Response:
+    {
+      "accounts": [
+        {
+          "id": "instagram_id",
+          "username": "myaccount",
+          "name": "My Account",
+          "profile_picture_url": "https://...",
+          "followers_count": 1234
+        }
+      ]
+    }
+
+### USER DATA MANAGEMENT (YENİ - FACEBOOK ZORUNLU)
+
+POST /api/user/delete
+  Description: Request user data deletion (Facebook requirement)
+  Request:
+    {
+      "signed_request": "FACEBOOK_SIGNED_REQUEST"
+    }
+  Response:
+    {
+      "url": "https://app.yourdomain.com/deletion-status/xyz123",
+      "confirmation_code": "xyz123"
+    }
+  Process:
+    1. Verify signed_request from Facebook
+    2. Extract user_id
+    3. Create deletion_requests record
+    4. Queue background job:
+       - Delete user record
+       - Delete all instagram_accounts
+       - Delete all automation_flows
+       - Delete all dm_sessions
+       - Delete all images from S3/R2
+       - Log to events
+    5. Return confirmation code
+
+GET /api/user/deletion-status/:code
+  Description: Check deletion request status
+  Response:
+    {
+      "status": "pending" | "completed" | "failed",
+      "requestedAt": "2025-11-10T14:30:00Z",
+      "completedAt": "2025-11-10T14:35:00Z"
+    }
+
+GET /api/user/data
+  Description: Export user data (GDPR compliance)
+  Response:
+    {
+      "user": {...},
+      "instagramAccounts": [...],
+      "flows": [...],
+      "sessions": [...],
+      "events": [...]
+    }
+
+### AUTOMATION FLOW ENDPOINTS (YENİ)
+
+GET /api/flows
+  Description: List all flows for current user
+  Query Params:
+    ?instagram_account_id=ig_12345678
+    ?status=active
+  Response:
+    {
+      "flows": [
+        {
+          "id": "fl_abc123",
+          "name": "Hair Style Bot",
+          "status": "active",
+          "instagramAccount": {...},
+          "createdAt": "..."
+        }
+      ]
+    }
+
+POST /api/flows
+  Description: Create new automation flow
+  Request:
+    {
+      "instagramAccountId": "ig_12345678",
+      "templateId": "tmp_hair001",
+      "name": "My Flow",
+      "description": "...",
+      "triggerKeywords": ["hair", "saç"],
+      "nodes": [...],
+      "edges": [...]
+    }
+  Response:
+    {
+      "flow": {...}
+    }
+
+GET /api/flows/:id
+  Description: Get flow by ID
+  Response:
+    {
+      "flow": {...}
+    }
+
+PUT /api/flows/:id
+  Description: Update flow
+  Request:
+    {
+      "name": "Updated Name",
+      "nodes": [...],
+      "edges": [...]
+    }
+  Response:
+    {
+      "flow": {...}
+    }
+
+DELETE /api/flows/:id
+  Description: Delete flow
+  Response:
+    { "ok": true }
+
+POST /api/flows/:id/publish
+  Description: Publish/unpublish flow
+  Request:
+    {
+      "status": "active" | "inactive" | "test"
+    }
+  Response:
+    {
+      "flow": {...}
+    }
+
+GET /api/flows/:id/analytics
+  Description: Get flow analytics
+  Query Params:
+    ?start_date=2025-11-01
+    ?end_date=2025-11-10
+  Response:
+    {
+      "totalSessions": 123,
+      "completedSessions": 98,
+      "averageCompletionTime": 45.5,
+      "dailyStats": [...]
+    }
+
+### INSTAGRAM WEBHOOK (YENİ - KRİTİK)
+
+GET /api/instagram/webhook
+  Description: Webhook verification (Facebook requirement)
+  Query Params:
+    ?hub.mode=subscribe
+    &hub.verify_token=SECRET_TOKEN
+    &hub.challenge=RANDOM_STRING
+  Response:
+    RANDOM_STRING (plain text)
+  Process:
+    1. Verify hub.mode === 'subscribe'
+    2. Verify hub.verify_token === process.env.WEBHOOK_VERIFY_TOKEN
+    3. Return hub.challenge
+
+POST /api/instagram/webhook
+  Description: Receive Instagram DM events
+  Headers:
+    x-hub-signature-256: sha256=...
+  Request:
+    {
+      "object": "instagram",
+      "entry": [{
+        "messaging": [{
+          "sender": {"id": "instagram_user_123"},
+          "recipient": {"id": "your_ig_account_id"},
+          "timestamp": 1234567890,
+          "message": {
+            "mid": "msg_id",
+            "text": "keyword",
+            "attachments": [{
+              "type": "image",
+              "payload": {"url": "https://..."}
+            }]
+          }
+        }]
+      }]
+    }
+  Response:
+    { "ok": true }
+  Process:
+    1. Verify HMAC signature
+    2. Extract sender, recipient, message
+    3. Find matching automation flow (keyword match)
+    4. Queue background job to process message
+    5. Return immediate response
+
+### AI PROCESSING ENDPOINTS (Python Microservice)
+
+POST /ai/analyze
+  Description: Analyze image with Gemini AI
+  Request:
+    {
+      "imageUrl": "https://...",
+      "promptTemplateId": "tmp_hair001",
+      "quality": "normal" | "high"
+    }
+  Response:
+    {
+      "analysis": {
+        "hair_length": "shoulder-length",
+        "hair_style": "wavy",
+        "hair_color": "ash brown (#7b6d5d)",
+        ...
+      },
+      "naturalLanguage": "shoulder-length wavy hair..."
+    }
+
+POST /ai/transform
+  Description: Transform image with Gemini AI
+  Request:
+    {
+      "selfieUrl": "https://...",
+      "referenceUrl": "https://...",
+      "prompt": "Change hair to match reference...",
+      "quality": "normal" | "high"
+    }
+  Response:
+    {
+      "imageUrl": "https://cdn.yourdomain.com/img_uuid.png"
+    }
+
+POST /ai/process-flow
+  Description: Execute automation flow step
+  Request:
+    {
+      "sessionId": "sess_abc123",
+      "currentNodeId": "node_1",
+      "userInput": {...}
+    }
+  Response:
+    {
+      "nextNodeId": "node_2",
+      "action": "send_message" | "request_image" | "generate_image",
+      "data": {...}
+    }
+
+### ANALYTICS ENDPOINTS (GÜNCELLENECEK)
+
+GET /api/analytics
+  Description: Overall analytics dashboard
+  Response:
+    {
+      "totalUsers": 1234,
+      "activeFlows": 56,
+      "totalSessions": 5678,
+      "revenue": {...}
+    }
+
+GET /api/analytics/flows/:id
+  Description: Flow-specific analytics
+  Response:
+    {
+      "sessions": [...],
+      "performance": {...}
+    }
+
+### TEMPLATE ENDPOINTS (YENİ)
+
+GET /api/templates
+  Description: List all available templates
+  Response:
+    {
+      "templates": [
+        {
+          "id": "tmp_hair001",
+          "type": "hair-style",
+          "name": "Hair Style Transformation",
+          "description": "...",
+          "previewImage": "https://..."
+        }
+      ]
+    }
+
+GET /api/templates/:id
+  Description: Get template details
+  Response:
+    {
+      "template": {...}
+    }
+
+### ADMIN ENDPOINTS (Opsiyonel)
+
+GET /api/admin/users
+  Description: List all users (admin only)
+  Response:
+    {
+      "users": [...]
+    }
+
+GET /api/admin/logs
+  Description: System logs
+  Query Params:
+    ?limit=100
+    &level=error
+  Response:
+    {
+      "logs": [...]
+    }
+
+================================================================================
+5. INSTAGRAM WEBHOOK INTEGRATION
+================================================================================
+
+OVERVIEW:
+---------
+
+Instagram Messaging API allows your app to receive real-time webhook events
+when users send messages to your Instagram Business account.
+
+REQUIRED SETUP:
+---------------
+
+1. Facebook Developer Console
+   → Create App → Products → Messenger → Instagram Settings
+   → Webhooks → Subscribe to: messages, messaging_postbacks
+   → Callback URL: https://app.yourdomain.com/api/instagram/webhook
+   → Verify Token: (random secret, store in .env)
+
+2. Instagram Business Account
+   → Must be linked to Facebook Page
+   → Page must have Page Access Token
+   → Instagram account must have messages enabled
+
+3. Permissions Required:
+   - pages_messaging
+   - instagram_basic
+   - instagram_manage_messages
+
+WEBHOOK VERIFICATION:
+---------------------
+
+Facebook will send a GET request to verify your endpoint:
+
+GET /api/instagram/webhook?hub.mode=subscribe&hub.verify_token=SECRET&hub.challenge=RANDOM
+
+Your Response:
+  - Verify hub.verify_token matches your secret
+  - Return hub.challenge as plain text response
+
+Implementation (Next.js):
+
+// app/api/instagram/webhook/route.ts
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const mode = searchParams.get('hub.mode');
+  const token = searchParams.get('hub.verify_token');
+  const challenge = searchParams.get('hub.challenge');
+
+  if (mode === 'subscribe' && token === process.env.WEBHOOK_VERIFY_TOKEN) {
+    console.log('Webhook verified');
+    return new Response(challenge, { status: 200 });
+  }
+
+  return new Response('Forbidden', { status: 403 });
+}
+
+WEBHOOK EVENT HANDLING:
+-----------------------
+
+Instagram sends POST requests for each message:
+
+POST /api/instagram/webhook
+Headers:
+  x-hub-signature-256: sha256=abc123...
+Body:
+  {
+    "object": "instagram",
+    "entry": [{
+      "id": "instagram_account_id",
+      "time": 1234567890,
+      "messaging": [{
+        "sender": {"id": "instagram_user_123"},
+        "recipient": {"id": "your_instagram_account_id"},
+        "timestamp": 1234567890,
+        "message": {
+          "mid": "msg_id_12345",
+          "text": "hair transformation",
+          "attachments": [{
+            "type": "image",
+            "payload": {
+              "url": "https://scontent.cdninstagram.com/..."
+            }
+          }]
+        }
+      }]
+    }]
+  }
+
+SIGNATURE VERIFICATION (HMAC SHA256):
+
+import crypto from 'crypto';
+
+function verifySignature(signature: string, body: string): boolean {
+  const hmac = crypto.createHmac('sha256', process.env.INSTAGRAM_APP_SECRET!);
+  hmac.update(body);
+  const expectedSignature = `sha256=${hmac.digest('hex')}`;
+
+  return crypto.timingSafeEqual(
+    Buffer.from(signature),
+    Buffer.from(expectedSignature)
+  );
+}
+
+export async function POST(request: Request) {
+  const signature = request.headers.get('x-hub-signature-256');
+  const rawBody = await request.text();
+
+  if (!signature || !verifySignature(signature, rawBody)) {
+    return new Response('Unauthorized', { status: 401 });
+  }
+
+  const data = JSON.parse(rawBody);
+
+  // Process webhook event asynchronously
+  await queueWebhookEvent(data);
+
+  // Return immediate response (required by Facebook)
+  return Response.json({ ok: true });
+}
+
+MESSAGE PROCESSING WORKFLOW:
+----------------------------
+
+1. Receive webhook event
+2. Extract sender ID, recipient ID, message text/image
+3. Find Instagram account in database (recipient ID)
+4. Find matching automation flow:
+   - Check triggerKeywords against message text
+   - Check flow.status === 'ACTIVE' or 'TEST'
+   - If TEST mode, check if sender in testUsers array
+5. Load or create DM session:
+   - Unique key: (instagramAccountId, instagramUserId, automationFlowId)
+   - Load sessionState (current position in flow)
+6. Execute flow node logic:
+   - If node type === "message": Send text response
+   - If node type === "request_image": Ask user to upload image
+   - If node type === "ai_analysis": Queue AI processing job
+   - If node type === "ai_transform": Queue AI transformation job
+   - If node type === "send_image": Send generated image to user
+7. Update session state
+8. Send response via Instagram API
+
+SENDING INSTAGRAM DM:
+---------------------
+
+POST https://graph.facebook.com/v18.0/me/messages
+Headers:
+  Authorization: Bearer {PAGE_ACCESS_TOKEN}
+Body:
+  {
+    "recipient": {
+      "id": "instagram_user_123"
+    },
+    "message": {
+      "text": "Hello! Please upload your selfie."
+    }
+  }
+
+OR (with image):
+
+  {
+    "recipient": {
+      "id": "instagram_user_123"
+    },
+    "message": {
+      "attachment": {
+        "type": "image",
+        "payload": {
+          "url": "https://cdn.yourdomain.com/result.png",
+          "is_reusable": true
+        }
+      }
+    }
+  }
+
+RATE LIMITING:
+--------------
+
+Instagram has rate limits:
+  - 200 requests per hour per user
+  - 10,000 requests per day per app
+
+Implement rate limiting in webhook handler:
+  - Track requests per user
+  - Queue overflow requests
+  - Respond with "Please wait" message if rate limited
+
+ERROR HANDLING:
+---------------
+
+1. Signature verification failure → 401 Unauthorized
+2. Instagram account not found → Log and ignore
+3. No matching flow → Ignore (user sent random message)
+4. AI processing failure → Send error message to user
+5. Network timeout → Retry up to 3 times
+
+================================================================================
+6. GOOGLE GEMINI AI INTEGRATION
+================================================================================
+
+APPROACH 1: Python FastAPI Microservice (ÖNERİLEN)
+---------------------------------------------------
+
+Based on AUTOMATAA architecture, create a separate Python service for AI.
+
+File Structure:
+  /ai-service/
+    ├── app/
+    │   ├── main.py              (FastAPI app)
+    │   ├── config.py            (Settings)
+    │   ├── clients/
+    │   │   └── gemini_client.py (Google Gemini API)
+    │   ├── api/
+    │   │   └── ai_routes.py     (AI endpoints)
+    │   ├── tasks.py             (Celery tasks)
+    │   └── queue.py             (Celery config)
+    ├── requirements.txt
+    ├── Dockerfile
+    └── docker-compose.yml
+
+Gemini Client Implementation (Python):
+
+# ai-service/app/clients/gemini_client.py
+import google.generativeai as genai
+from PIL import Image
+import io
+
+class GeminiClient:
+    def __init__(self, api_key: str):
+        genai.configure(api_key=api_key)
+        self.analysis_model = genai.GenerativeModel("gemini-2.0-flash-lite")
+        self.edit_model = genai.GenerativeModel("gemini-2.5-flash-image-preview")
+
+    async def analyze_image(self, image_bytes: bytes, prompt: str) -> dict:
+        """
+        Analyze image and return structured JSON.
+        """
+        image = Image.open(io.BytesIO(image_bytes))
+
+        response = self.analysis_model.generate_content([prompt, image])
+        text = response.text.strip()
+
+        # Strip markdown code blocks
+        if text.startswith("```json"):
+            text = text[7:]
+        if text.endswith("```"):
+            text = text[:-3]
+
+        return json.loads(text)
+
+    async def transform_image(
+        self,
+        selfie_bytes: bytes,
+        reference_bytes: bytes,
+        prompt: str
+    ) -> bytes:
+        """
+        Transform selfie to match reference using Gemini AI.
+        """
+        selfie = Image.open(io.BytesIO(selfie_bytes))
+        reference = Image.open(io.BytesIO(reference_bytes))
+
+        response = self.edit_model.generate_content([prompt, selfie, reference])
+
+        # Download generated image
+        image_data = response.candidates[0].content.parts[0].inline_data.data
+
+        # Convert to PNG
+        img = Image.open(io.BytesIO(image_data))
+        output = io.BytesIO()
+        img.save(output, format='PNG')
+
+        return output.getvalue()
+
+FastAPI Endpoints:
+
+# ai-service/app/api/ai_routes.py
+from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel
+import aiohttp
+
+router = APIRouter()
+
+class AnalyzeRequest(BaseModel):
+    image_url: str
+    prompt_template_id: str
+    quality: str = "normal"
+
+@router.post("/analyze")
+async def analyze_image(request: AnalyzeRequest):
+    # Download image
+    async with aiohttp.ClientSession() as session:
+        async with session.get(request.image_url) as resp:
+            image_bytes = await resp.read()
+
+    # Load prompt template from database
+    template = await get_prompt_template(request.prompt_template_id)
+
+    # Select model based on quality
+    model = template.analysis_model_high if request.quality == "high" else template.analysis_model_normal
+
+    # Analyze with Gemini
+    gemini = GeminiClient(api_key=os.getenv("GEMINI_API_KEY"))
+    result = await gemini.analyze_image(image_bytes, template.analysis_prompt)
+
+    return {"analysis": result}
+
+Celery Task for Async Processing:
+
+# ai-service/app/tasks.py
+from celery import Celery
+from app.clients.gemini_client import GeminiClient
+import os
+
+celery_app = Celery('ai_service', broker=os.getenv('CELERY_BROKER_URL'))
+
+@celery_app.task
+def process_image_transformation(session_id: str, selfie_url: str, reference_url: str):
+    # Download images
+    selfie_bytes = download_image(selfie_url)
+    reference_bytes = download_image(reference_url)
+
+    # Load session from database
+    session = get_dm_session(session_id)
+
+    # Get prompt template
+    template = get_prompt_template(session.flow.template_id)
+
+    # Transform image
+    gemini = GeminiClient(api_key=session.user.gemini_api_key or os.getenv('GEMINI_API_KEY'))
+    result_bytes = gemini.transform_image(selfie_bytes, reference_bytes, template.edit_template)
+
+    # Upload to S3/R2
+    result_url = upload_to_storage(result_bytes, f"{session_id}.png")
+
+    # Update session
+    update_dm_session(session_id, generated_images=[result_url])
+
+    # Send to user via Instagram API
+    send_instagram_message(session.instagram_user_id, image_url=result_url)
+
+APPROACH 2: Node.js Integration (Alternatif)
+---------------------------------------------
+
+If you prefer single stack, use @google/generative-ai npm package:
+
+npm install @google/generative-ai
+
+// lib/ai/gemini-client.ts
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+
+export async function analyzeImage(imageUrl: string, prompt: string) {
+  const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-lite" });
+
+  // Download image
+  const response = await fetch(imageUrl);
+  const buffer = await response.arrayBuffer();
+
+  const result = await model.generateContent([
+    prompt,
+    {
+      inlineData: {
+        data: Buffer.from(buffer).toString("base64"),
+        mimeType: "image/jpeg"
+      }
+    }
+  ]);
+
+  return JSON.parse(result.response.text());
+}
+
+export async function transformImage(
+  selfieUrl: string,
+  referenceUrl: string,
+  prompt: string
+) {
+  const model = genAI.getGenerativeModel({
+    model: "gemini-2.5-flash-image-preview"
+  });
+
+  // Download images
+  const selfie = await fetch(selfieUrl).then(r => r.arrayBuffer());
+  const reference = await fetch(referenceUrl).then(r => r.arrayBuffer());
+
+  const result = await model.generateContent([
+    prompt,
+    {
+      inlineData: {
+        data: Buffer.from(selfie).toString("base64"),
+        mimeType: "image/jpeg"
+      }
+    },
+    {
+      inlineData: {
+        data: Buffer.from(reference).toString("base64"),
+        mimeType: "image/jpeg"
+      }
+    }
+  ]);
+
+  // Extract generated image
+  const imageData = result.response.candidates[0].content.parts[0].inlineData.data;
+  return Buffer.from(imageData, 'base64');
+}
+
+For background processing with Node.js, use Bull/BullMQ:
+
+npm install bull bullmq ioredis
+
+// lib/queue/ai-queue.ts
+import { Queue, Worker } from 'bullmq';
+import Redis from 'ioredis';
+
+const connection = new Redis(process.env.REDIS_URL!);
+
+export const aiQueue = new Queue('ai-processing', { connection });
+
+export const aiWorker = new Worker('ai-processing', async (job) => {
+  if (job.name === 'transform-image') {
+    const { sessionId, selfieUrl, referenceUrl } = job.data;
+
+    // Transform image
+    const result = await transformImage(selfieUrl, referenceUrl, "...");
+
+    // Upload to S3
+    const url = await uploadToS3(result, `${sessionId}.png`);
+
+    // Update session
+    await prisma.dmSession.update({
+      where: { id: sessionId },
+      data: { generatedImages: { push: url } }
+    });
+
+    // Send to Instagram
+    await sendInstagramMessage(sessionId, url);
+  }
+}, { connection });
+
+================================================================================
+7. FACEBOOK APP REVIEW REQUIREMENTS
+================================================================================
+
+CHECKLIST (must.md Gereksinimleri):
+------------------------------------
+
+### 1. BACKEND & SUNUCU
+
+[✅] HTTPS test ortamı
+  → Deploy to Vercel (Next.js) + Railway (Python/DB)
+  → Domain + SSL sertifikası otomatik
+
+[✅] Facebook OAuth kimlik doğrulama
+  → Mevcut: app/api/auth/facebook/route.ts
+  → Long-lived token exchange var
+
+[✅] Webhook doğrulama
+  → Eklenecek: app/api/instagram/webhook/route.ts (GET)
+  → HMAC signature verification
+
+[✅] Logging sistemi
+  → Winston/Pino (Node.js) veya Loguru (Python)
+  → Events tablosuna log kaydetme
+
+### 2. API KULLANIM KURALLARI
+
+[✅] İzin gerekçelendirme
+  → Dokümantasyon hazırlanacak
+  → Hangi izinler, neden, nasıl kullanılıyor
+
+[✅] Graph API örnekleri
+  → Postman koleksiyonu veya cURL komutları
+  → API dokümantasyonu (Swagger/OpenAPI)
+
+[✅] Orantılı veri kullanımı
+  → Sadece gerekli alanlar çekiliyor
+  → Gereksiz veri saklanmıyor
+
+### 3. VERİ SAKLAMA & VERİTABANI POLİTİKALARI
+
+[✅] Veri minimizasyonu
+  → Session images 24 saat sonra silinecek (cron job)
+  → User deletion endpoint
+
+[✅] Silme mekanizması
+  → POST /api/user/delete endpoint
+  → Tüm ilişkili veriler cascade delete
+  → confirmation_code ile status takibi
+
+[✅] Güvenli saklama
+  → PostgreSQL database (encrypted at rest)
+  → S3/R2 with private buckets
+  → Access tokens encrypted
+
+[✅] Veri paylaşımı
+  → Üçüncü taraflarla paylaşım YOK
+  → Gizlilik politikasında belirtilecek
+
+### 4. İNCELEME PAKETİ HAZIRLIĞI
+
+[⚠️] Video/ekran kaydı
+  → Uygulama akışını gösteren video
+  → Tüm özelliklerin demonstrasyonu
+  → İzinlerin nasıl kullanıldığı
+
+[✅] Test kullanıcıları
+  → Facebook Developer Console → Roles
+  → Test kullanıcıları eklenecek
+
+[✅] Dokümantasyon
+  → Bu START.txt dosyası başlangıç
+  → API documentation (Swagger)
+  → Kullanım kılavuzu
+
+[⚠️] Gizlilik politikası
+  → Public URL: https://app.yourdomain.com/privacy
+  → Hangi veriler toplandığı
+  → Nasıl kullanıldığı
+  → Saklama süresi
+  → Silme prosedürü
+
+[⚠️] Kullanım şartları
+  → Public URL: https://app.yourdomain.com/terms
+  → Kullanıcı sorumlulukları
+  → Hizmet kapsamı
+
+### 5. BAŞVURU ÖNCESİ KONTROL LİSTESİ
+
+[ ] Backend HTTPS üzerinden erişilebilir
+[ ] Graph API izinlerini gösteren canlı uç noktalar mevcut
+[ ] Veri silme uç noktası hazır ve test edildi
+[ ] İnceleme videosu tamamlandı (Loom/YouTube)
+[ ] Gizlilik politikası yayınlandı ve Facebook panelinde linklendi
+
+FACEBOOK DEVELOPER DASHBOARD AYARLARI:
+---------------------------------------
+
+1. App Dashboard → Settings → Basic
+   - App Domains: yourdomain.com
+   - Privacy Policy URL: https://app.yourdomain.com/privacy
+   - Terms of Service URL: https://app.yourdomain.com/terms
+   - User Data Deletion: https://app.yourdomain.com/api/user/delete
+
+2. App Dashboard → Instagram → Settings
+   - Webhook Callback URL: https://app.yourdomain.com/api/instagram/webhook
+   - Verify Token: [your_secret_token]
+   - Subscribed Fields: messages, messaging_postbacks
+
+3. App Dashboard → App Review → Permissions and Features
+   - Request: pages_messaging
+   - Request: instagram_basic
+   - Request: instagram_manage_messages
+   - For each permission, provide:
+     * Detailed description of use
+     * Step-by-step instructions
+     * Screenshots or video
+
+4. App Review Submission
+   - Select permissions to review
+   - Add test user credentials
+   - Upload demonstration video
+   - Provide detailed notes
+
+EXAMPLE PERMISSION JUSTIFICATION:
+----------------------------------
+
+Permission: instagram_manage_messages
+
+Use Case:
+"Our app provides automated Instagram DM responses for businesses. When a
+user sends a message with a specific keyword (e.g., 'hair style'), our app:
+
+1. Receives the message via webhook (instagram_manage_messages)
+2. Analyzes the message content
+3. Requests the user to upload images
+4. Processes images with AI (Google Gemini)
+5. Sends generated images back to the user via DM
+
+This permission is essential for:
+- Receiving incoming DM messages (webhook)
+- Sending automated responses to users
+- Delivering AI-generated content
+
+We do not:
+- Store message content beyond active sessions
+- Share data with third parties
+- Send unsolicited messages
+
+All user data is deleted upon request via our data deletion endpoint."
+
+================================================================================
+8. IMPLEMENTATION ROADMAP (17 Days)
+================================================================================
+
+TEAM: 1 Full-Stack Developer (Solo)
+DAILY WORK: 8 hours
+ASSUMPTIONS: Experienced with Next.js, TypeScript, PostgreSQL, Python
+
+────────────────────────────────────────────────────────────────────────────
+PHASE 1: FOUNDATION (Days 1-3) - KRİTİK ALTYAPI
+────────────────────────────────────────────────────────────────────────────
+
+DAY 1: Database Setup
+──────────────────────
+
+Tasks:
+  ✓ Setup PostgreSQL (Docker)
+  ✓ Install Prisma ORM
+  ✓ Create schema.prisma with all models
+  ✓ Generate Prisma Client
+  ✓ Run initial migration
+  ✓ Create seed script with sample data
+
+Files:
+  - prisma/schema.prisma (new)
+  - prisma/seed.ts (new)
+  - lib/db.ts (Prisma client singleton)
+  - package.json (add prisma dependencies)
+
+Commands:
+  npm install prisma @prisma/client
+  npx prisma init
+  npx prisma migrate dev --name init
+  npx prisma db seed
+
+Testing:
+  - Verify database connection
+  - Check all tables created
+  - Seed data exists
+
+DAY 2: Auth System Refactoring
+───────────────────────────────
+
+Tasks:
+  ✓ Refactor auth endpoints to use Prisma
+  ✓ Update JWT payload with database user ID
+  ✓ Implement getUserFromCookies with DB lookup
+  ✓ Update Instagram accounts endpoint to save to DB
+  ✓ Add middleware for route protection
+
+Files:
+  - app/api/auth/facebook/route.ts (update)
+  - app/api/auth/me/route.ts (update)
+  - app/api/auth/instagram/accounts/route.ts (update)
+  - lib/auth/jwt.ts (update)
+  - middleware.ts (update)
+
+Testing:
+  - Login flow creates user in DB
+  - JWT contains correct user ID
+  - /api/auth/me fetches from DB
+  - Instagram accounts saved to DB
+
+DAY 3: Data Deletion Endpoint (Facebook Required)
+──────────────────────────────────────────────────
+
+Tasks:
+  ✓ Create /api/user/delete endpoint
+  ✓ Verify Facebook signed_request
+  ✓ Implement cascade deletion logic
+  ✓ Create deletion status endpoint
+  ✓ Setup background job for cleanup
+
+Files:
+  - app/api/user/delete/route.ts (new)
+  - app/api/user/deletion-status/[code]/route.ts (new)
+  - lib/facebook/verify-signed-request.ts (new)
+  - lib/jobs/user-deletion.ts (new)
+
+Testing:
+  - POST /api/user/delete returns confirmation code
+  - User and all related data deleted
+  - Status endpoint shows progress
+  - S3/R2 images deleted
+
+────────────────────────────────────────────────────────────────────────────
+PHASE 2: INSTAGRAM WEBHOOK (Days 4-5) - CORE INTEGRATION
+────────────────────────────────────────────────────────────────────────────
+
+DAY 4: Webhook Verification & Basic Handler
+────────────────────────────────────────────
+
+Tasks:
+  ✓ Create GET /api/instagram/webhook (verification)
+  ✓ Create POST /api/instagram/webhook (event handler)
+  ✓ Implement HMAC signature verification
+  ✓ Parse webhook payload
+  ✓ Setup rate limiting (SlowAPI or Upstash)
+
+Files:
+  - app/api/instagram/webhook/route.ts (new)
+  - lib/instagram/verify-signature.ts (new)
+  - lib/instagram/parse-webhook.ts (new)
+
+Testing:
+  - GET endpoint returns challenge
+  - POST endpoint verifies signature
+  - Invalid signature returns 401
+  - Rate limiting works
+
+DAY 5: Webhook Event Processing
+────────────────────────────────
+
+Tasks:
+  ✓ Implement message routing logic
+  ✓ Find matching automation flow (keyword match)
+  ✓ Create or load DM session
+  ✓ Queue background job for processing
+  ✓ Setup Bull/BullMQ or Celery task queue
+
+Files:
+  - lib/instagram/message-router.ts (new)
+  - lib/instagram/flow-matcher.ts (new)
+  - lib/queue/webhook-queue.ts (new)
+  - lib/jobs/process-webhook.ts (new)
+
+Testing:
+  - Incoming message finds correct flow
+  - Session created/loaded
+  - Job queued successfully
+  - Job processes message
+
+────────────────────────────────────────────────────────────────────────────
+PHASE 3: AI INTEGRATION (Days 6-9) - CORE FUNCTIONALITY
+────────────────────────────────────────────────────────────────────────────
+
+DAY 6: Python Microservice Setup
+─────────────────────────────────
+
+Tasks:
+  ✓ Create ai-service directory
+  ✓ Setup FastAPI project structure
+  ✓ Install dependencies (fastapi, google-generativeai, celery, etc.)
+  ✓ Create Dockerfile
+  ✓ Setup docker-compose with Redis
+
+Files:
+  - ai-service/app/main.py (new)
+  - ai-service/app/config.py (new)
+  - ai-service/requirements.txt (new)
+  - ai-service/Dockerfile (new)
+  - docker-compose.yml (update)
+
+Commands:
+  cd ai-service
+  python -m venv venv
+  source venv/bin/activate
+  pip install -r requirements.txt
+  uvicorn app.main:app --reload
+
+Testing:
+  - FastAPI server starts
+  - Health check endpoint works
+  - Docker container builds
+
+DAY 7: Google Gemini Client Implementation
+───────────────────────────────────────────
+
+Tasks:
+  ✓ Implement GeminiClient class (based on AUTOMATAA)
+  ✓ Add analyze_image method
+  ✓ Add transform_image method
+  ✓ Handle quota exceeded errors
+  ✓ Implement retry logic
+
+Files:
+  - ai-service/app/clients/gemini_client.py (new)
+  - ai-service/app/exceptions.py (new)
+
+Testing:
+  - Analyze sample image
+  - Transform sample image
+  - Error handling works
+  - Retry logic triggers
+
+DAY 8: AI API Endpoints
+───────────────────────
+
+Tasks:
+  ✓ Create POST /ai/analyze endpoint
+  ✓ Create POST /ai/transform endpoint
+  ✓ Implement image download utility
+  ✓ Integrate with Prisma (load templates)
+  ✓ Add authentication (API key from Next.js)
+
+Files:
+  - ai-service/app/api/ai_routes.py (new)
+  - ai-service/app/utils/image_download.py (new)
+  - ai-service/app/database.py (Prisma/SQLAlchemy)
+
+Testing:
+  - POST /ai/analyze returns JSON
+  - POST /ai/transform returns image URL
+  - Authentication works
+
+DAY 9: Celery Background Tasks
+───────────────────────────────
+
+Tasks:
+  ✓ Setup Celery with Redis broker
+  ✓ Create image transformation task
+  ✓ Create image analysis task
+  ✓ Integrate with Instagram API (send DM)
+  ✓ Implement error handling and retries
+
+Files:
+  - ai-service/app/queue.py (new)
+  - ai-service/app/tasks.py (new)
+  - ai-service/app/clients/instagram_client.py (new)
+
+Commands:
+  celery -A app.queue worker --loglevel=info
+
+Testing:
+  - Queue task from API
+  - Task executes successfully
+  - Instagram DM sent
+  - Retries on failure
+
+────────────────────────────────────────────────────────────────────────────
+PHASE 4: FLOW MANAGEMENT (Days 10-12) - USER FEATURES
+────────────────────────────────────────────────────────────────────────────
+
+DAY 10: Flow CRUD Endpoints
+────────────────────────────
+
+Tasks:
+  ✓ Create GET /api/flows (list)
+  ✓ Create POST /api/flows (create)
+  ✓ Create GET /api/flows/:id (read)
+  ✓ Create PUT /api/flows/:id (update)
+  ✓ Create DELETE /api/flows/:id (delete)
+
+Files:
+  - app/api/flows/route.ts (new)
+  - app/api/flows/[id]/route.ts (new)
+  - lib/services/flow-service.ts (new)
+
+Testing:
+  - Create flow saves to DB
+  - List flows returns user's flows
+  - Update flow modifies DB
+  - Delete flow removes from DB
+
+DAY 11: Flow Execution Engine
+──────────────────────────────
+
+Tasks:
+  ✓ Implement flow executor
+  ✓ Handle node types (message, request_image, ai_analysis, ai_transform)
+  ✓ Update session state
+  ✓ Integrate with AI microservice
+  ✓ Handle conditionals and branching
+
+Files:
+  - lib/flow/executor.ts (new)
+  - lib/flow/node-handlers.ts (new)
+  - lib/flow/session-manager.ts (new)
+
+Testing:
+  - Execute simple flow
+  - Session state updates
+  - AI nodes trigger jobs
+  - Branching works
+
+DAY 12: Template System
+───────────────────────
+
+Tasks:
+  ✓ Seed AI prompt templates
+  ✓ Create GET /api/templates endpoint
+  ✓ Create template library UI (basic)
+  ✓ Implement template application logic
+
+Files:
+  - prisma/seed-templates.ts (new)
+  - app/api/templates/route.ts (new)
+  - app/[locale]/templates/page.tsx (update)
+
+Testing:
+  - Templates seeded in DB
+  - API returns templates
+  - UI displays templates
+  - Apply template creates flow
+
+────────────────────────────────────────────────────────────────────────────
+PHASE 5: PRODUCTION READINESS (Days 13-15) - DEPLOYMENT
+────────────────────────────────────────────────────────────────────────────
+
+DAY 13: Image Storage & CDN
+────────────────────────────
+
+Tasks:
+  ✓ Setup Cloudflare R2 or AWS S3
+  ✓ Implement upload utility
+  ✓ Implement download utility
+  ✓ Add CDN URL generation
+  ✓ Implement image cleanup cron job
+
+Files:
+  - lib/storage/r2-client.ts (new)
+  - lib/storage/upload.ts (new)
+  - lib/cron/cleanup-images.ts (new)
+
+Environment:
+  R2_ACCOUNT_ID=...
+  R2_ACCESS_KEY_ID=...
+  R2_SECRET_ACCESS_KEY=...
+  R2_BUCKET_NAME=...
+
+Testing:
+  - Upload image to R2
+  - Download image from R2
+  - CDN URL works
+  - Cleanup deletes old images
+
+DAY 14: Logging & Monitoring
+─────────────────────────────
+
+Tasks:
+  ✓ Setup Winston or Pino logger
+  ✓ Log all API requests
+  ✓ Log all errors
+  ✓ Create events table logging
+  ✓ Setup Sentry for error tracking (optional)
+
+Files:
+  - lib/logger.ts (new)
+  - lib/middleware/logger-middleware.ts (new)
+  - lib/events/log-event.ts (new)
+
+Testing:
+  - Logs appear in console/file
+  - Errors logged to Sentry
+  - Events saved to DB
+
+DAY 15: Deployment
+──────────────────
+
+Tasks:
+  ✓ Deploy Next.js to Vercel
+  ✓ Deploy Python AI service to Railway/Render
+  ✓ Setup PostgreSQL on Railway/Supabase
+  ✓ Setup Redis on Upstash/Railway
+  ✓ Configure environment variables
+  ✓ Setup domain + SSL
+
+Platforms:
+  - Vercel (Next.js frontend + API routes)
+  - Railway (Python AI service + PostgreSQL + Redis)
+  - Cloudflare R2 (image storage)
+
+Testing:
+  - Production URL accessible
+  - HTTPS works
+  - Database connected
+  - AI service reachable
+  - Full flow works end-to-end
+
+────────────────────────────────────────────────────────────────────────────
+PHASE 6: APP REVIEW PREP (Days 16-17) - COMPLIANCE
+────────────────────────────────────────────────────────────────────────────
+
+DAY 16: Legal Pages & Documentation
+────────────────────────────────────
+
+Tasks:
+  ✓ Create privacy policy page
+  ✓ Create terms of service page
+  ✓ Create API documentation (Swagger/Postman)
+  ✓ Create permission justification document
+  ✓ Create user guide
+
+Files:
+  - app/[locale]/privacy/page.tsx (new)
+  - app/[locale]/terms/page.tsx (new)
+  - docs/api-documentation.md (new)
+  - docs/permission-justification.md (new)
+
+Testing:
+  - Pages accessible publicly
+  - Content is clear and complete
+  - Links work
+
+DAY 17: Video & Submission
+───────────────────────────
+
+Tasks:
+  ✓ Record demo video (Loom/OBS)
+  ✓ Show full user flow
+  ✓ Demonstrate each permission use
+  ✓ Test with test users
+  ✓ Submit to Facebook App Review
+
+Video Outline:
+  1. Introduction (30s)
+  2. User authentication (Facebook login) (1m)
+  3. Connect Instagram account (1m)
+  4. Create automation flow (2m)
+  5. Test flow with DM (3m)
+  6. Show AI processing (1m)
+  7. Receive generated image (1m)
+  8. Data deletion demo (1m)
+  9. Conclusion (30s)
+  Total: ~10 minutes
+
+Submission Checklist:
+  [ ] All permissions requested with justification
+  [ ] Video uploaded (YouTube unlisted or directly)
+  [ ] Test user credentials provided
+  [ ] Privacy policy URL added
+  [ ] Terms URL added
+  [ ] Data deletion URL added
+  [ ] All questions answered
+  [ ] Submit button clicked
+
+Expected Review Time: 2-4 weeks
+
+────────────────────────────────────────────────────────────────────────────
+TOTAL: 17 DAYS (FULL-TIME)
+────────────────────────────────────────────────────────────────────────────
+
+================================================================================
+9. ENVIRONMENT VARIABLES
+================================================================================
+
+Create .env.local file in project root:
+
+# ============================================================================
+# NEXT.JS (Frontend & API Routes)
+# ============================================================================
+
+# Facebook/Instagram App
+FACEBOOK_APP_ID=your_facebook_app_id
+FACEBOOK_APP_SECRET=your_facebook_app_secret
+FACEBOOK_REDIRECT_URI=https://app.yourdomain.com/api/auth/callback
+INSTAGRAM_API_VERSION=v18.0
+
+# JWT Authentication
+JWT_SECRET=your_super_secret_jwt_key_change_this_in_production_min_32_chars
+
+# URLs
+NEXT_PUBLIC_APP_URL=https://app.yourdomain.com
+NEXT_PUBLIC_API_URL=/api
+NEXT_PUBLIC_AI_SERVICE_URL=https://ai.yourdomain.com
+
+# Instagram Webhook
+WEBHOOK_VERIFY_TOKEN=your_random_webhook_verify_token_12345
+
+# ============================================================================
+# DATABASE
+# ============================================================================
+
+DATABASE_URL=postgresql://user:password@host:5432/automation_fb?schema=public
+
+# Direct connection (for Prisma Studio)
+DIRECT_URL=postgresql://user:password@host:5432/automation_fb?schema=public
+
+# ============================================================================
+# REDIS (Queue & Cache)
+# ============================================================================
+
+REDIS_URL=redis://default:password@host:6379
+
+# ============================================================================
+# IMAGE STORAGE (Cloudflare R2 or AWS S3)
+# ============================================================================
+
+STORAGE_BACKEND=r2  # or 's3'
+
+# Cloudflare R2
+R2_ACCOUNT_ID=your_cloudflare_account_id
+R2_ACCESS_KEY_ID=your_r2_access_key_id
+R2_SECRET_ACCESS_KEY=your_r2_secret_access_key
+R2_BUCKET_NAME=automation-fb-images
+R2_PUBLIC_URL=https://images.yourdomain.com
+
+# AWS S3 (Alternative)
+AWS_REGION=us-east-1
+AWS_ACCESS_KEY_ID=your_aws_access_key
+AWS_SECRET_ACCESS_KEY=your_aws_secret_key
+S3_BUCKET_NAME=automation-fb-images
+S3_PUBLIC_URL=https://automation-fb-images.s3.amazonaws.com
+
+# ============================================================================
+# GOOGLE GEMINI AI (Optional: per-user keys preferred)
+# ============================================================================
+
+GEMINI_API_KEY=your_google_gemini_api_key_fallback
+
+# ============================================================================
+# LOGGING & MONITORING
+# ============================================================================
+
+LOG_LEVEL=info  # debug, info, warn, error
+
+# Sentry (Optional)
+SENTRY_DSN=https://your_sentry_dsn
+SENTRY_ENVIRONMENT=production
+
+# ============================================================================
+# PYTHON AI SERVICE (ai-service/.env)
+# ============================================================================
+
+# Environment
+ENVIRONMENT=production
+
+# Database (same as Next.js)
+DATABASE_URL=postgresql://user:password@host:5432/automation_fb
+
+# Google Gemini
+GEMINI_API_KEY=your_google_gemini_api_key
+
+# Models
+GEMINI_ANALYSIS_MODEL_NORMAL=gemini-2.0-flash-lite
+GEMINI_ANALYSIS_MODEL_HIGH=gemini-2.0-flash-lite
+GEMINI_EDIT_MODEL_NORMAL=gemini-2.0-flash-image-preview
+GEMINI_EDIT_MODEL_HIGH=gemini-2.5-flash-image-preview
+
+# Celery
+CELERY_BROKER_URL=redis://default:password@host:6379/0
+CELERY_RESULT_BACKEND=redis://default:password@host:6379/1
+
+# Storage (same as Next.js)
+STORAGE_BACKEND=r2
+R2_ACCOUNT_ID=...
+R2_ACCESS_KEY_ID=...
+R2_SECRET_ACCESS_KEY=...
+R2_BUCKET_NAME=...
+
+# Instagram API (for sending DMs)
+INSTAGRAM_API_VERSION=v18.0
+
+# Logging
+LOG_LEVEL=info
+
+NOTES:
+------
+
+1. NEVER commit .env files to Git
+   - Add to .gitignore
+   - Use .env.example as template
+
+2. Use different values for dev/staging/production
+   - .env.local (development)
+   - Vercel/Railway env vars (production)
+
+3. Rotate secrets regularly
+   - JWT_SECRET
+   - WEBHOOK_VERIFY_TOKEN
+   - API keys
+
+4. Use strong passwords
+   - Database: min 20 chars, alphanumeric + symbols
+   - JWT_SECRET: min 32 chars
+
+5. Test with .env.example
+   - Provide .env.example in repo
+   - Include instructions for setup
+
+================================================================================
+10. DEPLOYMENT ARCHITECTURE
+================================================================================
+
+RECOMMENDED STACK:
+------------------
+
+┌───────────────────────────────────────────────────────────────────────┐
+│ CLOUDFLARE (Optional but recommended)                                 │
+│ - DDoS protection                                                     │
+│ - CDN for static assets                                               │
+│ - DNS management                                                      │
+└───────────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌───────────────────────────────────────────────────────────────────────┐
+│ VERCEL (Next.js Frontend + API Routes)                                │
+│                                                                       │
+│ Features:                                                             │
+│ - Automatic deployments from Git                                     │
+│ - Edge functions for API routes                                      │
+│ - Built-in SSL                                                        │
+│ - Environment variables management                                    │
+│ - Instant rollback                                                    │
+│                                                                       │
+│ URLs:                                                                 │
+│ - https://app.yourdomain.com (frontend)                              │
+│ - https://app.yourdomain.com/api/* (API routes)                      │
+└───────────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌───────────────────────────────────────────────────────────────────────┐
+│ RAILWAY (All-in-One Platform)                                         │
+│                                                                       │
+│ ┌─────────────────────────────────────────────────────────────────┐  │
+│ │ Python AI Service (FastAPI)                                     │  │
+│ │ - Docker container                                              │  │
+│ │ - Internal URL: ai-service.railway.internal                     │  │
+│ │ - Public URL: https://ai.yourdomain.com (if needed)             │  │
+│ └─────────────────────────────────────────────────────────────────┘  │
+│                                                                       │
+│ ┌─────────────────────────────────────────────────────────────────┐  │
+│ │ Celery Worker                                                   │  │
+│ │ - Same Docker image as AI service                               │  │
+│ │ - Command: celery -A app.queue worker                           │  │
+│ │ - Auto-scaling: 1-3 workers                                     │  │
+│ └─────────────────────────────────────────────────────────────────┘  │
+│                                                                       │
+│ ┌─────────────────────────────────────────────────────────────────┐  │
+│ │ PostgreSQL 17                                                   │  │
+│ │ - Managed database                                              │  │
+│ │ - Automatic backups                                             │  │
+│ │ - Connection pooling                                            │  │
+│ │ - Private URL (internal only)                                   │  │
+│ └─────────────────────────────────────────────────────────────────┘  │
+│                                                                       │
+│ ┌─────────────────────────────────────────────────────────────────┐  │
+│ │ Redis 7                                                         │  │
+│ │ - Managed Redis instance                                        │  │
+│ │ - Used for Celery broker + cache                                │  │
+│ │ - Private URL (internal only)                                   │  │
+│ └─────────────────────────────────────────────────────────────────┘  │
+└───────────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌───────────────────────────────────────────────────────────────────────┐
+│ CLOUDFLARE R2 (S3-Compatible Storage)                                 │
+│ - Image storage (selfies, generated images)                          │
+│ - CDN delivery (fast, global)                                         │
+│ - Custom domain: images.yourdomain.com                                │
+│ - Bucket: automation-fb-images                                        │
+│ - Public access with signed URLs (optional)                           │
+└───────────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌───────────────────────────────────────────────────────────────────────┐
+│ EXTERNAL SERVICES                                                     │
+│                                                                       │
+│ ┌──────────────┐  ┌──────────────┐  ┌──────────────┐                │
+│ │ Google       │  │ Facebook     │  │ Sentry       │                │
+│ │ Gemini AI    │  │ Graph API    │  │ (Error       │                │
+│ │              │  │ (Instagram)  │  │  Tracking)   │                │
+│ └──────────────┘  └──────────────┘  └──────────────┘                │
+└───────────────────────────────────────────────────────────────────────┘
+
+DEPLOYMENT STEPS:
+-----------------
+
+### 1. VERCEL (Next.js)
+
+1. Install Vercel CLI:
+   npm install -g vercel
+
+2. Login:
+   vercel login
+
+3. Deploy:
+   cd Automation-FB
+   vercel
+
+4. Configure environment variables in Vercel Dashboard:
+   - FACEBOOK_APP_ID
+   - FACEBOOK_APP_SECRET
+   - JWT_SECRET
+   - DATABASE_URL
+   - REDIS_URL
+   - R2_*
+   - etc.
+
+5. Add custom domain:
+   Vercel Dashboard → Project → Settings → Domains
+   → Add app.yourdomain.com
+
+6. Enable production deployment:
+   git push origin main (auto-deploys)
+
+### 2. RAILWAY (Python AI + Database)
+
+1. Install Railway CLI:
+   npm install -g @railway/cli
+
+2. Login:
+   railway login
+
+3. Create new project:
+   railway init
+
+4. Add PostgreSQL:
+   railway add postgresql
+
+5. Add Redis:
+   railway add redis
+
+6. Deploy Python AI service:
+   cd ai-service
+   railway up
+
+   (Railway auto-detects Dockerfile)
+
+7. Add Celery worker:
+   Railway Dashboard → New Service → From Existing Image
+   Command: celery -A app.queue worker --loglevel=info
+
+8. Configure environment variables in Railway Dashboard
+
+9. Note internal URLs:
+   - PostgreSQL: postgresql://...railway.internal...
+   - Redis: redis://...railway.internal...
+   - AI Service: ai-service.railway.internal
+
+### 3. CLOUDFLARE R2
+
+1. Create R2 bucket:
+   Cloudflare Dashboard → R2 → Create Bucket
+   Name: automation-fb-images
+
+2. Create API token:
+   R2 → Manage R2 API Tokens → Create API Token
+   Permissions: Object Read & Write
+
+3. Get credentials:
+   - Account ID
+   - Access Key ID
+   - Secret Access Key
+
+4. Configure custom domain (optional):
+   R2 → Bucket → Settings → Public Access
+   → Connect Domain: images.yourdomain.com
+
+### 4. DOMAIN & DNS
+
+1. Point domain to Vercel:
+   DNS Records:
+   - A record: app.yourdomain.com → 76.76.21.21
+   - CNAME: app.yourdomain.com → cname.vercel-dns.com
+
+2. Point AI service (optional):
+   - CNAME: ai.yourdomain.com → your-railway-project.railway.app
+
+3. Point R2 CDN:
+   - CNAME: images.yourdomain.com → [R2 bucket URL]
+
+MONITORING & MAINTENANCE:
+-------------------------
+
+1. Uptime monitoring:
+   - UptimeRobot (free)
+   - Monitor: app.yourdomain.com/api/health
+
+2. Error tracking:
+   - Sentry.io (free tier: 5k events/month)
+
+3. Database backups:
+   - Railway automatic backups (daily)
+   - Manual export: pg_dump
+
+4. Log aggregation:
+   - Railway logs (built-in)
+   - Vercel logs (built-in)
+
+5. Performance monitoring:
+   - Vercel Analytics
+   - Google Analytics (optional)
+
+SCALING STRATEGY:
+-----------------
+
+### Horizontal Scaling:
+
+1. Vercel (Next.js):
+   - Auto-scales to millions of requests
+   - Edge functions deployed globally
+   - No configuration needed
+
+2. Railway (Python AI):
+   - Add more Celery workers (Railway replicas)
+   - Add more FastAPI instances (load balanced)
+
+3. Database:
+   - Read replicas (Railway Pro plan)
+   - Connection pooling (PgBouncer)
+
+### Vertical Scaling:
+
+1. Railway resources:
+   - Upgrade plan for more CPU/RAM
+   - Default: 512MB RAM, 0.5 vCPU
+   - Recommended: 2GB RAM, 2 vCPU
+
+2. PostgreSQL:
+   - Upgrade to larger instance
+   - Enable extensions (pg_stat_statements)
+
+### Caching:
+
+1. Redis cache:
+   - Cache Instagram account data (5 min TTL)
+   - Cache flow definitions (1 min TTL)
+   - Cache prompt templates (10 min TTL)
+
+2. CDN:
+   - Cloudflare caches images automatically
+   - Set Cache-Control headers
+
+COST ESTIMATE (Monthly):
+------------------------
+
+Vercel:
+  - Hobby plan: $0 (sufficient for MVP)
+  - Pro plan: $20 (recommended for production)
+
+Railway:
+  - Starter plan: $5 (credit)
+  - Developer plan: $10/month (includes PostgreSQL + Redis)
+  - Estimated usage: $20-40/month (AI service + workers)
+
+Cloudflare R2:
+  - Storage: $0.015/GB/month
+  - Operations: $4.50/million writes, $0.36/million reads
+  - Estimated: $5-10/month (100GB storage, moderate traffic)
+
+Google Gemini AI:
+  - Free tier: 1500 requests/day (gemini-flash)
+  - Pay-as-you-go: $0.00025/image (gemini-2.5-flash-image-preview)
+  - Estimated: $50-200/month (depends on usage)
+
+TOTAL: $80-270/month (for production with moderate traffic)
+
+ALTERNATIVE (Lower Cost):
+
+- Replace Railway with Render.com (free tier for DB)
+- Use Supabase free tier (PostgreSQL)
+- Use Upstash free tier (Redis)
+- Self-host on DigitalOcean Droplet ($12/month)
+
+TOTAL (Budget): $20-50/month
+
+================================================================================
+11. CODE TEMPLATES & EXAMPLES
+================================================================================
+
+### EXAMPLE 1: Instagram Webhook Handler (Next.js)
+
+// app/api/instagram/webhook/route.ts
+import { NextRequest, NextResponse } from 'next/server';
+import crypto from 'crypto';
+import { prisma } from '@/lib/db';
+import { queueWebhookEvent } from '@/lib/queue/webhook-queue';
+
+// GET: Webhook verification
+export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const mode = searchParams.get('hub.mode');
+  const token = searchParams.get('hub.verify_token');
+  const challenge = searchParams.get('hub.challenge');
+
+  if (mode === 'subscribe' && token === process.env.WEBHOOK_VERIFY_TOKEN) {
+    console.log('✅ Webhook verified');
+    return new Response(challenge, { status: 200 });
+  }
+
+  console.error('❌ Webhook verification failed');
+  return new Response('Forbidden', { status: 403 });
+}
+
+// POST: Webhook event handler
+export async function POST(request: NextRequest) {
+  try {
+    // Verify signature
+    const signature = request.headers.get('x-hub-signature-256');
+    const rawBody = await request.text();
+
+    if (!signature || !verifySignature(signature, rawBody)) {
+      return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
+    }
+
+    const data = JSON.parse(rawBody);
+
+    // Queue for async processing
+    await queueWebhookEvent(data);
+
+    // Return immediate response (Facebook requires fast response)
+    return NextResponse.json({ ok: true });
+
+  } catch (error) {
+    console.error('Webhook processing error:', error);
+    return NextResponse.json({ error: 'Internal error' }, { status: 500 });
+  }
+}
+
+function verifySignature(signature: string, body: string): boolean {
+  const hmac = crypto.createHmac('sha256', process.env.INSTAGRAM_APP_SECRET!);
+  hmac.update(body);
+  const expectedSignature = `sha256=${hmac.digest('hex')}`;
+
+  try {
+    return crypto.timingSafeEqual(
+      Buffer.from(signature),
+      Buffer.from(expectedSignature)
+    );
+  } catch {
+    return false;
+  }
+}
+
+### EXAMPLE 2: Flow Executor (Next.js)
+
+// lib/flow/executor.ts
+import { prisma } from '@/lib/db';
+import { callAiService } from '@/lib/ai/client';
+import { sendInstagramMessage } from '@/lib/instagram/api';
+
+export async function executeFlowNode(
+  sessionId: string,
+  nodeId: string,
+  userInput?: any
+) {
+  // Load session
+  const session = await prisma.dmSession.findUnique({
+    where: { id: sessionId },
+    include: {
+      flow: {
+        include: {
+          template: true,
+          instagramAccount: true
+        }
+      }
+    }
+  });
+
+  if (!session) throw new Error('Session not found');
+
+  // Find node in flow
+  const node = session.flow.nodes.find((n: any) => n.id === nodeId);
+  if (!node) throw new Error('Node not found');
+
+  // Execute based on node type
+  switch (node.type) {
+    case 'message':
+      await sendInstagramMessage(
+        session.instagramUserId,
+        node.data.message
+      );
+      break;
+
+    case 'request_image':
+      await sendInstagramMessage(
+        session.instagramUserId,
+        node.data.prompt || 'Please upload an image'
+      );
+      break;
+
+    case 'ai_analysis':
+      const imageUrl = session.userImages[session.userImages.length - 1];
+      const analysis = await callAiService('/ai/analyze', {
+        imageUrl,
+        promptTemplateId: session.flow.templateId,
+        quality: 'normal'
+      });
+
+      // Store in session state
+      await prisma.dmSession.update({
+        where: { id: sessionId },
+        data: {
+          sessionState: {
+            ...session.sessionState,
+            analysis: analysis.analysis,
+            prompt: analysis.naturalLanguage
+          }
+        }
+      });
+      break;
+
+    case 'ai_transform':
+      const selfieUrl = session.userImages[0];
+      const referenceUrl = session.userImages[1];
+      const prompt = (session.sessionState as any).prompt;
+
+      // Queue transformation job
+      const result = await callAiService('/ai/transform', {
+        selfieUrl,
+        referenceUrl,
+        prompt,
+        quality: 'high'
+      });
+
+      // Store result
+      await prisma.dmSession.update({
+        where: { id: sessionId },
+        data: {
+          generatedImages: {
+            push: result.imageUrl
+          }
+        }
+      });
+
+      // Send to user
+      await sendInstagramMessage(
+        session.instagramUserId,
+        {
+          attachment: {
+            type: 'image',
+            payload: { url: result.imageUrl }
+          }
+        }
+      );
+      break;
+  }
+
+  // Find next node
+  const nextEdge = session.flow.edges.find((e: any) => e.source === nodeId);
+  const nextNodeId = nextEdge?.target;
+
+  // Update session
+  await prisma.dmSession.update({
+    where: { id: sessionId },
+    data: {
+      currentNodeId: nextNodeId,
+      lastMessageAt: new Date()
+    }
+  });
+
+  // Execute next node if exists
+  if (nextNodeId) {
+    await executeFlowNode(sessionId, nextNodeId);
+  } else {
+    // Flow completed
+    await prisma.dmSession.update({
+      where: { id: sessionId },
+      data: { isCompleted: true }
+    });
+  }
+}
+
+### EXAMPLE 3: Data Deletion Endpoint (Facebook Required)
+
+// app/api/user/delete/route.ts
+import { NextRequest, NextResponse } from 'next/server';
+import { prisma } from '@/lib/db';
+import { verifyFacebookSignedRequest } from '@/lib/facebook/verify';
+import { queueUserDeletion } from '@/lib/jobs/user-deletion';
+import crypto from 'crypto';
+
+export async function POST(request: NextRequest) {
+  try {
+    const { signed_request } = await request.json();
+
+    // Verify Facebook signed request
+    const data = verifyFacebookSignedRequest(
+      signed_request,
+      process.env.FACEBOOK_APP_SECRET!
+    );
+
+    if (!data || !data.user_id) {
+      return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
+    }
+
+    // Find user by Facebook ID
+    const user = await prisma.user.findUnique({
+      where: { facebookId: data.user_id }
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
+    // Generate confirmation code
+    const confirmationCode = crypto.randomBytes(16).toString('hex');
+
+    // Create deletion request
+    const deletionRequest = await prisma.deletionRequest.create({
+      data: {
+        userId: user.id,
+        confirmationCode,
+        status: 'PENDING'
+      }
+    });
+
+    // Queue background job for actual deletion
+    await queueUserDeletion(user.id, confirmationCode);
+
+    // Return confirmation URL (required by Facebook)
+    const statusUrl = `${process.env.NEXT_PUBLIC_APP_URL}/deletion-status/${confirmationCode}`;
+
+    return NextResponse.json({
+      url: statusUrl,
+      confirmation_code: confirmationCode
+    });
+
+  } catch (error) {
+    console.error('User deletion error:', error);
+    return NextResponse.json({ error: 'Internal error' }, { status: 500 });
+  }
+}
+
+// lib/facebook/verify.ts
+import crypto from 'crypto';
+
+export function verifyFacebookSignedRequest(
+  signedRequest: string,
+  appSecret: string
+) {
+  const [encodedSig, payload] = signedRequest.split('.');
+
+  // Decode signature
+  const sig = Buffer.from(encodedSig, 'base64url');
+
+  // Decode payload
+  const data = JSON.parse(Buffer.from(payload, 'base64url').toString());
+
+  // Verify HMAC
+  const expectedSig = crypto
+    .createHmac('sha256', appSecret)
+    .update(payload)
+    .digest();
+
+  if (!crypto.timingSafeEqual(sig, expectedSig)) {
+    throw new Error('Invalid signature');
+  }
+
+  return data;
+}
+
+// lib/jobs/user-deletion.ts
+import { prisma } from '@/lib/db';
+import { deleteFromR2 } from '@/lib/storage/r2-client';
+
+export async function queueUserDeletion(userId: string, confirmationCode: string) {
+  // In production, use a proper queue (Bull/Celery)
+  // For now, execute immediately
+
+  setTimeout(async () => {
+    try {
+      // Get all user data
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+        include: {
+          instagramAccounts: {
+            include: {
+              flows: {
+                include: {
+                  dmSessions: true
+                }
+              },
+              dmSessions: true
+            }
+          }
+        }
+      });
+
+      if (!user) return;
+
+      // Delete images from R2
+      const allSessions = user.instagramAccounts.flatMap(acc =>
+        [...acc.flows.flatMap(f => f.dmSessions), ...acc.dmSessions]
+      );
+
+      for (const session of allSessions) {
+        for (const imageUrl of [...session.userImages, ...session.generatedImages]) {
+          await deleteFromR2(imageUrl);
+        }
+      }
+
+      // Delete user (cascade delete handles relations)
+      await prisma.user.delete({
+        where: { id: userId }
+      });
+
+      // Update deletion request
+      await prisma.deletionRequest.update({
+        where: { confirmationCode },
+        data: {
+          status: 'COMPLETED',
+          completedAt: new Date()
+        }
+      });
+
+      console.log(`✅ User ${userId} deleted successfully`);
+
+    } catch (error) {
+      console.error('User deletion failed:', error);
+
+      await prisma.deletionRequest.update({
+        where: { confirmationCode },
+        data: { status: 'FAILED' }
+      });
+    }
+  }, 1000);
+}
+
+### EXAMPLE 4: Python Gemini Client
+
+# ai-service/app/clients/gemini_client.py
+import google.generativeai as genai
+from PIL import Image
+import io
+import json
+import time
+
+class GeminiClient:
+    def __init__(self, api_key: str):
+        genai.configure(api_key=api_key)
+        self.analysis_model = genai.GenerativeModel("gemini-2.0-flash-lite")
+        self.edit_model = genai.GenerativeModel("gemini-2.5-flash-image-preview")
+
+    async def analyze_image(self, image_bytes: bytes, prompt: str) -> dict:
+        """Analyze image and return structured JSON."""
+
+        image = Image.open(io.BytesIO(image_bytes))
+
+        try:
+            response = self.analysis_model.generate_content([prompt, image])
+            text = response.text.strip()
+
+            # Strip markdown code blocks
+            if text.startswith("```json"):
+                text = text[7:]
+            if text.endswith("```"):
+                text = text[:-3]
+
+            result = json.loads(text.strip())
+            return result
+
+        except json.JSONDecodeError as e:
+            raise ValueError(f"Invalid JSON response: {e}")
+        except Exception as e:
+            if "quota" in str(e).lower():
+                raise QuotaExceededError("Gemini API quota exceeded")
+            raise
+
+    async def transform_image(
+        self,
+        selfie_bytes: bytes,
+        reference_bytes: bytes | None,
+        prompt: str
+    ) -> bytes:
+        """Transform selfie to match reference using Gemini AI."""
+
+        selfie = Image.open(io.BytesIO(selfie_bytes))
+
+        images = [prompt, selfie]
+        if reference_bytes:
+            reference = Image.open(io.BytesIO(reference_bytes))
+            images.append(reference)
+
+        try:
+            response = self.edit_model.generate_content(images)
+
+            # Download generated image with retry
+            for attempt in range(3):
+                try:
+                    image_data = response.candidates[0].content.parts[0].inline_data.data
+                    break
+                except Exception as e:
+                    if attempt == 2:
+                        raise
+                    time.sleep(2 ** attempt)
+
+            # Convert to PNG
+            img = Image.open(io.BytesIO(image_data))
+            output = io.BytesIO()
+            img.save(output, format='PNG')
+
+            return output.getvalue()
+
+        except Exception as e:
+            if "quota" in str(e).lower():
+                raise QuotaExceededError("Gemini API quota exceeded")
+            raise
+
+class QuotaExceededError(Exception):
+    pass
+
+================================================================================
+12. SECURITY & COMPLIANCE
+================================================================================
+
+SECURITY BEST PRACTICES:
+------------------------
+
+### 1. AUTHENTICATION & AUTHORIZATION
+
+✓ Use HTTP-only cookies for JWT (prevents XSS)
+✓ Use SameSite=Lax for CSRF protection
+✓ Verify JWT on every protected route
+✓ Implement proper route guards (middleware)
+✓ Never expose API keys in client code
+
+### 2. API SECURITY
+
+✓ Validate all input with Zod schemas
+✓ Implement rate limiting (Upstash Rate Limit or SlowAPI)
+✓ Use HMAC signature verification for webhooks
+✓ Sanitize user input (prevent XSS, SQL injection)
+✓ Use parameterized queries (Prisma ORM)
+✓ Never trust user-provided URLs (SSRF protection)
+
+### 3. DATA PROTECTION
+
+✓ Encrypt sensitive data at rest (database encryption)
+✓ Use HTTPS everywhere (TLS 1.3)
+✓ Rotate secrets regularly (JWT_SECRET, API keys)
+✓ Implement proper access control (user can only access own data)
+✓ Log access to sensitive operations
+
+### 4. INSTAGRAM WEBHOOK SECURITY
+
+✓ Verify x-hub-signature-256 header (HMAC SHA256)
+✓ Use constant-time comparison (timingSafeEqual)
+✓ Return 401 for invalid signatures
+✓ Rate limit webhook endpoint
+✓ Log all webhook events
+
+### 5. IMAGE SECURITY
+
+✓ Validate image format (JPEG, PNG only)
+✓ Limit image size (max 50MB)
+✓ Scan for malware (optional: ClamAV)
+✓ Use signed URLs for private images
+✓ Set CORS headers properly
+✓ Implement CDN with rate limiting
+
+### 6. ERROR HANDLING
+
+✓ Never expose stack traces to users
+✓ Log errors securely (Sentry, Winston)
+✓ Return generic error messages
+✓ Implement proper fallbacks
+✓ Handle quota limits gracefully
+
+COMPLIANCE:
+-----------
+
+### 1. GDPR (EU Users)
+
+✓ Privacy policy clearly explains data usage
+✓ User can request data export (GET /api/user/data)
+✓ User can request deletion (POST /api/user/delete)
+✓ Data minimization (only collect necessary data)
+✓ Data retention policy (images deleted after 24h)
+✓ Consent for data processing
+
+### 2. FACEBOOK PLATFORM POLICIES
+
+✓ Data Deletion Callback URL implemented
+✓ Only request necessary permissions
+✓ Use data as described in app review
+✓ Don't sell user data
+✓ Don't use data for advertising
+✓ Don't share data with third parties
+✓ Respond to deletion requests within 30 days
+
+### 3. INSTAGRAM TERMS OF SERVICE
+
+✓ Don't spam users
+✓ Don't send unsolicited messages
+✓ Respect rate limits
+✓ Don't impersonate users
+✓ Don't scrape data
+✓ Only message users who initiated contact
+
+### 4. GOOGLE GEMINI AI TERMS
+
+✓ Don't generate harmful content
+✓ Respect usage limits
+✓ Attribute AI-generated content (optional)
+✓ Don't reverse-engineer model
+✓ Monitor for abuse
+
+AUDIT CHECKLIST:
+----------------
+
+[ ] All environment variables are secrets (not in code)
+[ ] Database connection uses SSL
+[ ] JWT secret is strong (min 32 chars)
+[ ] CORS is properly configured
+[ ] Rate limiting is active
+[ ] Input validation on all endpoints
+[ ] Error logging is secure (no PII)
+[ ] Webhook signatures verified
+[ ] Images scanned for malware
+[ ] Data deletion endpoint works
+[ ] Privacy policy is public
+[ ] Terms of service is public
+[ ] User can export their data
+[ ] Sensitive operations are logged
+[ ] Regular security audits scheduled
+
+================================================================================
+END OF START.txt
+================================================================================
+
+QUICK START COMMANDS:
+---------------------
+
+# 1. Setup database
+npm install prisma @prisma/client
+npx prisma init
+npx prisma migrate dev --name init
+npx prisma db seed
+
+# 2. Install dependencies
+npm install
+
+# 3. Setup environment
+cp .env.example .env.local
+# Edit .env.local with your credentials
+
+# 4. Run development server
+npm run dev
+
+# 5. Setup Python AI service (separate terminal)
+cd ai-service
+python -m venv venv
+source venv/bin/activate  # or `venv\Scripts\activate` on Windows
+pip install -r requirements.txt
+uvicorn app.main:app --reload
+
+# 6. Run Celery worker (separate terminal)
+cd ai-service
+celery -A app.queue worker --loglevel=info
+
+# 7. Deploy to production
+vercel --prod
+railway up
+
+SUPPORT:
+--------
+
+- Documentation: [link to docs]
+- Issues: GitHub Issues
+- Email: support@yourdomain.com
+
+CONTRIBUTORS:
+-------------
+
+- [Your Name] - Full-stack developer
+
+LICENSE:
+--------
+
+Proprietary - All rights reserved
+
+================================================================================
