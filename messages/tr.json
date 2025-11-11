@@ -626,6 +626,44 @@
           "body": "Veri silme talepleri veya sorularınız için lütfen privacy@looklab.app adresine başvurun. Tüm taleplere 2 iş günü içinde yanıt verecek ve 30 gün içinde silme işlemini tamamlayacağız."
         }
       }
+    },
+    "deletionStatus": {
+      "title": "Veri silme durumu",
+      "subtitle": "Meta tarafından verilen onay kodunu kullanarak verilerinizin ne kadarının silindiğini takip edin.",
+      "statusLabel": "Güncel durum",
+      "confirmationLabel": "Onay kodu",
+      "timelineHeading": "Talep zaman çizelgesi",
+      "detailsHeading": "Silme detayları",
+      "timestamps": {
+        "requested": "Talep alındı",
+        "completed": "Silme tamamlandı",
+        "notAvailable": "Beklemede"
+      },
+      "statuses": {
+        "pending": {
+          "label": "Beklemede",
+          "description": "Silme talebinizi aldık ve tüm Instagram hesaplarını, otomasyon akışlarını, oturumları ve logları güvenle kaldırıyoruz.",
+          "eta": "Tahmini tamamlanma 24 saat içinde (politika gereği en fazla 30 gün)."
+        },
+        "completed": {
+          "label": "Tamamlandı",
+          "description": "Bu onay koduyla ilişkili tüm kullanıcı kayıtları LookLab'dan kalıcı olarak silindi."
+        },
+        "failed": {
+          "label": "İnceleme gerekiyor",
+          "description": "Silme işlemi otomatik olarak tamamlanamadı. Gizlilik ekibimiz bilgilendirildi ve kısa süre içinde çözülecek."
+        },
+        "unknown": {
+          "label": "Talep bulunamadı",
+          "description": "Onay kodunu tekrar kontrol edin veya yardım için privacy@looklab.app adresine yazın."
+        }
+      },
+      "help": {
+        "title": "Yardıma mı ihtiyacınız var?",
+        "description": "Onay kodunuzla birlikte privacy@looklab.app adresine e-posta gönderin; 2 iş günü içinde yanıtlarız."
+      },
+      "metaDescription": "Facebook/Instagram veri silme talebinizin durumunu kontrol edin.",
+      "refresh": "Durumu yenile"
     }
   }
 }

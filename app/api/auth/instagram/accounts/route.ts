@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getUserFromCookies } from '@/lib/auth/jwt';
 import { getAllInstagramAccounts } from '@/lib/auth/facebook';
+import { prisma } from '@/lib/db';
 
 export const runtime = 'nodejs';
 
@@ -32,12 +33,65 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // 3. Fetch Instagram accounts
+    // 3. Fetch Instagram accounts from Facebook Graph API
     const accounts = await getAllInstagramAccounts(user.accessToken);
+
+    // 4. Save/update accounts in database
+    const savedAccounts = await Promise.all(
+      accounts.map(async (account) => {
+        // Calculate token expiration (60 days for long-lived tokens)
+        const tokenExpiresAt = new Date();
+        tokenExpiresAt.setDate(tokenExpiresAt.getDate() + 60);
+
+        return prisma.instagramAccount.upsert({
+          where: { instagramId: account.id },
+          update: {
+            username: account.username,
+            name: account.name,
+            profilePictureUrl: account.profile_picture_url,
+            followersCount: account.followers_count,
+            accessToken: user.accessToken, // Use Facebook access token
+            tokenExpiresAt,
+            isActive: true,
+          },
+          create: {
+            userId: user.userId,
+            instagramId: account.id,
+            username: account.username,
+            name: account.name,
+            profilePictureUrl: account.profile_picture_url,
+            followersCount: account.followers_count,
+            accessToken: user.accessToken,
+            tokenExpiresAt,
+            isActive: true,
+          },
+        });
+      })
+    );
+
+    // 5. Log event
+    await prisma.event.create({
+      data: {
+        userId: user.userId,
+        eventType: 'instagram_accounts_synced',
+        details: {
+          accountCount: savedAccounts.length,
+          timestamp: new Date().toISOString(),
+        },
+      },
+    });
 
     return NextResponse.json({
       success: true,
-      accounts,
+      accounts: savedAccounts.map((acc) => ({
+        id: acc.id,
+        instagramId: acc.instagramId,
+        username: acc.username,
+        name: acc.name,
+        profilePictureUrl: acc.profilePictureUrl,
+        followersCount: acc.followersCount,
+        isActive: acc.isActive,
+      })),
     });
   } catch (error) {
     console.error('Error fetching Instagram accounts:', error);

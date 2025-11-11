@@ -15,13 +15,59 @@ services:
       - FACEBOOK_APP_SECRET=74263af13721723f24c37049311eb892
       - JWT_SECRET=R8y-CgT4Z_1eH2mK0sWp9oXb6jQ5vN3uA7dLfGzVpY_aDqEeFfGgHhIiJjKkLlMmNn
       - INSTAGRAM_API_VERSION=v18.0
+      - DATABASE_URL=postgresql://automation_user:automation_pass_2025@postgres:5432/automation_fb?schema=public
+      - REDIS_URL=redis://redis:6379
     volumes:
       - .:/app
       - /app/node_modules
       - /app/.next
     restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
     networks:
       - automation-network
+
+  postgres:
+    image: postgres:17-alpine
+    container_name: automation-fb-postgres
+    environment:
+      - POSTGRES_USER=automation_user
+      - POSTGRES_PASSWORD=automation_pass_2025
+      - POSTGRES_DB=automation_fb
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U automation_user -d automation_fb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - automation-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: automation-fb-redis
+    command: redis-server --appendonly yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    networks:
+      - automation-network
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
 
 networks:
   automation-network:

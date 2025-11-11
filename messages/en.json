@@ -626,6 +626,44 @@
           "body": "For data deletion requests or questions, please contact privacy@looklab.app. We will respond to all requests within 2 business days and complete deletion within 30 days."
         }
       }
+    },
+    "deletionStatus": {
+      "title": "Data deletion status",
+      "subtitle": "Use the confirmation code that Meta provided to see how far along we are with removing your data.",
+      "statusLabel": "Current status",
+      "confirmationLabel": "Confirmation code",
+      "timelineHeading": "Request timeline",
+      "detailsHeading": "Deletion details",
+      "timestamps": {
+        "requested": "Request received",
+        "completed": "Deletion completed",
+        "notAvailable": "Pending"
+      },
+      "statuses": {
+        "pending": {
+          "label": "Pending",
+          "description": "We received your deletion request and are securely removing every associated Instagram account, automation flow, session and log.",
+          "eta": "Estimated completion within 24 hours (policy maximum: 30 days)."
+        },
+        "completed": {
+          "label": "Completed",
+          "description": "All user records tied to this confirmation code have been permanently deleted from LookLab."
+        },
+        "failed": {
+          "label": "Needs review",
+          "description": "Something prevented us from finishing the deletion automatically. Our privacy team has been alerted and will resolve it shortly."
+        },
+        "unknown": {
+          "label": "Request not found",
+          "description": "Double-check the confirmation code or contact privacy@looklab.app for assistance."
+        }
+      },
+      "help": {
+        "title": "Need help?",
+        "description": "Email privacy@looklab.app with your confirmation code and we will respond within 2 business days."
+      },
+      "metaDescription": "Check the status of your Facebook or Instagram data deletion request for LookLab.",
+      "refresh": "Refresh status"
     }
   }
 }

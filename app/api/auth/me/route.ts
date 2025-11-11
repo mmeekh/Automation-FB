@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getUserFromCookies } from '@/lib/auth/jwt';
+import { prisma } from '@/lib/db';
 
 export const runtime = 'nodejs';
 
@@ -29,15 +30,43 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Return user info (without access token for security)
+    // Load full user data with Instagram accounts from database
+    const dbUser = await prisma.user.findUnique({
+      where: { id: user.userId },
+      include: {
+        instagramAccounts: {
+          where: { isActive: true },
+          select: {
+            id: true,
+            instagramId: true,
+            username: true,
+            name: true,
+            profilePictureUrl: true,
+            followersCount: true,
+            isActive: true,
+          },
+        },
+      },
+    });
+
+    if (!dbUser) {
+      return NextResponse.json(
+        { error: 'User not found' },
+        { status: 404 }
+      );
+    }
+
+    // Return user info with Instagram accounts (without access token for security)
     return NextResponse.json({
       success: true,
       user: {
-        id: user.userId,
-        facebookId: user.facebookId,
-        name: user.name,
-        email: user.email,
-        picture: user.picture,
+        id: dbUser.id,
+        facebookId: dbUser.facebookId,
+        name: dbUser.name,
+        email: dbUser.email,
+        picture: dbUser.picture,
+        subscriptionTier: dbUser.subscriptionTier,
+        instagramAccounts: dbUser.instagramAccounts,
       },
     });
   } catch (error) {

@@ -1,0 +1,237 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================================
+// USER & AUTHENTICATION
+// ============================================================================
+
+model User {
+  id               String   @id @default(cuid())
+  facebookId       String   @unique @map("facebook_id")
+  email            String?
+  name             String?
+  picture          String?
+  geminiApiKey     String?  @map("gemini_api_key") // Per-user API key
+  subscriptionTier String   @default("free") @map("subscription_tier")
+
+  // Relations
+  instagramAccounts InstagramAccount[]
+  deletionRequests  DeletionRequest[]
+  events            Event[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+// ============================================================================
+// INSTAGRAM ACCOUNTS
+// ============================================================================
+
+model InstagramAccount {
+  id                String   @id @default(cuid())
+  userId            String   @map("user_id")
+  instagramId       String   @unique @map("instagram_id")
+  username          String
+  name              String?
+  profilePictureUrl String?  @map("profile_picture_url")
+  followersCount    Int?     @map("followers_count")
+  accessToken       String   @map("access_token") // Long-lived token (60 days)
+  tokenExpiresAt    DateTime? @map("token_expires_at")
+  isActive          Boolean  @default(true) @map("is_active")
+
+  // Relations
+  user       User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  flows      AutomationFlow[]
+  dmSessions DmSession[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([userId])
+  @@map("instagram_accounts")
+}
+
+// ============================================================================
+// AUTOMATION FLOWS
+// ============================================================================
+
+model AutomationFlow {
+  id                 String     @id @default(cuid())
+  userId             String     @map("user_id")
+  instagramAccountId String     @map("instagram_account_id")
+  templateId         String     @map("template_id")
+  name               String
+  description        String?
+  status             FlowStatus @default(INACTIVE)
+
+  // Trigger configuration
+  triggerKeywords   String[] @map("trigger_keywords")
+  triggerExactMatch Boolean  @default(false) @map("trigger_exact_match")
+
+  // Test mode
+  testUsers String[] @map("test_users") // Instagram user IDs for testing
+
+  // Flow definition (React Flow format)
+  nodes Json // Array of flow nodes
+  edges Json // Array of flow edges
+
+  // Settings
+  followerOnly Boolean   @default(false) @map("follower_only")
+  dailyQuota   Int       @default(100) @map("daily_quota")
+  usedQuota    Int       @default(0) @map("used_quota")
+  quotaResetAt DateTime? @map("quota_reset_at")
+
+  // Relations
+  instagramAccount InstagramAccount @relation(fields: [instagramAccountId], references: [id], onDelete: Cascade)
+  template         AiPromptTemplate @relation(fields: [templateId], references: [id])
+  dmSessions       DmSession[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([instagramAccountId, status])
+  @@index([userId])
+  @@map("automation_flows")
+}
+
+enum FlowStatus {
+  INACTIVE
+  TEST
+  ACTIVE
+}
+
+// ============================================================================
+// DM SESSIONS (Instagram Message Conversations)
+// ============================================================================
+
+model DmSession {
+  id                 String   @id @default(cuid())
+  automationFlowId   String   @map("automation_flow_id")
+  instagramAccountId String   @map("instagram_account_id")
+  instagramUserId    String   @map("instagram_user_id") // Sender's IG ID
+  instagramUsername  String?  @map("instagram_username")
+
+  // Session state
+  currentNodeId String? @map("current_node_id")
+  sessionState  Json    @default("{}") @map("session_state") // Flow variables
+
+  // Images
+  userImages      String[] @map("user_images") // URLs of user-uploaded images
+  generatedImages String[] @map("generated_images") // AI-generated image URLs
+
+  // Metadata
+  lastMessageAt DateTime @default(now()) @map("last_message_at")
+  isCompleted   Boolean  @default(false) @map("is_completed")
+
+  // Relations
+  flow             AutomationFlow   @relation(fields: [automationFlowId], references: [id], onDelete: Cascade)
+  instagramAccount InstagramAccount @relation(fields: [instagramAccountId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([instagramAccountId, instagramUserId, automationFlowId])
+  @@index([automationFlowId])
+  @@index([instagramUserId])
+  @@map("dm_sessions")
+}
+
+// ============================================================================
+// AI PROMPT TEMPLATES
+// ============================================================================
+
+model AiPromptTemplate {
+  id          String @id @default(cuid())
+  templateType String @map("template_type") // hair-style, car-color, furniture, etc.
+  name        String
+  description String?
+
+  // Model configuration
+  analysisModelNormal String @default("gemini-2.0-flash-lite") @map("analysis_model_normal")
+  analysisModelHigh   String @default("gemini-2.0-flash-lite") @map("analysis_model_high")
+  editModelNormal     String @default("gemini-2.0-flash-image-preview") @map("edit_model_normal")
+  editModelHigh       String @default("gemini-2.5-flash-image-preview") @map("edit_model_high")
+
+  // Prompts
+  analysisPrompt String @map("analysis_prompt") @db.Text
+  editTemplate   String @map("edit_template") @db.Text // Must include {{PROMPT}} placeholder
+
+  // Relations
+  flows AutomationFlow[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([templateType])
+  @@map("ai_prompt_templates")
+}
+
+// ============================================================================
+// EVENTS (Logging & Analytics)
+// ============================================================================
+
+model Event {
+  id        String   @id @default(cuid())
+  userId    String?  @map("user_id")
+  eventType String   @map("event_type")
+  sessionId String?  @map("session_id")
+  details   Json?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // Relations
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt])
+  @@index([eventType, createdAt])
+  @@map("events")
+}
+
+// ============================================================================
+// DATA DELETION REQUESTS (Facebook Required)
+// ============================================================================
+
+model DeletionRequest {
+  id               String          @id @default(cuid())
+  userId           String?         @map("user_id")
+  confirmationCode String          @unique @map("confirmation_code")
+  status           DeletionStatus  @default(PENDING)
+  requestedAt      DateTime        @default(now()) @map("requested_at")
+  completedAt      DateTime?       @map("completed_at")
+
+  // Relations
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([confirmationCode])
+  @@map("deletion_requests")
+}
+
+enum DeletionStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+// ============================================================================
+// NOTES (Admin Team Communication - Optional)
+// ============================================================================
+
+model Note {
+  id        String   @id @default(cuid())
+  content   String   @db.Text
+  createdBy String   @map("created_by")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("notes")
+}

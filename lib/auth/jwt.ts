@@ -1,10 +1,11 @@
 import { SignJWT, jwtVerify } from 'jose';
+import { prisma } from '@/lib/db';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'default-secret-change-in-production';
 const secret = new TextEncoder().encode(JWT_SECRET);
 
 export interface JWTPayload {
-  userId: string;
+  userId: string; // Database user ID (cuid)
   facebookId: string;
   email?: string;
   name?: string;
@@ -38,7 +39,7 @@ export async function verifyToken(token: string): Promise<JWTPayload | null> {
 }
 
 /**
- * Get user from request cookies
+ * Get user from request cookies and load from database
  */
 export async function getUserFromCookies(cookieHeader: string | null): Promise<JWTPayload | null> {
   if (!cookieHeader) return null;
@@ -50,5 +51,21 @@ export async function getUserFromCookies(cookieHeader: string | null): Promise<J
 
   if (!token) return null;
 
-  return verifyToken(token);
+  const payload = await verifyToken(token);
+  if (!payload) return null;
+
+  // Verify user still exists in database
+  const user = await prisma.user.findUnique({
+    where: { id: payload.userId },
+  });
+
+  if (!user) return null;
+
+  // Return payload with fresh data from database
+  return {
+    ...payload,
+    email: user.email || payload.email,
+    name: user.name || payload.name,
+    picture: user.picture || payload.picture,
+  };
 }

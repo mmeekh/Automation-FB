@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyFacebookToken, exchangeForLongLivedToken } from '@/lib/auth/facebook';
 import { createToken } from '@/lib/auth/jwt';
+import { prisma } from '@/lib/db';
 
 export const runtime = 'nodejs';
 
@@ -43,28 +44,59 @@ export async function POST(request: NextRequest) {
     const finalAccessToken = longLivedTokenData?.access_token || accessToken;
     const expiresIn = longLivedTokenData?.expires_in || 3600; // Default 1 hour if exchange fails
 
-    // 3. Create JWT payload
+    // 3. Create or update user in database
+    const user = await prisma.user.upsert({
+      where: { facebookId: facebookUser.id },
+      update: {
+        email: facebookUser.email,
+        name: facebookUser.name,
+        picture: facebookUser.picture?.data?.url,
+      },
+      create: {
+        facebookId: facebookUser.id,
+        email: facebookUser.email,
+        name: facebookUser.name,
+        picture: facebookUser.picture?.data?.url,
+        subscriptionTier: 'free',
+      },
+    });
+
+    // 4. Create JWT payload with database user ID
     const jwtPayload = {
-      userId: facebookUser.id,
-      facebookId: facebookUser.id,
-      email: facebookUser.email,
-      name: facebookUser.name,
-      picture: facebookUser.picture?.data?.url,
+      userId: user.id, // Database ID (cuid)
+      facebookId: user.facebookId,
+      email: user.email ?? undefined,
+      name: user.name ?? undefined,
+      picture: user.picture ?? undefined,
       accessToken: finalAccessToken,
       expiresAt: Date.now() + expiresIn * 1000,
     };
 
-    // 4. Create JWT token
+    // 5. Create JWT token
     const token = await createToken(jwtPayload);
 
-    // 5. Set cookie
+    // 6. Log login event
+    await prisma.event.create({
+      data: {
+        userId: user.id,
+        eventType: 'user_login',
+        details: {
+          method: 'facebook',
+          timestamp: new Date().toISOString(),
+        },
+      },
+    });
+
+    // 7. Set cookie and return response
     const response = NextResponse.json({
       success: true,
       user: {
-        id: facebookUser.id,
-        name: facebookUser.name,
-        email: facebookUser.email,
-        picture: facebookUser.picture?.data?.url,
+        id: user.id,
+        facebookId: user.facebookId,
+        name: user.name,
+        email: user.email,
+        picture: user.picture,
+        subscriptionTier: user.subscriptionTier,
       },
       token,
     });
