@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/Button';
 import { useStore } from '@/lib/store';
 import { AutomationSidebar } from '@/components/layout/AutomationSidebar';
 
-type SupportedLocale = 'en' | 'tr';
+type SupportedLocale = 'en';
 
 type TestCopy = {
   title: string;
@@ -63,38 +63,6 @@ const TEST_COPY: Record<SupportedLocale, TestCopy> = {
     noAccountsAlert:
       'No Instagram Business accounts were found. Please ensure your Facebook Page is linked to an Instagram Business profile.',
     fetchError: 'An error occurred while fetching Instagram accounts.'
-  },
-  tr: {
-    title: 'Instagram Kimlik Doğrulama Testi',
-    subtitle: 'Facebook/Instagram giriş akışını test edin ve bağlı hesapları görüntüleyin',
-    statusHeading: 'Kimlik Doğrulama Durumu',
-    fetchButton: 'Instagram Hesaplarını Çek',
-    logoutButton: 'Çıkış Yap',
-    notAuthenticated: 'Giriş yapmadınız',
-    loginButton: 'Facebook/Instagram ile Giriş Yap',
-    accountsHeading: (count) => `Instagram Business Hesapları (${count})`,
-    followers: 'takipçi',
-    following: 'takip',
-    posts: 'gönderi',
-    idLabel: 'ID',
-    stepsTitle: '📋 Test Adımları',
-    steps: [
-      '"Facebook/Instagram ile Giriş Yap" butonuna tıklayın',
-      'Facebook hesabınızla oturum açın',
-      'İstenen izinleri onaylayın (Instagram, Sayfalar, Mesajlar vb.)',
-      '"Instagram Hesaplarını Çek" butonuna tıklayın',
-      'Bağlı Instagram Business hesaplarını görüntüleyin'
-    ],
-    noteTitle: 'Not:',
-    noteDescription: 'Bir Instagram hesabının listelenebilmesi için:',
-    noteList: [
-      'Bir Facebook Sayfanız olmalı',
-      'Instagram hesabı Business veya Creator tipinde olmalı',
-      'Instagram hesabı Facebook Sayfasına bağlanmış olmalı'
-    ],
-    noAccountsAlert:
-      'Instagram Business hesabı bulunamadı. Facebook Sayfanızın bir Instagram Business hesabıyla bağlantılı olduğundan emin olun.',
-    fetchError: 'Instagram hesapları alınırken bir hata oluştu.'
   }
 };
 

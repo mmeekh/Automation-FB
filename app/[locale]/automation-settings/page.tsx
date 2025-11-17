@@ -12,7 +12,6 @@ import {
   ChevronDownIcon,
 } from '@heroicons/react/24/outline';
 import Image from 'next/image';
-import { useLocale } from 'next-intl';
 import { useAccountStore } from '@/lib/store/accountStore';
 import type { InstagramAccount } from '@/lib/types/account';
 import {
@@ -182,8 +181,6 @@ function QuotaSettings({
   onTotalGenerationLimitChange,
   onResetIntervalChange,
 }: QuotaSettingsProps) {
-  const locale = useLocale();
-  const translate = (trText: string, enText: string) => (locale === 'tr' ? trText : enText);
   // Collapse state for accounts - kredi havuzu kapalı olanlar collapsed başlar
   const [collapsedAccounts, setCollapsedAccounts] = useState<Set<string>>(() => {
     const initialCollapsed = new Set<string>();
@@ -229,7 +226,7 @@ function QuotaSettings({
     onAllocationChange(accountId, Number.isFinite(parsed) ? parsed : 0);
   };
 
-  const formatNumber = (value: number) => value.toLocaleString('tr-TR');
+  const formatNumber = (value: number) => value.toLocaleString('en-US');
   const poolIsBalanced = totalPoolPercent === REQUIRED_POOL_ALLOCATION;
 
   // Mock package quota data (will be replaced with real data later)
@@ -243,7 +240,7 @@ function QuotaSettings({
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex-1">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary-600">
-              Paket Quota
+              Plan Quota
             </p>
             <div className="mt-2 flex items-baseline gap-2">
               <p className="text-3xl font-bold text-neutral-900">
@@ -251,7 +248,7 @@ function QuotaSettings({
               </p>
               <span className="text-lg font-semibold text-neutral-400">/</span>
               <p className="text-xl font-semibold text-neutral-600">
-                {formatNumber(packageTotalQuota)} kredi
+                {formatNumber(packageTotalQuota)} credits
               </p>
             </div>
             <div className="mt-3 relative h-2 overflow-hidden rounded-full bg-neutral-200">
@@ -261,14 +258,13 @@ function QuotaSettings({
               />
             </div>
             <p className="mt-2 text-xs text-neutral-600">
-              {formatNumber(packageTotalQuota - packageUsedQuota)}{' '}
-              {translate('kredi kaldı', 'credits remaining')}
+              {formatNumber(packageTotalQuota - packageUsedQuota)} credits remaining
             </p>
           </div>
           <div className="flex flex-col gap-2">
             <div className="rounded-xl border border-white/70 bg-white/80 px-4 py-2.5 shadow-inner">
               <span className="block text-xs font-semibold uppercase tracking-wider text-neutral-500">
-                Aktif hesap
+                Active accounts
               </span>
               <span className="block mt-1 text-2xl font-bold text-neutral-900">
                 {connectedAccounts.length}
@@ -281,14 +277,9 @@ function QuotaSettings({
       <section className="space-y-4">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h3 className="text-lg font-semibold text-neutral-900">
-              {translate('Instagram hesapları', 'Instagram accounts')}
-            </h3>
+            <h3 className="text-lg font-semibold text-neutral-900">Credit pool</h3>
             <p className="text-sm text-neutral-600">
-              {translate(
-                'Kredi havuzuna dahil edeceğiniz hesapları seçin ve paylaşımlarını belirleyin.',
-                'Choose which accounts join the credit pool and set their allocation.'
-              )}
+              Choose which accounts join the credit pool and set their allocation.
             </p>
           </div>
           <div
@@ -296,17 +287,14 @@ function QuotaSettings({
               poolIsBalanced ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'
             }`}
           >
-            Havuz %{totalPoolPercent}
-            {!poolIsBalanced && <span className="text-xs font-medium">Hedef: %100</span>}
+            Pool {totalPoolPercent}%
+            {!poolIsBalanced && <span className="text-xs font-medium">Target: 100%</span>}
           </div>
         </div>
 
         {connectedAccounts.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-neutral-200 bg-neutral-50 p-6 text-sm text-neutral-500">
-            {translate(
-              'Henüz bağlanmış Instagram hesabınız yok. Önce bir hesap bağlayın.',
-              'No Instagram accounts are connected yet. Connect an account to get started.'
-            )}
+            No Instagram accounts are connected yet. Connect an account to get started.
           </div>
         ) : (
           connectedAccounts.map((account) => {
@@ -324,11 +312,7 @@ function QuotaSettings({
                     <button
                       onClick={() => toggleAccountCollapse(account.id)}
                       className="p-1 hover:bg-neutral-100 rounded-lg transition-colors"
-                      aria-label={
-                        isCollapsed
-                          ? translate('Genişlet', 'Expand')
-                          : translate('Daralt', 'Collapse')
-                      }
+                      aria-label={isCollapsed ? 'Expand account section' : 'Collapse account section'}
                     >
                       <ChevronDownIcon
                         className={`w-5 h-5 text-neutral-600 transition-transform ${
@@ -378,24 +362,23 @@ function QuotaSettings({
                 <>
                 <div className="mt-5 grid gap-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
                   <div>
-                    <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wide text-neutral-500">
-                      <span>{translate('Toplam Üretim', 'Total production')}</span>
+                  <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wide text-neutral-500">
+                      <span>Total production</span>
                       <span className="text-primary-600">
-                        {account.totalGenerations.toLocaleString('tr-TR')}{' '}
-                        {translate('üretim', 'runs')}
+                        {account.totalGenerations.toLocaleString('en-US')} runs
                       </span>
                     </div>
                     <p className="mt-1 text-[10px] text-neutral-400">
-                      {translate('Kişi başı limit', 'Per-user limit')}:{' '}
+                      Per-user limit:{' '}
                       {account.perUserLimit === UNLIMITED_QUOTA
-                        ? translate('Sınırsız', 'Unlimited')
-                        : `${account.perUserLimit} ${translate('üretim', 'runs')}`}
+                        ? 'Unlimited'
+                        : `${account.perUserLimit} runs`}
                     </p>
                   </div>
 
                   <div className="flex items-center gap-2 rounded-full border border-neutral-200 bg-neutral-50 px-3 py-1.5">
                     <span className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
-                      {translate('Paylaşım', 'Allocation')}
+                      Allocation
                     </span>
                     <input
                       type="number"
@@ -426,10 +409,7 @@ function QuotaSettings({
                   />
                   {!included && (
                     <p className="mt-2 text-xs text-neutral-400">
-                      {translate(
-                        'Hesabı havuza ekledikten sonra oran belirleyebilirsiniz.',
-                        'Add the account to the pool before assigning an allocation.'
-                      )}
+                      This account is excluded from the credit pool.
                     </p>
                   )}
                 </div>
@@ -437,21 +417,18 @@ function QuotaSettings({
                 {/* Account-specific quota settings */}
                 <div className="mt-5 border-t border-neutral-200 pt-4">
                   <h4 className="text-sm font-semibold text-neutral-900 mb-3">
-                    Hesap limitleri
+                    Account limits
                   </h4>
 
                   {/* Total generation limit for account */}
                   <div className="mb-3">
                     <label className="flex items-center justify-between text-xs font-medium text-neutral-600 mb-2">
                       <span>
-                        {translate(
-                          'Toplam üretim limiti (hesap bazlı)',
-                          'Total production limit (per account)'
-                        )}
+                        Total production limit
                       </span>
                       <span className="text-primary-600 font-semibold">
-                        {account.totalGenerations.toLocaleString('tr-TR')} /{' '}
-                        {(account.totalGenerationLimit ?? 1000).toLocaleString('tr-TR')}
+                        {account.totalGenerations.toLocaleString('en-US')} /{' '}
+                        {(account.totalGenerationLimit ?? 1000).toLocaleString('en-US')}
                       </span>
                     </label>
                     <input
@@ -461,23 +438,17 @@ function QuotaSettings({
                       value={account.totalGenerationLimit ?? 1000}
                       onChange={(e) => onTotalGenerationLimitChange(account.id, Number(e.target.value))}
                       className="w-full px-3 py-2 text-xs border border-neutral-200 rounded-lg bg-white focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
-                      placeholder={translate('Toplam üretim limiti', 'Total production limit')}
+                      placeholder="Total production limit"
                     />
                     <p className="mt-1 text-[10px] text-neutral-400">
-                      {translate(
-                        'Bu hesabın maksimum kaç üretim yapabileceğini belirler',
-                        'Defines the maximum runs allowed for this account'
-                      )}
+                      Set the total run cap for this account.
                     </p>
                   </div>
 
                   {/* Per-user generation limit */}
                   <div className="mb-3">
                     <label className="block text-xs font-medium text-neutral-600 mb-2">
-                      {translate(
-                        'Maksimum kişi başı üretim limiti',
-                        'Maximum runs per user'
-                      )}
+                      Per-user limit
                     </label>
                     <select
                       value={account.perUserLimit}
@@ -486,17 +457,17 @@ function QuotaSettings({
                     >
                       {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
                         <option key={num} value={num}>
-                          {num} {translate('üretim', 'runs')}
+                          {num} runs
                         </option>
                       ))}
-                      <option value={UNLIMITED_QUOTA}>{translate('Sınırsız', 'Unlimited')}</option>
+                      <option value={UNLIMITED_QUOTA}>Unlimited</option>
                     </select>
                   </div>
 
                   {/* Reset Interval */}
                   <div>
                     <label className="block text-xs font-medium text-neutral-600 mb-2">
-                      {translate('Sıfırlama aralığı', 'Reset interval')}
+                      Reset interval
                     </label>
                     <div className="grid grid-cols-2 gap-2">
                       <select
@@ -523,13 +494,13 @@ function QuotaSettings({
                         }}
                         className="px-3 py-2 text-xs border border-neutral-200 rounded-lg bg-white focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
                       >
-                        <option value="m">{translate('Dakika', 'Minutes')}</option>
-                        <option value="h">{translate('Saat', 'Hours')}</option>
-                        <option value="d">{translate('Gün', 'Days')}</option>
-                        <option value="M">{translate('Ay', 'Months')}</option>
-                      </select>
-                    </div>
+                        <option value="m">Minutes</option>
+                        <option value="h">Hours</option>
+                        <option value="d">Days</option>
+                        <option value="M">Months</option>
+                    </select>
                   </div>
+                </div>
                 </div>
                 </>
                 )}
@@ -548,9 +519,9 @@ function QuotaSettings({
               ? 'bg-gradient-to-r from-primary-500 to-accent-500 text-white hover:shadow-lg'
               : 'bg-neutral-300 text-neutral-500 cursor-not-allowed'
           }`}
-          title={!poolIsBalanced ? translate('Havuz %100 olmalıdır', 'Pool allocation must equal 100%') : ''}
+          title={!poolIsBalanced ? 'Pool allocation must equal 100%' : ''}
         >
-          {translate('Ayarları kaydet', 'Save settings')}
+          Save settings
         </button>
       </div>
     </div>

@@ -36,14 +36,14 @@ interface ChartDatum {
 }
 
 const AUTOMATION_TEMPLATES = [
-  { id: 'auto-restoration', name: 'Saç Restorasyon AI' },
-  { id: 'auto-style-advisor', name: 'Stil Önerisi Akışı' },
-  { id: 'auto-reminder', name: 'Randevu Hatırlatma' },
+  { id: 'auto-restoration', name: 'Hair Restoration AI' },
+  { id: 'auto-style-advisor', name: 'Style Advisor Flow' },
+  { id: 'auto-reminder', name: 'Appointment Reminder' },
 ] as const;
 
 const mockUsageData: AccountUsage[] = generateMockUsageData();
 
-const numberFormatter = new Intl.NumberFormat('tr-TR');
+const numberFormatter = new Intl.NumberFormat('en-US');
 
 export function groupByGranularity(data: AccountUsage[], mode: Granularity): ChartDatum[] {
   if (data.length === 0) return [];
@@ -120,7 +120,7 @@ export function groupByGranularity(data: AccountUsage[], mode: Granularity): Cha
 
   // Monthly fallback: single aggregated point covering the full 30-day span
   const monthlyDatum: ChartDatum = {
-    period: 'Son 30 Gün',
+    period: 'Last 30 Days',
     rawStart: firstDate.toISOString(),
   };
   usernames.forEach((username) => {
@@ -202,9 +202,9 @@ function buildAutomationBreakdownData(accounts: AccountUsage[]): AutomationBreak
 }
 
 const granularityOptions: { value: Granularity; label: string }[] = [
-  { value: 'daily', label: 'Günlük' },
-  { value: 'weekly', label: 'Haftalık' },
-  { value: 'monthly', label: 'Aylık' },
+  { value: 'daily', label: 'Daily' },
+  { value: 'weekly', label: 'Weekly' },
+  { value: 'monthly', label: 'Monthly' },
 ];
 
 export function ProductionInsights(): JSX.Element {
@@ -263,7 +263,7 @@ export function ProductionInsights(): JSX.Element {
       <header className="space-y-1">
         <Title className="text-2xl font-semibold text-neutral-900">📊 Production Insights</Title>
         <Text className="text-sm text-neutral-500">
-          Son 30 güne ait üretim performansınızı takip edin ve kredilerinizi planlayın.
+          Track production performance for the last 30 days and plan your credits with confidence.
         </Text>
       </header>
 
@@ -318,7 +318,7 @@ function Filters({
     <Card className="border border-neutral-200 bg-white shadow-sm">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <Text className="text-xs font-semibold uppercase text-neutral-500">Hesaplar</Text>
+          <Text className="text-xs font-semibold uppercase text-neutral-500">Accounts</Text>
           <div className="mt-2 flex flex-wrap gap-2">
             {accounts.map((account) => {
               const selected = selectedAccountIds.includes(account.accountId);
@@ -387,11 +387,11 @@ function LineUsageChart({ data, categories, granularity, hasSelection }: LineUsa
     <Card className="border border-neutral-200 bg-white shadow-sm">
       <Flex justifyContent="between" alignItems="center" className="mb-4">
         <div>
-          <Title>Son 30 günde üretim</Title>
+          <Title>Production over the last 30 days</Title>
           <Text className="text-xs text-neutral-500">
-            {granularity === 'daily' && 'Günlük kullanım trendi'}
-            {granularity === 'weekly' && '7 günlük toplamlar'}
-            {granularity === 'monthly' && '30 günlük toplam üretim'}
+            {granularity === 'daily' && 'Daily usage trend'}
+            {granularity === 'weekly' && '7-day totals'}
+            {granularity === 'monthly' && '30-day total production'}
           </Text>
         </div>
         <span className="rounded-full border border-neutral-200 bg-transparent px-3 py-1 text-xs font-semibold text-neutral-600">
@@ -401,7 +401,7 @@ function LineUsageChart({ data, categories, granularity, hasSelection }: LineUsa
 
       {!hasSelection ? (
         <div className="py-8 text-center text-sm text-neutral-500">
-          En az bir hesap seçerek grafiği görüntüleyin.
+          Select at least one account to view the chart.
         </div>
       ) : (
         <LineChart
@@ -414,7 +414,7 @@ function LineUsageChart({ data, categories, granularity, hasSelection }: LineUsa
           showLegend
           showGridLines
           className="h-80"
-          yAxisLabel="Üretim"
+          yAxisLabel="Production"
           customTooltip={({ payload, active, label }) => {
             if (!active || !payload) return null;
             return (
@@ -425,7 +425,7 @@ function LineUsageChart({ data, categories, granularity, hasSelection }: LineUsa
                     <div key={entry.dataKey} className="flex items-center justify-between gap-4">
                       <span className="text-sm text-neutral-700">{entry.dataKey}</span>
                       <span className="text-sm font-semibold text-neutral-900">
-                        {`${numberFormatter.format(entry.value as number)} üretim`}
+                        {`${numberFormatter.format(entry.value as number)} outputs`}
                       </span>
                     </div>
                   ))}
@@ -449,15 +449,15 @@ function KPICards({ totalProduction, mostActiveUsername, averageDailyProduction 
   return (
     <Grid numItemsMd={3} className="gap-4">
       <Card className="border border-neutral-200 bg-white shadow-sm">
-        <Text className="text-sm text-neutral-500">Toplam üretim (30 gün)</Text>
+        <Text className="text-sm text-neutral-500">Total production (30 days)</Text>
         <Metric className="mt-2 text-neutral-900">{numberFormatter.format(totalProduction)}</Metric>
       </Card>
       <Card className="border border-neutral-200 bg-white shadow-sm">
-        <Text className="text-sm text-neutral-500">En aktif hesap</Text>
+        <Text className="text-sm text-neutral-500">Most active account</Text>
         <Metric className="mt-2 text-neutral-900">{mostActiveUsername}</Metric>
       </Card>
       <Card className="border border-neutral-200 bg-white shadow-sm">
-        <Text className="text-sm text-neutral-500">Ortalama günlük üretim</Text>
+        <Text className="text-sm text-neutral-500">Average daily production</Text>
         <Metric className="mt-2 text-neutral-900">
           {numberFormatter.format(averageDailyProduction)}
         </Metric>
@@ -473,14 +473,14 @@ interface DepletionForecastListProps {
 function DepletionForecastList({ accounts }: DepletionForecastListProps) {
   return (
     <Card className="border border-neutral-200 bg-white shadow-sm">
-      <Title>Kalan kredi tahmini</Title>
+      <Title>Remaining credit forecast</Title>
       <Text className="text-xs text-neutral-500">
-        Son 7 günlük ortalama kullanım baz alınarak kalan gün tahmini yapılır.
+        Estimates remaining days based on the last 7 days of usage.
       </Text>
 
       {accounts.length === 0 ? (
         <div className="py-6 text-center text-sm text-neutral-500">
-          En az bir hesap seçildiğinde tahmin görünür.
+          Select at least one account to see the forecast.
         </div>
       ) : (
         <div className="mt-4 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
@@ -507,7 +507,7 @@ function DepletionForecastList({ accounts }: DepletionForecastListProps) {
                       {account.username}
                     </Text>
                     <Text className="text-xs text-neutral-500">
-                      Tahmini kalan: {formattedRemaining} gün
+                      Estimated remaining: {formattedRemaining} days
                     </Text>
                   </div>
                   <span className="rounded-full border border-neutral-200 bg-transparent px-2.5 py-1 text-xs font-semibold text-neutral-600">
@@ -522,7 +522,7 @@ function DepletionForecastList({ accounts }: DepletionForecastListProps) {
                   showAnimation
                 />
                 <Text className="mt-1 text-xs text-neutral-500">
-                  Son 7 gün ortalama: {numberFormatter.format(Math.round(averageLast7))} / gün
+                  7-day average: {numberFormatter.format(Math.round(averageLast7))} per day
                 </Text>
               </Card>
             );

@@ -35,7 +35,7 @@ export interface InstagramAccount {
   // Settings
   settings: {
     timezone: string; // 'Europe/Istanbul'
-    language: 'tr' | 'en';
+    language: 'en';
     notifications: {
       quotaWarning: boolean; // warn at 80%
       errorAlerts: boolean;

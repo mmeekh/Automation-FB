@@ -119,6 +119,6 @@ function clean(v?: string) {
 }
 
 function formatMetric(v: number | string) {
-  if (typeof v === 'number') return new Intl.NumberFormat('tr-TR').format(v);
+  if (typeof v === 'number') return new Intl.NumberFormat('en-US').format(v);
   return clean(v) || '-';
 }

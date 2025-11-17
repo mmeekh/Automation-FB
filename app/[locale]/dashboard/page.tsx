@@ -14,7 +14,7 @@ import {
   ArrowRightIcon
 } from '@heroicons/react/24/solid';
 
-type SupportedLocale = 'en' | 'tr';
+type SupportedLocale = 'en';
 
 type FeatureCardContent = {
   icon: keyof typeof ICONS;
@@ -149,86 +149,6 @@ const DASHBOARD_COPY: Record<SupportedLocale, DashboardCopy> = {
         'Spin up flows for outreach, lead nurture, and customer support in a single afternoon. LookLab handles the AI, routing, and analytics so you can focus on the conversations that close deals.',
       primary: 'Get Started',
       secondary: 'See Automations'
-    }
-  },
-  tr: {
-    hero: {
-      topLine: 'Sosyal medyanızı otomatikleştirin',
-      animatedWords: ['iş akışlarınızı', 'etkileşiminizi', 'büyümenizi', 'süreçlerinizi'],
-      suffix: 'yönetin.',
-      description:
-        'Hazır akışları seçin, hesabınızı bağlayın ve dakikalar içinde otomasyonları başlatın.',
-      primaryCta: 'Başlayın',
-      secondaryCta: 'Demoyu İzle'
-    },
-    featureCards: [
-      {
-        icon: 'sparkles',
-        accent: 'from-primary-500 to-accent-500',
-        title: 'Kanıtlanmış akışları başlatın',
-        description:
-          'Lead toplama, randevu planlama ve yapay zekâ destekli concierge deneyimleri için Instagram DM hunilerinden seçim yapın.'
-      },
-      {
-        icon: 'bolt',
-        accent: 'from-orange-500 to-pink-500',
-        title: 'Her yanıtı otomatikleştirin',
-        description:
-          'Yapay zekâ yanıtlarını, takip mesajlarını ve medya gönderimlerini otomatik tetikleyin—ekibiniz kod veya Zapier zinciri kurmasın.'
-      },
-      {
-        icon: 'face',
-        accent: 'from-emerald-500 to-teal-500',
-        title: 'Kişiselleştirmeyi koruyun',
-        description:
-          'Her potansiyel müşteriye hedeflerine göre insan dokunuşunda rehberlik sunmak için hesap bazlı kişiselleştirme katmanları ekleyin.'
-      }
-    ],
-    workflowHeading: 'Üç kılavuz adımda yayına alın',
-    workflowSteps: [
-      {
-        title: 'Bir şablon seçin',
-        description:
-          'İnternetten lead toplamadan satış sonrası yükseltmeye kadar Instagram için hazırlanmış otomasyon oyun kitaplarından yararlanın.'
-      },
-      {
-        title: 'Sürükle, bırak, özelleştir',
-        description:
-          'Metni, yapay zekâ eylemlerini ve bekleme adımlarını görsel olarak düzenleyin. Kod yazmadan her niyet için yollar ekleyin.'
-      },
-      {
-        title: 'Yayınla ve optimize et',
-        description:
-          'Tek tıkla aktive edin; yanıtları ve dönüşümleri aynı çalışma alanından takip ederek sürekli iyileştirin.'
-      }
-    ],
-    automationStats: [
-      { value: '120+', label: 'hazır otomasyon adımı' },
-      { value: '45s', label: 'ortalama başlatma süresi' },
-      { value: '24/7', label: 'kesintisiz takip' }
-    ],
-    automationOutcomes: [
-      "Her DM lead'ini hedefe uygun akışlarla yakalayın",
-      'VIP müşterileri ekibinize aktarırken diğerlerini yapay zekâ ile besleyin',
-      'Yanıtları, rezervasyonları ve geliri anlık takip edin'
-    ],
-    visualBuilder: {
-      badge: 'Görsel oluşturucu, gerçek sonuçlar',
-      title: 'Instagram otomasyonlarınız tek tuvalde',
-      description:
-        'Müşteri yolculuklarını haritalayın, yapay zekâ yanıtlarını ekleyin ve araç değiştirmeden takip sekansları kurgulayın. Her blok Instagram için tasarlandı; böylece kampanyalarınız kişisel ve zamanında hissettirir.'
-    },
-    metricsSection: {
-      badge: 'Büyüyen metrikler',
-      title:
-        'Anında yanıtlayan, hiç durmadan nurtur eden ve sıcak lead’leri satış ekibinize devreden otomasyonlar.'
-    },
-    ctaSection: {
-      title: 'Otomasyonlarınızı bugün hayata geçirin',
-      description:
-        'Tanıtım, lead besleme ve müşteri desteği akışlarını tek öğleden sonra içinde kurun. LookLab yapay zekâyı, yönlendirmeyi ve analitiği yönetirken siz sonuç getiren sohbetlere odaklanın.',
-      primary: 'Başlayın',
-      secondary: 'Otomasyonları görün'
     }
   }
 };

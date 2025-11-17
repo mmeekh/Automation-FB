@@ -2,7 +2,6 @@
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useLocale } from 'next-intl';
 import { AutomationTemplate } from '@/lib/automations/types';
 import { getAutomationLandingUrl } from '@/lib/utils/automation-slugs';
 
@@ -14,50 +13,13 @@ interface CollapsedViewProps {
   onMouseLeave?: () => void;
 }
 
-type SupportedLocale = 'en' | 'tr';
-
-type Copy = {
-  labels: {
-    before: string;
-    style: string;
-    result: string;
-  };
-  statusActive: string;
-  button: string;
-  category: Record<string, string>;
+const LABELS = {
+  before: 'Before',
+  style: 'Style',
+  result: 'Result'
 };
-
-const COPY: Record<SupportedLocale, Copy> = {
-  en: {
-    labels: {
-      before: 'Before',
-      style: 'Style',
-      result: 'Result'
-    },
-    statusActive: '✓ Active',
-    button: 'View →',
-    category: {}
-  },
-  tr: {
-    labels: {
-      before: 'Önce',
-      style: 'Stil',
-      result: 'Sonuç'
-    },
-    statusActive: '✓ Aktif',
-    button: 'İncele →',
-    category: {
-      'Hair Style Change': 'Saç Stili Değişimi',
-      Automotive: 'Otomotiv',
-      'Car Color Changer': 'Araç Renk Değişimi',
-      Fashion: 'Moda',
-      'Interior Design': 'İç Tasarım',
-      Jewelry: 'Mücevher',
-      'Pet Products': 'Evcil Hayvan Ürünleri',
-      'Aesthetic AI': 'Estetik AI'
-    }
-  }
-};
+const STATUS_ACTIVE = '✓ Active';
+const BUTTON_LABEL = 'View →';
 
 const IMAGE_MAP: Record<string, { before: string; style: string; result: string }> = {
   'instagram-bald-to-haired': { before: 'hairchange1', style: 'hairchange2', result: 'hairchange3' },
@@ -92,12 +54,10 @@ export function CollapsedView({
   onMouseLeave
 }: CollapsedViewProps) {
   const router = useRouter();
-  const locale = (useLocale() as SupportedLocale) ?? 'en';
-  const copy = COPY[locale] ?? COPY.en;
 
   const imageSet = IMAGE_MAP[template.id];
 
-  const translateCategory = (category: string) => copy.category[category] ?? category;
+  const translateCategory = (category: string) => category;
 
   const getPlaceholderEmoji = (type: 'before' | 'style' | 'result') => {
     if (template.category === 'Aesthetic AI') {
@@ -118,7 +78,7 @@ export function CollapsedView({
         {imageSet ? (
           <Image
             src={`/media/${imageSet[type]}.webp`}
-            alt={copy.labels[type]}
+            alt={LABELS[type]}
             fill
             className="object-cover"
             priority
@@ -137,7 +97,7 @@ export function CollapsedView({
           </div>
         )}
       </div>
-      <span className="text-[9px] font-semibold text-neutral-600">{copy.labels[type]}</span>
+      <span className="text-[9px] font-semibold text-neutral-600">{LABELS[type]}</span>
     </div>
   );
 
@@ -146,7 +106,7 @@ export function CollapsedView({
       className={`group relative rounded-3xl bg-white border border-neutral-200/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_60px_rgb(0,0,0,0.08)] transition-all duration-500 cursor-pointer ${
         isHovered === false ? 'blur-sm scale-[0.98] opacity-60' : ''
       }`}
-      onClick={() => router.push(getAutomationLandingUrl(template.id, locale))}
+      onClick={() => router.push(getAutomationLandingUrl(template.id))}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
@@ -160,7 +120,7 @@ export function CollapsedView({
           {isActivated && (
             <div className="px-3 py-1 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 shadow-lg">
               <span className="text-xs font-semibold text-white flex items-center gap-1.5">
-                {copy.statusActive}
+                {STATUS_ACTIVE}
               </span>
             </div>
           )}
@@ -187,7 +147,7 @@ export function CollapsedView({
 
         <div className="text-center">
           <button className="px-4 py-2 text-sm font-medium text-neutral-900 border border-neutral-900 rounded-lg hover:bg-neutral-900 hover:text-white transition-all">
-            {copy.button}
+            {BUTTON_LABEL}
           </button>
         </div>
       </div>

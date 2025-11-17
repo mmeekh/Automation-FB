@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="tr" className={rubikMoonrocks.variable}>
+    <html lang="en" className={rubikMoonrocks.variable}>
       <head>
         <link
           rel="stylesheet"

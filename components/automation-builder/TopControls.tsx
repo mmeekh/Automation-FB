@@ -121,9 +121,9 @@ export function TopControls() {
           {/* Generation Stats with Progress Bar */}
           <div className="flex-1 max-w-md">
             <div className="flex items-center justify-between mb-1.5">
-              <span className="text-xs font-semibold text-neutral-700">Toplam Üretim</span>
+              <span className="text-xs font-semibold text-neutral-700">Total Production</span>
               <span className="text-xs font-bold text-primary-600">
-                {globalTotalGenerations.toLocaleString('tr-TR')} / {globalTotalLimit.toLocaleString('tr-TR')}
+                {globalTotalGenerations.toLocaleString('en-US')} / {globalTotalLimit.toLocaleString('en-US')}
               </span>
             </div>
             <div className="relative">
@@ -145,13 +145,13 @@ export function TopControls() {
                 <div className="absolute bottom-full left-0 mb-2 bg-neutral-900 text-white text-xs rounded-lg p-3 shadow-xl z-50 min-w-[280px]">
                   <div className="space-y-2">
                     <div className="text-neutral-400 font-semibold mb-2 pb-2 border-b border-neutral-700">
-                      Hesap Bazlı Üretimler
+                      Account-level production
                     </div>
                     {connectedAccounts.map(acc => (
                       <div key={acc.id} className="flex justify-between items-center">
                         <span className="text-neutral-300">@{acc.username}</span>
                         <span className="font-semibold text-white">
-                          {(acc.totalGenerations || 0).toLocaleString('tr-TR')} / {(acc.totalGenerationLimit || 0).toLocaleString('tr-TR')}
+                          {(acc.totalGenerations || 0).toLocaleString('en-US')} / {(acc.totalGenerationLimit || 0).toLocaleString('en-US')}
                         </span>
                       </div>
                     ))}
@@ -162,7 +162,7 @@ export function TopControls() {
               )}
             </div>
             <p className="mt-1.5 text-[10px] text-neutral-500">
-              Kalan: {(globalTotalLimit - globalTotalGenerations).toLocaleString('tr-TR')} üretim
+              Remaining: {(globalTotalLimit - globalTotalGenerations).toLocaleString('en-US')} outputs
             </p>
           </div>
 

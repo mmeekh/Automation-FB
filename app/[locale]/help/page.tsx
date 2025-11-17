@@ -13,7 +13,7 @@ import {
   RocketLaunchIcon
 } from '@heroicons/react/24/outline';
 
-type SupportedLocale = 'en' | 'tr';
+type SupportedLocale = 'en';
 
 type QuickLink = {
   title: string;
@@ -172,122 +172,6 @@ const HELP_COPY: Record<SupportedLocale, HelpCopy> = {
       description: 'Our support team is available 24/7 to assist you',
       primary: 'Contact Support',
       secondary: 'Schedule a Call'
-    }
-  },
-  tr: {
-    badge: 'Yardım Merkezi',
-    title: 'Size nasıl yardımcı olabiliriz?',
-    subtitle: 'SSS bölümünde arayın, dokümantasyona göz atın veya destek ekibimizle iletişime geçin',
-    searchPlaceholder: 'Yardım ara...',
-    allLabel: 'Tümü',
-    faqHeading: 'Sıkça Sorulan Sorular',
-    results: {
-      singular: '{count} sonuç',
-      plural: '{count} sonuç'
-    },
-    quickLinks: [
-      {
-        title: 'Video eğitimler',
-        description: 'Adım adım video rehberler',
-        icon: 'video',
-        link: '#',
-        color: 'from-red-500 to-pink-500'
-      },
-      {
-        title: 'Dokümantasyon',
-        description: 'Tam API referansı',
-        icon: 'docs',
-        link: '#',
-        color: 'from-blue-500 to-cyan-500'
-      },
-      {
-        title: 'Canlı sohbet desteği',
-        description: 'Ekibimizden anında yardım alın',
-        icon: 'chat',
-        link: '#',
-        color: 'from-green-500 to-emerald-500'
-      },
-      {
-        title: 'Hızlı başlangıç rehberi',
-        description: '5 dakikada yayına alın',
-        icon: 'rocket',
-        link: '#',
-        color: 'from-purple-500 to-violet-500'
-      }
-    ],
-    faqs: [
-      {
-        category: 'Başlangıç',
-        question: 'İlk otomasyonumu nasıl oluştururum?',
-        answer:
-          'Kenar çubuğundan "Otomasyon"u seçin ve galerimizden bir şablon alın. Mesajları özelleştirin, Instagram hesabınızı bağlayın ve "Aktifleştir"e tıklayın. Otomasyon hemen çalışmaya başlar!'
-      },
-      {
-        category: 'Başlangıç',
-        question: 'Instagram hesabımı nasıl bağlarım?',
-        answer:
-          'Ayarlar > Entegrasyonlar bölümünde "Meta Business Suite"e tıklayın ve Instagram hesabınızı bağlamak için OAuth adımlarını izleyin. Bağlamak istediğiniz hesap için yönetici yetkiniz olduğundan emin olun.'
-      },
-      {
-        category: 'Otomasyonlar',
-        question: 'Dört düğüm tipi nelerdir?',
-        answer:
-          'Tetik düğümleri anahtar kelimeler eşleştiğinde otomasyonu başlatır. Mesaj düğümleri metin, görsel ve buton gönderir. Görsel İsteği düğümleri kullanıcıdan fotoğraf ister. Sonuç düğümleri yapay zekâ çıktısını randevu butonlarıyla gösterir.'
-      },
-      {
-        category: 'Otomasyonlar',
-        question: 'Kota sistemi nasıl çalışır?',
-        answer:
-          'Her otomasyonun günlük bir kota sınırı vardır (ör. günde 1000 üretim). Kota her 24 saatte bir sıfırlanır. Kullanımı ilerleme çubuğundan izleyebilir ve Ayarlar bölümünde limitleri güncelleyebilirsiniz.'
-      },
-      {
-        category: 'Otomasyonlar',
-        question: 'Test Modu nedir?',
-        answer:
-          'Test Modu, otomasyonu önce seçtiğiniz Instagram kullanıcı adlarıyla çalıştırmanızı sağlar. Böylece her şeyin sorunsuz olduğundan emin olduktan sonra herkese açabilirsiniz.'
-      },
-      {
-        category: 'Düzenleme',
-        question: 'Düğümlerdeki mesajları nasıl düzenlerim?',
-        answer:
-          'Düzenleme Modu açıkken herhangi bir düğümün üzerine gelin ve "Düzenle"ye tıklayın. Metni güncelleyebilir, emoji ekleyebilir, görsel yükleyebilir ve buton ayarlayabilirsiniz. Değişiklikler "Otomasyonu Kaydet"e bastığınızda uygulanır.'
-      },
-      {
-        category: 'Düzenleme',
-        question: 'Yaptığım değişiklikleri geri alabilir miyim?',
-        answer:
-          'Evet! Düzenleme Modu aktifken üst çubuktaki Geri Al / İleri Al düğmelerini kullanabilirsiniz. Son 50 değişiklik geçmişte saklanır.'
-      },
-      {
-        category: 'Analitik',
-        question: 'Hangi istatistikler takip ediliyor?',
-        answer:
-          'Her düğüm gönderilen mesajları, teslimat oranını ve açılma oranını gösterir. Sonuç düğümleri ayrıca randevu butonlarının tıklanma oranlarını takip eder.'
-      },
-      {
-        category: 'Faturalandırma',
-        question: 'Fiyatlandırma nasıl işliyor?',
-        answer:
-          'Planlarımız ayda 49$’dan başlayan esnek seçenekler sunar. Ücretlendirme aylık otomasyon çalıştırma sayısı ve bağlı hesaplara göre belirlenir. Detaylar için Ayarlar > Faturalandırma bölümünü kontrol edin.'
-      },
-      {
-        category: 'Sorun Giderme',
-        question: 'Otomasyon tetiklenmiyor mu?',
-        answer:
-          'Şunları kontrol edin: 1) Otomasyonunuz Aktif mi (Pasif veya Test değil)? 2) Anahtar kelimeler doğru mu? 3) Instagram hesabı bağlı mı? 4) Günlük kotayı doldurdunuz mu? Akış sayfasındaki durum göstergesine bakın.'
-      },
-      {
-        category: 'Sorun Giderme',
-        question: 'Görseller oluşmuyor mu?',
-        answer:
-          'Ayarlar > API Anahtarları bölümünde anahtarlarınızın geçerli olduğunu doğrulayın. Gemini Vision AI entegrasyonunun bağlı olduğundan emin olun. Kullanıcıların JPG veya PNG formatında geçerli görseller gönderdiğini kontrol edin.'
-      }
-    ],
-    footer: {
-      title: 'Hâlâ yardıma mı ihtiyacınız var?',
-      description: 'Destek ekibimiz 7/24 size yardımcı olmaya hazır',
-      primary: 'Destekle İletişime Geç',
-      secondary: 'Görüşme Planla'
     }
   }
 };

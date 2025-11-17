@@ -26,7 +26,7 @@ export const mockAccounts: InstagramAccount[] = [
     creditAllocationPercent: 50,
     settings: {
       timezone: 'Europe/Istanbul',
-      language: 'tr',
+      language: 'en',
       notifications: {
         quotaWarning: true,
         errorAlerts: true,
@@ -56,7 +56,7 @@ export const mockAccounts: InstagramAccount[] = [
     creditAllocationPercent: 25,
     settings: {
       timezone: 'Europe/Istanbul',
-      language: 'tr',
+      language: 'en',
       notifications: {
         quotaWarning: true,
         errorAlerts: false,
@@ -114,7 +114,7 @@ export const mockAccounts: InstagramAccount[] = [
     creditAllocationPercent: 0,
     settings: {
       timezone: 'Europe/Istanbul',
-      language: 'tr',
+      language: 'en',
       notifications: {
         quotaWarning: true,
         errorAlerts: true,

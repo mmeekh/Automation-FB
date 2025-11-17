@@ -5,7 +5,7 @@ import { Header } from '@/components/layout/Header';
 import { Button } from '@/components/ui/Button';
 import { CheckIcon } from '@heroicons/react/24/solid';
 
-type SupportedLocale = 'en' | 'tr';
+type SupportedLocale = 'en';
 
 type PricingTier = {
   id: string;
@@ -117,92 +117,6 @@ const PRICING_COPY: Record<SupportedLocale, PricingCopy> = {
           'SLA-backed support (24/7)',
           'White-label delivery',
           'Bespoke security reviews'
-        ],
-        premium: true,
-        eclipse: true,
-        action: 'contactSales'
-      }
-    ]
-  },
-  tr: {
-    header: {
-      badge: 'Fiyatlandırma',
-      title: 'Salon otomasyonunuzu esnek paketlerle büyütün',
-      subtitle:
-        'Tüm paketlerde DM akışları, görsel talep adımları ve randevu otomasyonları dahildir. İstediğiniz zaman yükseltin veya düşürün.'
-    },
-    labels: {
-      recommended: 'En Popüler',
-      enterprise: '✨ Kurumsal',
-      choosePlan: 'Plan Seç',
-      contactSales: 'Satışla Görüş'
-    },
-    tiers: [
-      {
-        id: 'starter-100',
-        name: 'Starter 100',
-        price: '$49',
-        period: '/ay',
-        limit: '100 üretime kadar',
-        highlight: 'LookLab otomasyonlarını bir saatten kısa sürede yayına alın',
-        features: [
-          'DM otomasyonu (1 şablon)',
-          '100 yapay zekâ dönüşümü dahil',
-          'Paylaşımlı otomasyon kredileri',
-          'Standart destek'
-        ],
-        starter: true,
-        action: 'choosePlan'
-      },
-      {
-        id: 'growth-500',
-        name: 'Growth 500',
-        price: '$179',
-        period: '/ay',
-        limit: '500 üretime kadar',
-        highlight: 'Çok adımlı akışlarla DM dönüşümlerini ölçeklendirin',
-        features: [
-          'DM otomasyonu (3 şablon)',
-          '500 yapay zekâ dönüşümü dahil',
-          'Segmentlere özel hızlı yanıtlar',
-          'Analitik özetleri',
-          'Öncelikli e-posta desteği'
-        ],
-        recommended: true,
-        action: 'choosePlan'
-      },
-      {
-        id: 'studio-1000',
-        name: 'Studio 1000',
-        price: '$349',
-        period: '/ay',
-        limit: '1.000 üretime kadar',
-        highlight: 'Manuel danışmanlık yerine geçen stüdyolar için',
-        features: [
-          'DM otomasyonu (5+ şablon)',
-          '1.000 yapay zekâ dönüşümü dahil',
-          'Özel marka kimliği ve sohbet metinleri',
-          'Performans panoları',
-          'CRM ve takvim entegrasyonu',
-          'Uzman başarı yöneticisi'
-        ],
-        premium: true,
-        action: 'choosePlan'
-      },
-      {
-        id: 'contact-sales',
-        name: 'Satışla Görüşün',
-        price: 'Görüşelim',
-        period: '',
-        limit: '1.000+ üretim',
-        highlight: 'Özel akışlara ihtiyaç duyan franchise ve scale-up ekipleri için',
-        features: [
-          'Sınırsız LookLab otomasyonu',
-          'Özel yapay zekâ güvenlik adımları',
-          'Gelişmiş analitik depo entegrasyonu',
-          'SLA güvenceli 7/24 destek',
-          'Beyaz etiket teslimat',
-          'Özel güvenlik incelemeleri'
         ],
         premium: true,
         eclipse: true,
