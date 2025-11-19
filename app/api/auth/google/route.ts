@@ -68,8 +68,8 @@ export async function POST(request: NextRequest) {
           );
         }
         googleId = tokenInfo.sub;
-        if (tokenInfo.expires_in) {
-          expiresAt = Date.now() + Number(tokenInfo.expires_in) * 1000;
+        if (tokenInfo.expiry_date) {
+          expiresAt = tokenInfo.expiry_date;
         }
       } catch (error) {
         console.error('Failed to verify access token:', error);
