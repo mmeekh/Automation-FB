@@ -1,0 +1,25 @@
+{
+  email your-email@example.com
+}
+
+unlukimdir.com, www.unlukimdir.com {
+  encode gzip
+
+  @static {
+    path /favicon.ico
+    path /robots.txt
+  }
+  handle @static {
+    reverse_proxy app:3003
+  }
+
+  reverse_proxy app:3003 {
+    header_up Host {host}
+    header_up X-Forwarded-Proto {scheme}
+    header_up X-Forwarded-For {remote_host}
+  }
+
+  tls {
+    dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+  }
+}

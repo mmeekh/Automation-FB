@@ -1,0 +1,81 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: automation-app
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_APP_URL: https://www.unlukimdir.com
+      NEXT_PUBLIC_API_URL: /api
+    expose:
+      - "3003"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      - automation-network
+
+  postgres:
+    image: postgres:17-alpine
+    container_name: automation-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-automation_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-automation_pass_2025}
+      POSTGRES_DB: ${POSTGRES_DB:-automation_fb}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-automation_user} -d ${POSTGRES_DB:-automation_fb}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - automation-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: automation-redis
+    command: redis-server --appendonly yes
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    networks:
+      - automation-network
+
+  caddy:
+    image: caddy:2.9-alpine
+    container_name: automation-caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      CLOUDFLARE_API_TOKEN: ${CLOUDFLARE_API_TOKEN:-}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - app
+    networks:
+      - automation-network
+
+volumes:
+  postgres_data:
+  redis_data:
+  caddy_data:
+  caddy_config:
+
+networks:
+  automation-network:
+    driver: bridge
