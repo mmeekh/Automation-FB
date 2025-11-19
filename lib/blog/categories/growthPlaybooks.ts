@@ -681,7 +681,11 @@ Keep a punch list of experiments and revisit during weekly retros.`,
       category: 'Growth Playbooks',
       readTime: '13 min read',
       publishedAt: '13 Oct 2025',
-      author: author('Merve Yılmaz', 'Automation Architect', '/media/avatars/merve.png'),
+      author: {
+        name: 'Merve Yılmaz',
+        role: 'Automation Architect',
+        avatar: '/media/avatars/merve.png',
+      },
       keywords: [
         'multilingual dm funnels',
         'looklab localization playbook',
