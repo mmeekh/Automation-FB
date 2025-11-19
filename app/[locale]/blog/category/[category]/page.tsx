@@ -138,9 +138,12 @@ export default function BlogCategoryPage() {
         <main className="flex min-h-screen flex-col items-center justify-center bg-neutral-50 px-6 text-center">
           <h1 className="text-2xl font-semibold text-neutral-900">Category not found</h1>
           <p className="mt-2 text-neutral-600">The category you selected is not available yet.</p>
-          <Button asChild className="mt-6 bg-primary-600 hover:bg-primary-700">
-            <Link href={`/${locale}/blog`}>Back to blog</Link>
-          </Button>
+          <Link
+            href={`/${locale}/blog`}
+            className="mt-6 inline-flex items-center justify-center rounded-xl bg-primary-600 px-6 py-3 font-semibold text-white transition hover:bg-primary-700"
+          >
+            Back to blog
+          </Link>
         </main>
       </>
     );
@@ -157,9 +160,12 @@ export default function BlogCategoryPage() {
         <main className="flex min-h-screen flex-col items-center justify-center bg-neutral-50 px-6 text-center">
           <h1 className="text-2xl font-semibold text-neutral-900">No posts yet</h1>
           <p className="mt-2 text-neutral-600">We are preparing automation guides for this category.</p>
-          <Button asChild className="mt-6 bg-primary-600 hover:bg-primary-700">
-            <Link href={`/${locale}/blog`}>Browse other categories</Link>
-          </Button>
+          <Link
+            href={`/${locale}/blog`}
+            className="mt-6 inline-flex items-center justify-center rounded-xl bg-primary-600 px-6 py-3 font-semibold text-white transition hover:bg-primary-700"
+          >
+            Browse other categories
+          </Link>
         </main>
       </>
     );
