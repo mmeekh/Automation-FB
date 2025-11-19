@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/Button';
 import { useFacebookSDK } from '@/lib/hooks/useFacebookSDK';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { useToast } from '@/lib/hooks/useToast';
-import { CredentialResponse, useGoogleLogin } from '@react-oauth/google';
+import { TokenResponse, useGoogleLogin } from '@react-oauth/google';
 
 
 const GoogleIcon = () => (
@@ -125,14 +125,14 @@ export function AuthModal() {
   const toast = useToast();
 
   const handleGoogleSuccess = useCallback(
-    async (tokenResponse: CredentialResponse) => {
+    async (tokenResponse: TokenResponse) => {
       try {
-        const credential = tokenResponse.credential;
-        if (!credential) {
-          throw new Error('Google kimlik belirteci eksik');
+        const accessToken = tokenResponse.access_token;
+        if (!accessToken) {
+          throw new Error('Google kimlik belirteci alınamadı');
         }
 
-        const backendResult = await loginWithGoogle(credential);
+        const backendResult = await loginWithGoogle(accessToken);
 
         if (!backendResult.success || !backendResult.user) {
           throw new Error('Google ile kimlik doğrulaması başarısız');
@@ -178,6 +178,7 @@ export function AuthModal() {
     onSuccess: handleGoogleSuccess,
     onError: handleGoogleError,
     flow: 'implicit',
+    scope: 'openid email profile',
   });
 
   const trimmedEmail = useMemo(() => email.trim(), [email]);

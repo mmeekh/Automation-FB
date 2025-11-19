@@ -6,17 +6,18 @@ import { prisma } from '@/lib/db';
 export const runtime = 'nodejs';
 
 interface GoogleLoginRequest {
-  idToken: string;
+  idToken?: string;
+  accessToken?: string;
 }
 
 export async function POST(request: NextRequest) {
   try {
     const body: GoogleLoginRequest = await request.json();
-    const { idToken } = body;
+    const { idToken, accessToken } = body;
 
-    if (!idToken) {
+    if (!idToken && !accessToken) {
       return NextResponse.json(
-        { error: 'ID token is required' },
+        { error: 'ID token or access token is required' },
         { status: 400 }
       );
     }
@@ -31,27 +32,84 @@ export async function POST(request: NextRequest) {
     }
 
     const client = new OAuth2Client(clientId);
-    const ticket = await client.verifyIdToken({
-      idToken,
-      audience: clientId,
-    });
+    let googleId: string | undefined;
+    let email: string | null = null;
+    let name: string | null = null;
+    let picture: string | null = null;
+    let providerToken = idToken || accessToken!;
+    let expiresAt = Date.now() + 30 * 24 * 60 * 60 * 1000;
 
-    const payload = ticket.getPayload();
+    if (idToken) {
+      const ticket = await client.verifyIdToken({
+        idToken,
+        audience: clientId,
+      });
 
-    if (!payload?.sub) {
+      const payload = ticket.getPayload();
+
+      if (!payload?.sub) {
+        return NextResponse.json(
+          { error: 'Invalid Google token' },
+          { status: 401 }
+        );
+      }
+
+      googleId = payload.sub;
+      email = payload.email ?? null;
+      name = payload.name ?? null;
+      picture = payload.picture ?? null;
+    } else if (accessToken) {
+      try {
+        const tokenInfo = await client.getTokenInfo(accessToken);
+        if (tokenInfo.aud !== clientId) {
+          return NextResponse.json(
+            { error: 'Access token audience mismatch' },
+            { status: 401 }
+          );
+        }
+        googleId = tokenInfo.sub;
+        if (tokenInfo.expires_in) {
+          expiresAt = Date.now() + Number(tokenInfo.expires_in) * 1000;
+        }
+      } catch (error) {
+        console.error('Failed to verify access token:', error);
+        return NextResponse.json(
+          { error: 'Invalid Google access token' },
+          { status: 401 }
+        );
+      }
+
+      try {
+        const userInfoRes = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        if (!userInfoRes.ok) {
+          throw new Error('Failed to fetch user info');
+        }
+
+        const userInfo = await userInfoRes.json();
+        googleId = userInfo.sub || googleId;
+        email = userInfo.email ?? null;
+        name = userInfo.name ?? null;
+        picture = userInfo.picture ?? null;
+      } catch (error) {
+        console.error('Failed to fetch user info:', error);
+        return NextResponse.json(
+          { error: 'Unable to fetch Google user info' },
+          { status: 500 }
+        );
+      }
+    }
+
+    if (!googleId) {
       return NextResponse.json(
-        { error: 'Invalid Google token' },
+        { error: 'Unable to determine Google user ID' },
         { status: 401 }
       );
     }
-
-    const googleId = payload.sub;
-    const email = payload.email ?? null;
-    const name = payload.name ?? null;
-    const picture = payload.picture ?? null;
-
-    const now = Date.now();
-    const expiresAt = now + 30 * 24 * 60 * 60 * 1000; // 30 days
 
     const user = await prisma.user.upsert({
       where: { googleId },
@@ -76,7 +134,7 @@ export async function POST(request: NextRequest) {
       email: user.email ?? undefined,
       name: user.name ?? undefined,
       picture: user.picture ?? undefined,
-      accessToken: idToken,
+      accessToken: providerToken,
       expiresAt,
     };
 

@@ -99,11 +99,11 @@ export function useAuth() {
     }
   }, [setAuthenticatedUser]);
 
-  const loginWithGoogle = useCallback(async (idToken: string) => {
+  const loginWithGoogle = useCallback(async (token: string) => {
     try {
       const response = await api.post<{ success: boolean; user: User; token: string }>(
         '/auth/google',
-        { idToken }
+        { accessToken: token }
       );
 
       setAuthenticatedUser(response.user);
