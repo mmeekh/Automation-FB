@@ -197,9 +197,12 @@ export default function BlogCategoryPage() {
                 </p>
               </div>
             </div>
-            <Button asChild className="bg-primary-600 hover:bg-primary-700">
-              <Link href={`/${locale}/blog`}>Browse all categories</Link>
-            </Button>
+            <Link
+              href={`/${locale}/blog`}
+              className="inline-flex items-center justify-center rounded-xl bg-primary-600 px-6 py-3 font-semibold text-white transition hover:bg-primary-700"
+            >
+              Browse all categories
+            </Link>
           </header>
 
           <HighlightCard icon={icon} locale={locale} post={highlight} theme={theme} />
