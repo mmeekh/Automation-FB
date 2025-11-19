@@ -16,12 +16,13 @@ datasource db {
 
 model User {
   id               String   @id @default(cuid())
-  facebookId       String   @unique @map("facebook_id")
+  facebookId       String?  @unique @map("facebook_id")
   email            String?
   name             String?
   picture          String?
   geminiApiKey     String?  @map("gemini_api_key") // Per-user API key
   subscriptionTier String   @default("free") @map("subscription_tier")
+  googleId         String?  @unique @map("google_id")
 
   // Relations
   instagramAccounts InstagramAccount[]

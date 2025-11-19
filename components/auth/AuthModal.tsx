@@ -1,6 +1,6 @@
 'use client';
 
-import { type FormEvent, type MouseEvent, useMemo, useState } from 'react';
+import { type FormEvent, type MouseEvent, useMemo, useState, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/Button';
 import { useFacebookSDK } from '@/lib/hooks/useFacebookSDK';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { useToast } from '@/lib/hooks/useToast';
+import { CredentialResponse, useGoogleLogin } from '@react-oauth/google';
 
 
 const GoogleIcon = () => (
@@ -120,8 +121,64 @@ export function AuthModal() {
   const [loadingProvider, setLoadingProvider] = useState<'email' | 'google' | 'instagram' | null>(null);
 
   const { isLoaded: fbSdkLoaded, login: facebookLogin } = useFacebookSDK();
-  const { login: backendLogin } = useAuth();
+  const { login: backendLogin, loginWithGoogle } = useAuth();
   const toast = useToast();
+
+  const handleGoogleSuccess = useCallback(
+    async (tokenResponse: CredentialResponse) => {
+      try {
+        const credential = tokenResponse.credential;
+        if (!credential) {
+          throw new Error('Google kimlik belirteci eksik');
+        }
+
+        const backendResult = await loginWithGoogle(credential);
+
+        if (!backendResult.success || !backendResult.user) {
+          throw new Error('Google ile kimlik doğrulaması başarısız');
+        }
+
+        const userInfo = backendResult.user;
+        const displayName = userInfo.name || 'Kullanıcı';
+
+        setUser({
+          id: userInfo.id,
+          name: displayName,
+          email: userInfo.email || '',
+          avatar:
+            userInfo.picture ||
+            displayName.charAt(0)?.toUpperCase() ||
+            'G',
+        });
+
+        toast.success(`Hoş geldiniz, ${displayName}!`);
+        closeAuthModal();
+
+        setTimeout(() => {
+          router.push(`/${locale}/dashboard`);
+        }, 500);
+      } catch (error) {
+        console.error('Google login error:', error);
+        const errorMessage =
+          error instanceof Error ? error.message : 'Google ile giriş yapılamadı';
+        toast.error(errorMessage);
+      } finally {
+        setLoadingProvider(null);
+      }
+    },
+    [closeAuthModal, locale, loginWithGoogle, router, setUser, toast]
+  );
+
+  const handleGoogleError = useCallback(() => {
+    toast.error('Google kimlik doğrulaması başarısız oldu');
+    setLoadingProvider(null);
+  }, [toast]);
+
+  const googleLogin = useGoogleLogin({
+    onSuccess: handleGoogleSuccess,
+    onError: handleGoogleError,
+    flow: 'implicit',
+  });
 
   const trimmedEmail = useMemo(() => email.trim(), [email]);
   const showPasswordField = trimmedEmail.length > 0;
@@ -151,12 +208,13 @@ export function AuthModal() {
 
   const handleGoogleLogin = () => {
     setLoadingProvider('google');
-    completeLogin({
-      id: 'google_user',
-      name: 'Google Kullanıcısı',
-      email: 'google@demo.com',
-      avatar: 'G',
-    });
+    try {
+      googleLogin();
+    } catch (error) {
+      console.error('Google login failed to start:', error);
+      toast.error('Google ile giriş başlatılamadı');
+      setLoadingProvider(null);
+    }
   };
 
   const handleInstagramLogin = async () => {

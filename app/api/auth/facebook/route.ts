@@ -93,6 +93,7 @@ export async function POST(request: NextRequest) {
       user: {
         id: user.id,
         facebookId: user.facebookId,
+        googleId: user.googleId,
         name: user.name,
         email: user.email,
         picture: user.picture,

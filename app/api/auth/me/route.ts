@@ -62,6 +62,7 @@ export async function GET(request: NextRequest) {
       user: {
         id: dbUser.id,
         facebookId: dbUser.facebookId,
+        googleId: dbUser.googleId,
         name: dbUser.name,
         email: dbUser.email,
         picture: dbUser.picture,

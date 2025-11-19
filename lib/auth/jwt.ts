@@ -6,7 +6,8 @@ const secret = new TextEncoder().encode(JWT_SECRET);
 
 export interface JWTPayload {
   userId: string; // Database user ID (cuid)
-  facebookId: string;
+  facebookId?: string;
+  googleId?: string;
   email?: string;
   name?: string;
   picture?: string;
@@ -64,6 +65,8 @@ export async function getUserFromCookies(cookieHeader: string | null): Promise<J
   // Return payload with fresh data from database
   return {
     ...payload,
+    facebookId: user.facebookId ?? payload.facebookId,
+    googleId: user.googleId ?? payload.googleId,
     email: user.email || payload.email,
     name: user.name || payload.name,
     picture: user.picture || payload.picture,

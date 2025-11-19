@@ -5,10 +5,12 @@ import { api } from '@/lib/services/api';
 
 export interface User {
   id: string;
-  facebookId: string;
+  facebookId?: string;
+  googleId?: string;
   name: string;
   email?: string;
   picture?: string;
+  subscriptionTier?: string;
 }
 
 export interface InstagramAccount {
@@ -48,6 +50,14 @@ export function useAuth() {
     isAuthenticated: false,
   });
 
+  const setAuthenticatedUser = useCallback((user: User) => {
+    setState({
+      user,
+      isLoading: false,
+      isAuthenticated: true,
+    });
+  }, []);
+
   /**
    * Fetch current user from API
    */
@@ -80,18 +90,30 @@ export function useAuth() {
         { accessToken }
       );
 
-      setState({
-        user: response.user,
-        isLoading: false,
-        isAuthenticated: true,
-      });
+      setAuthenticatedUser(response.user);
 
       return { success: true, user: response.user };
     } catch (error) {
       console.error('Login failed:', error);
       return { success: false, error: 'Login failed' };
     }
-  }, []);
+  }, [setAuthenticatedUser]);
+
+  const loginWithGoogle = useCallback(async (idToken: string) => {
+    try {
+      const response = await api.post<{ success: boolean; user: User; token: string }>(
+        '/auth/google',
+        { idToken }
+      );
+
+      setAuthenticatedUser(response.user);
+
+      return { success: true, user: response.user };
+    } catch (error) {
+      console.error('Google login failed:', error);
+      return { success: false, error: 'Google login failed' };
+    }
+  }, [setAuthenticatedUser]);
 
   /**
    * Logout user
@@ -134,6 +156,7 @@ export function useAuth() {
     isLoading: state.isLoading,
     isAuthenticated: state.isAuthenticated,
     login,
+    loginWithGoogle,
     logout,
     fetchUser,
     fetchInstagramAccounts,

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Rubik_Moonrocks } from 'next/font/google';
 import "./globals.css";
+import { Providers } from './providers';
 
 const inter = Inter({ subsets: ['latin'] });
 const rubikMoonrocks = Rubik_Moonrocks({
@@ -24,10 +25,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           href="https://unpkg.com/@tremor/react@3.18.7/dist/tremor.css"
         />
       </head>
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }
-
 
 
