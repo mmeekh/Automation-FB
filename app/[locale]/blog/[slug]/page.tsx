@@ -473,9 +473,12 @@ export default function BlogPostPage() {
         <main className="flex min-h-screen flex-col items-center justify-center bg-neutral-50 px-6 text-center">
           <h1 className="text-2xl font-semibold text-neutral-900">Post not found</h1>
           <p className="mt-2 text-neutral-600">The article you are looking for has moved or no longer exists.</p>
-          <Button asChild className="mt-6 bg-primary-600 hover:bg-primary-700">
-            <Link href="../blog">Return to blog</Link>
-          </Button>
+          <Link
+            href="../blog"
+            className="mt-6 inline-flex items-center justify-center rounded-xl bg-primary-600 px-6 py-3 font-semibold text-white transition hover:bg-primary-700"
+          >
+            Return to blog
+          </Link>
         </main>
       </>
     );
