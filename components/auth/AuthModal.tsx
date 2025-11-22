@@ -367,11 +367,17 @@ export function AuthModal() {
 
           <p className="mt-10 text-center text-xs text-neutral-500">
             {t('agreementText')}{' '}
-            <Link href="/terms" className="font-medium text-primary-600 hover:text-primary-700 underline underline-offset-2">
+            <Link
+              href={`/${locale}/legal/terms`}
+              className="font-medium text-primary-600 hover:text-primary-700 underline underline-offset-2"
+            >
               {t('termsOfService')}
             </Link>{' '}
             {t('and')}{' '}
-            <Link href="/privacy" className="font-medium text-primary-600 hover:text-primary-700 underline underline-offset-2">
+            <Link
+              href={`/${locale}/legal/privacy`}
+              className="font-medium text-primary-600 hover:text-primary-700 underline underline-offset-2"
+            >
               {t('privacyPolicy')}
             </Link>
           </p>

@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
     // 4. Create JWT payload with database user ID
     const jwtPayload = {
       userId: user.id, // Database ID (cuid)
-      facebookId: user.facebookId,
+      facebookId: user.facebookId ?? undefined,
       email: user.email ?? undefined,
       name: user.name ?? undefined,
       picture: user.picture ?? undefined,

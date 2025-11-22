@@ -96,6 +96,34 @@ export function Header() {
     router.push(`/${locale}/dashboard`);
   };
 
+  const getAvatarContent = (size: 'desktop' | 'mobile') => {
+    if (!user) return null;
+    const avatar = user.avatar?.trim() || '';
+    const isUrl = avatar.startsWith('http');
+    const sizeClasses =
+      size === 'desktop'
+        ? 'w-9 h-9 sm:w-10 sm:h-10'
+        : 'w-12 h-12';
+
+    if (isUrl) {
+      return (
+        <Image
+          src={avatar}
+          alt={user.name}
+          width={48}
+          height={48}
+          className={`${sizeClasses} rounded-full object-cover`}
+        />
+      );
+    }
+
+    const initial = avatar || user.name.charAt(0).toUpperCase();
+    return (
+      <span className="text-white font-semibold text-sm sm:text-base">
+        {initial}
+      </span>
+    );
+  };
 
   return (
     <>
@@ -231,7 +259,7 @@ export function Header() {
                       onClick={() => setUserMenuOpen((prev) => !prev)}
                       className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-gradient-to-r from-primary-500 to-accent-500 flex items-center justify-center text-white font-semibold text-sm shadow-lg hover-lift cursor-pointer transition-all active:scale-95"
                     >
-                      {(user.avatar && user.avatar.trim()) ? user.avatar : user.name.charAt(0).toUpperCase()}
+                      {getAvatarContent('desktop')}
                     </button>
 
                     {userMenuOpen && (
@@ -331,8 +359,8 @@ export function Header() {
               {user ? (
                 <div className="space-y-4">
                   <div className="flex items-center gap-3 p-4 rounded-xl bg-gradient-to-br from-white to-neutral-100 shadow-neu-sm">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-r from-primary-500 to-accent-500 flex items-center justify-center text-white font-semibold text-lg">
-                      {(user.avatar && user.avatar.trim()) ? user.avatar : user.name.charAt(0).toUpperCase()}
+                    <div className="rounded-full bg-gradient-to-r from-primary-500 to-accent-500 flex items-center justify-center">
+                      {getAvatarContent('mobile')}
                     </div>
                     <div>
                       <div className="font-semibold text-neutral-800">{user.name}</div>

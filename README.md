@@ -956,3 +956,8 @@ projenin sal1kl1 geliçimi için **zorunlu** bir pratiktir. 📊
 - Büyütüldü: Instagram logo boyutu artırıldı (w-7 h-7 → w-9 h-9)
 - Düzeltildi: README.md - Türkçe karakter encoding sorunları düzeltildi (ş, ı, ğ, ü, ö, İ, ç karakterleri)
 
+### [2025-11-22] - GPT-5.1
+- Güncellendi: `.env` - `NEXT_PUBLIC_APP_URL` production için `https://unlukimdir.com` olarak ayarlandı
+- Güncellendi: `Caddyfile` - Auto HTTPS tekrar aktif edilip `unlukimdir.com` ve `www.unlukimdir.com` için reverse proxy yapılandırıldı
+- Çalıştırıldı: `docker-compose.prod.yml` ile `automation-app`, `automation-postgres` ve `automation-redis` prod container'ları ayağa kaldırıldı
+- Doğrulandı: Caddy üzerinden Let's Encrypt sertifikası alındı ve Cloudflare → origin SSL handshake (525) hatası düzeltildi

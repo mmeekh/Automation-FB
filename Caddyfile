@@ -1,8 +1,4 @@
-{
-    auto_https off
-}
-
 unlukimdir.com, www.unlukimdir.com {
     encode gzip
-    reverse_proxy automation-fb-frontend:3003
+    reverse_proxy automation-app:3003
 }

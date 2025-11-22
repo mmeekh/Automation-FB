@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   app:
     build:
@@ -11,8 +9,10 @@ services:
       - .env
     environment:
       NODE_ENV: production
-      NEXT_PUBLIC_APP_URL: https://www.unlukimdir.com
-      NEXT_PUBLIC_API_URL: /api
+      NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-https://www.unlukimdir.com}
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-/api}
+      DATABASE_URL: ${PROD_DATABASE_URL:-postgresql://${POSTGRES_USER:-automation_user}:${POSTGRES_PASSWORD:-automation_pass_2025}@${POSTGRES_HOST:-postgres}:5432/${POSTGRES_DB:-automation_fb}?schema=public}
+      REDIS_URL: ${PROD_REDIS_URL:-redis://redis:6379}
     expose:
       - "3003"
     depends_on:
